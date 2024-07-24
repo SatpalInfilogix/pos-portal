@@ -300,12 +300,9 @@
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item"
-                        href="https://dreamspos.dreamstechnologies.com/html/template/profile.html">My Profile</a>
-                    <a class="dropdown-item"
-                        href="https://dreamspos.dreamstechnologies.com/html/template/general-settings.html">Settings</a>
-                    <a class="dropdown-item"
-                        href="https://dreamspos.dreamstechnologies.com/html/template/signin.html">Logout</a>
+                    <a class="dropdown-item" href="#">My Profile</a>
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" href="#">Logout</a>
                 </div>
             </div>
 
@@ -332,7 +329,7 @@
                     </button>
                 </div>
                 <div class="modal-body p-4">
-                    <form action="https://dreamspos.dreamstechnologies.com/html/template/pos.html">
+                    <form action="#">
                         <div class="product-wrap">
                             <div class="product-list d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center flex-fill">
