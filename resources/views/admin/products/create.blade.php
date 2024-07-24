@@ -33,8 +33,8 @@
                 <div class="card-body add-product pb-0">
                     <div class="accordion-card-one accordion" id="accordionExample">
                         <div class="accordion-item">
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                            <div class="row mb-3">
+                                <div class="col-md-6 add-product">
                                     <label class="form-label">Category</label>
                                     <select name="category_id" id="category_id" class="form-control">
                                         <option value="" selected disabled>Select Category</option>
@@ -42,6 +42,11 @@
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label">Product Code</label>
+                                    <input type="text" name="product_code" class="form-control">
+                                    <small id="pcode-err" style="color:red; display:none;">Product code already exist</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -51,7 +56,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 add-product">
                                     <div class="input-blocks add-product list">
                                         <label class="form-label">Quantity</label>
                                         <input type="text" id="quantity" class="form-control">
@@ -61,9 +66,7 @@
                                         <!-- Display entered quantities here -->
                                     </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 add-product">
                                     <label class="form-label">Manufacture Date</label>
                                     <input type="text" name="manufacture_date" id="manufacture_date" class="form-control">
                                 </div>
@@ -157,6 +160,7 @@
             rules: {
                 category_id: "required",
                 product_name: "required",
+                product_code: "required",
                 // 'quantities[]': {
                 //     required: true,
                 //     minlength: 1 // Require at least one quantity
@@ -167,6 +171,7 @@
             messages: {
                 category_id: "Please enter category",
                 product_name: "Please enter the product name",
+                product_code: "Please enter the product code",
                 // 'quantities[]': {
                 //     required: "Please enter at least one quantity",
                 //     minlength: "Please enter at least one quantity"
@@ -187,7 +192,33 @@
             }
         });
     });
-
+    //check product code
+    $(document).on('keyup','[name="product_code"]',function(){
+        var product_code = $(this).val(); 
+        var token = "{{ csrf_token() }}";
+        var url = "{{ route('products.check_code') }}";
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                "_token": token,
+                product_code
+            },
+            success: function(response) {
+                console.log(response);
+                if(response.success){
+                    $('#pcode-err').show();
+                    $('.btn-submit').prop('disabled', true);
+                }else{
+                    $('#pcode-err').hide();
+                    $('.btn-submit').prop('disabled', false);
+                }
+            },
+            error: function(xhr) {
+                console.log(xhr);
+            }
+        });
+    });
 
 </script>
 @endsection

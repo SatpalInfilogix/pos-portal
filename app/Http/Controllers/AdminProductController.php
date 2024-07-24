@@ -47,6 +47,7 @@ class AdminProductController extends Controller
         Product::create([
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
+            'product_code'      => $request->product_code,
             'quantity'          => json_encode($request->quantities),
             'manufacture_date'  => $request->manufacture_date,
             'lot_number'        => $uniqueCode,
@@ -85,6 +86,7 @@ class AdminProductController extends Controller
         $product = Product::where('id', $id)->update([
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
+            'product_code'      => $request->product_code,
             'quantity'          => json_encode($request->quantities),
             'manufacture_date'  => $request->manufacture_date,
         ]);
@@ -110,6 +112,24 @@ class AdminProductController extends Controller
             return response()->json(['status' => 'success', 'product' => $status, 'message' => 'Category deleted successfully.'], 200);
         } else {
             return response()->json(['status' => 'error', 'message' => 'Category not found.'], 404);
+        }
+    }
+
+    public function checkProductCode(Request $request){
+        if(isset($request->type)){
+            $product = Product::where('product_code', $request->product_code)->where('id','!=',$request->product_id)->first();
+            if($product){
+                return response()->json(["success" => true]);
+            }else{
+                return response()->json(["error" => true]);
+            }
+        }else{
+            $product = Product::where('product_code', $request->product_code)->first();
+            if($product){
+                return response()->json(["success" => true]);
+            }else{
+                return response()->json(["error" => true]);
+            }
         }
     }
 }

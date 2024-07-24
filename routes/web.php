@@ -144,6 +144,8 @@ Route::post('update-cart', [PosCartController::class, 'update'])->name('update-c
 Route::post('discount', [PosCartController::class, 'discountApply'])->name('discount');
 Route::post('/set-invoice-for-inventory-return', [InventoryReturnController::class, 'setInvoice'])->name('set-invoice-for-inventory-return');
 
+Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');
+
 
 /* Login And Registration Routes Ends Here */
 Route::get('/generate-pdf', [PDFController::class, 'download'])->name('download');
