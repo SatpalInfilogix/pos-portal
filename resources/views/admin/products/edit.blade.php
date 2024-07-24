@@ -34,23 +34,31 @@
             <div class="card-body add-product pb-0">
                 <div class="accordion-card-one accordion" id="accordionExample">
                     <div class="accordion-item">
-                        <div class="row">
-                            <label class="form-label">Category</label>
-                            <select name="category_id" id="category_id" class="form-control">
-                                <option value="" selected disabled>Select Category</option>
-                                @foreach($categories as $category)
-                                    <option value="{{ $category->id }}" @selected($product->category_id == $category->id)>{{ $category->name }}</option>
-                                @endforeach
-                            </select>
+                        <div class="row mb-3">
+                            <div class="col-md-6 add-product">
+                                <label class="form-label">Category</label>
+                                <select name="category_id" id="category_id" class="form-control">
+                                    <option value="" selected disabled>Select Category</option>
+                                    @foreach($categories as $category)
+                                        <option value="{{ $category->id }}" @selected($product->category_id == $category->id)>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-md-6 add-product">
+                                <label class="form-label">Product Code</label>
+                                <input type="text" name="product_code" class="form-control" value="{{ old('product_code', $product->product_code) }}">
+                                <small id="pcode-err" style="color:red; display:none;">Product code already exist</small>
+                            </div>    
                         </div>
-                        <div class="row">
-                            <div class="mb-3 add-product">
+                        <div class="row mb-3">
+                            <div class="add-product">
                                 <label class="form-label">Product Name</label>
                                 <input type="text" name="product_name" class="form-control" value="{{ old('product_name', $product->name) }}">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="mb-3 add-product">
+
+                        <div class="row mb-3">
+                            <div class="col-md-6 add-product">
                                 <div class="input-blocks add-product list">
                                     <label class="form-label">Quantity</label>
                                     <input type="text" id="quantity" class="form-control">
@@ -69,9 +77,7 @@
                                     @endforeach
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="mb-3 add-product">
+                            <div class="col-md-6 add-product">
                                 <label class="form-label">Manufacture Date</label>
                                 <input type="text" name="manufacture_date" id="manufacture_date" class="form-control" value="{{ old('manufacture_date', $product->manufacture_date) }}">
                             </div>
@@ -197,11 +203,13 @@
             rules: {
                 category_id: "required",
                 product_name: "required",
+                product_code: "required",
                 manufacture_date: "required",
             },
             messages: {
                 category_id: "Please enter category",
                 product_name: "Please enter the product name",
+                product_code: "Please enter the product code",
                 manufacture_date: "Please enter the manufacture date",
             },
             errorClass: "text-danger f-12",
@@ -214,6 +222,36 @@
             },
             submitHandler: function(form) {
                 form.submit();
+            }
+        });
+    });
+    //check product code
+    $(document).on('keyup','[name="product_code"]',function(){
+        var product_code = $(this).val(); 
+        var product_id = "{{ $product->id }}"; 
+        var token = "{{ csrf_token() }}";
+        var url = "{{ route('products.check_code') }}";
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                "_token": token,
+                "type" : "edit",
+                product_id,
+                product_code
+            },
+            success: function(response) {
+                console.log(response);
+                if(response.success){
+                    $('#pcode-err').show();
+                    $('.btn-submit').prop('disabled', true);
+                }else{
+                    $('#pcode-err').hide();
+                    $('.btn-submit').prop('disabled', false);
+                }
+            },
+            error: function(xhr) {
+                console.log(xhr);
             }
         });
     });
