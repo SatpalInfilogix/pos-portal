@@ -158,46 +158,13 @@
         </div>
         <div class="col-md-12 col-lg-4 ps-0">
             <aside class="product-order-list">
-                <div class="head d-flex align-items-center justify-content-between w-100">
+                {{-- <div class="head d-flex align-items-center justify-content-between w-100">
                     <div class>
                         <h5>Order List</h5>
                         <span>Invoice ID : <span id="invoice-id">{{ $invoiceId }}</span></span>
                     </div>
-                    <div class>
-                        <a class="confirm-text" href="javascript:void(0);"><i data-feather="trash-2"
-                                class="feather-16 text-danger"></i></a>
-                        <a href="javascript:void(0);" class="text-default"><i
-                                data-feather="more-vertical" class="feather-16"></i></a>
-                    </div>
-                </div>
-                <div class="customer-info block-section">
-                    <h6>Customer Information</h6>
-                    <div class="input-block d-flex align-items-center">
-                        <div class="flex-grow-1">
-                            <select class="select">
-                                <option>Walk in Customer</option>
-                                <option>John</option>
-                                <option>Smith</option>
-                                <option>Ana</option>
-                                <option>Elza</option>
-                            </select>
-                        </div>
-                        <a href="#" class="btn btn-primary btn-icon" data-bs-toggle="modal"
-                            data-bs-target="#create"><i data-feather="user-plus"
-                                class="feather-16"></i></a>
-                    </div>
-                    <div class="input-block">
-                        <select class="select">
-                            <option>Select Products</option>
-                            <option>IPhone 14 64GB</option>
-                            <option>MacBook Pro</option>
-                            <option>Rolex Tribute V3</option>
-                            <option>Red Nike Angelo</option>
-                            <option>Airpod 2</option>
-                            <option>Oldest</option>
-                        </select>
-                    </div>
-                </div>
+                </div> --}}
+            
                 <div class="product-added block-section">
                     <div class="head-text d-flex align-items-center justify-content-between">
                         <h6 class="d-flex align-items-center mb-0">Product Added<span
@@ -250,53 +217,25 @@
                     <!--- end cart Product list-->
                 </div>
                 <div class="block-section">
-                    <div class="selling-info">
-                        <div class="row">
-                            <div class="col-12 col-sm-4">
-                                <div class="input-block">
-                                    <label>Order Tax</label>
-                                    <select class="select">
-                                        <option>GST 5%</option>
-                                        <option>GST 10%</option>
-                                        <option>GST 15%</option>
-                                        <option>GST 20%</option>
-                                        <option>GST 25%</option>
-                                        <option>GST 30%</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="input-block">
-                                    <label>Shipping</label>
-                                    <select class="select">
-                                        <option>15</option>
-                                        <option>20</option>
-                                        <option>25</option>
-                                        <option>30</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-12 col-sm-4">
-                                <div class="input-block">
-                                    <label>Discount</label>
-                                    <?php
+                    <div class="order-total">
+                        <table class="table table-responsive table-borderless">
+                            <tr>
+                                <td>Discount</td>
+                                <td class="">
+                                    @php
                                         $discountValue = '';
                                         if(session()->has('cart') && array_key_exists('discount_percentage', session('cart'))) {
                                             $discountValue = session('cart')['discount_percentage'];
                                         }
-                                    ?>
+                                    @endphp
                                     <select class="select discount-option" id="discountSelect">
                                         <option selected disabled>Select Discount</option>
                                         @foreach($discounts as $key =>$discount)
                                             <option value="{{ $discount->discount }}" @selected($discount->discount == $discountValue)>{{$discount->discount}} %</option>
                                         @endforeach
                                     </select>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="order-total">
-                        <table class="table table-responsive table-borderless">
+                                </td>
+                            </tr>
                             <tr>
                                 <td>Gross Sale Amount</td>
                                 <td class="text-end totalAmount">@if(session('cart')) {{ session('cart')['formatted_sub_total'] }} @else 0 @endif</td>

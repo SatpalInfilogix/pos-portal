@@ -254,11 +254,13 @@
             <a href="https://dreamspos.dreamstechnologies.com/html/template/general-settings.html"><i
                     data-feather="settings"></i></a>
         </li> -->
+        <a href="{{ route('pos-dashboard') }}" target="_blank"><strong>Open POS Dashboard</strong></a>
+
         <li class="nav-item dropdown has-arrow main-drop">
             <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
                 <span class="user-info">
                     <span class="user-letter">
-                        <img src="@if(auth()->user()->profile_image != '' && auth()->user()->profile_image != null) {{env('APP_URL')}}/{{auth()->user()->profile_image}} @else https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avator1.jpg @endif"
+                        <img src="@if(auth()->user()->profile_image) {{env('APP_URL')}}/{{auth()->user()->profile_image}} @else https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avator1.jpg @endif"
                             alt class="img-fluid">
                     </span>
                     <span class="user-detail">
@@ -271,7 +273,7 @@
                 <div class="profilename">
                     <div class="profileset">
                         <span class="user-img"><img
-                                src="@if(auth()->user()->profile_image != '' && auth()->user()->profile_image != null) {{env('APP_URL')}}/{{auth()->user()->profile_image}} @else https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avator1.jpg @endif"
+                                src="@if(auth()->user()->profile_image) {{env('APP_URL')}}/{{auth()->user()->profile_image}} @else https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avator1.jpg @endif"
                                 alt>
                             <span class="status online"></span></span>
                         <div class="profilesets">

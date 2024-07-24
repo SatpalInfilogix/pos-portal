@@ -69,51 +69,6 @@
             <ul class="nav user-menu">
 
                 <li class="nav-item nav-searchinputs">
-                    <div class="top-nav-search">
-                        <a href="javascript:void(0);" class="responsive-search">
-                            <i class="fa fa-search"></i>
-                        </a>
-                        <form action="#" class="dropdown">
-                            <div class="searchinputs dropdown-toggle" id="dropdownMenuClickable"
-                                data-bs-toggle="dropdown" data-bs-auto-close="false">
-                                <input type="text" placeholder="Search">
-                                <div class="search-addon">
-                                    <span><i data-feather="x-circle" class="feather-14"></i></span>
-                                </div>
-                            </div>
-                            <div class="dropdown-menu search-dropdown" aria-labelledby="dropdownMenuClickable">
-                                <div class="search-info">
-                                    <h6><span><i data-feather="search" class="feather-16"></i></span>Recent Searches
-                                    </h6>
-                                    <ul class="search-tags">
-                                        <li><a href="javascript:void(0);">Products</a></li>
-                                        <li><a href="javascript:void(0);">Sales</a></li>
-                                        <li><a href="javascript:void(0);">Applications</a></li>
-                                    </ul>
-                                </div>
-                                <div class="search-info">
-                                    <h6><span><i data-feather="help-circle" class="feather-16"></i></span>Help</h6>
-                                    <p>How to Change Product Volume from 0 to 200 on Inventory management</p>
-                                    <p>Change Product Name</p>
-                                </div>
-                                <div class="search-info">
-                                    <h6><span><i data-feather="user" class="feather-16"></i></span>Customers</h6>
-                                    <ul class="customers">
-                                        <li><a href="javascript:void(0);">Aron Varu<img
-                                                    src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avator1.jpg"
-                                                    alt class="img-fluid"></a></li>
-                                        <li><a href="javascript:void(0);">Jonita<img
-                                                    src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avator1.jpg"
-                                                    alt class="img-fluid"></a></li>
-                                        <li><a href="javascript:void(0);">Aaron<img
-                                                    src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avator1.jpg"
-                                                    alt class="img-fluid"></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-
-                        </form>
-                    </div>
                 </li>
 
 
@@ -182,14 +137,8 @@
                         <i data-feather="maximize"></i>
                     </a>
                 </li>--}}
-                <li class="nav-item nav-item-box">
-                    <a href="javascript:void(0)">
-                        <i data-feather="mail"></i>
-                        <span class="badge rounded-pill">1</span>
-                    </a>
-                </li>
-
-                <li class="nav-item dropdown nav-item-box">
+              
+                {{-- <li class="nav-item dropdown nav-item-box">
                     <a href="javascript:void(0);" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
                         <i data-feather="bell"></i><span class="badge rounded-pill">2</span>
                     </a>
@@ -293,13 +242,13 @@
                             <a href="javascript:void(0)">View all Notifications</a>
                         </div>
                     </div>
-                </li>
+                </li> --}}
 
-                <li class="nav-item nav-item-box">
+                {{-- <li class="nav-item nav-item-box">
                     <a href="javascript:void(0)">
                         <i data-feather="settings"></i>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item dropdown has-arrow main-drop">
                     <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
                         <span class="user-info">
@@ -351,12 +300,9 @@
                 <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
                     aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item"
-                        href="https://dreamspos.dreamstechnologies.com/html/template/profile.html">My Profile</a>
-                    <a class="dropdown-item"
-                        href="https://dreamspos.dreamstechnologies.com/html/template/general-settings.html">Settings</a>
-                    <a class="dropdown-item"
-                        href="https://dreamspos.dreamstechnologies.com/html/template/signin.html">Logout</a>
+                    <a class="dropdown-item" href="#">My Profile</a>
+                    <a class="dropdown-item" href="#">Settings</a>
+                    <a class="dropdown-item" href="#">Logout</a>
                 </div>
             </div>
 
@@ -383,7 +329,7 @@
                     </button>
                 </div>
                 <div class="modal-body p-4">
-                    <form action="https://dreamspos.dreamstechnologies.com/html/template/pos.html">
+                    <form action="#">
                         <div class="product-wrap">
                             <div class="product-list d-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center flex-fill">

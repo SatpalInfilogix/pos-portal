@@ -45,13 +45,13 @@
         <div class="header">
 
             <div class="header-left active">
-                <a href="index.html" class="logo logo-normal">
+                <a href="#" class="logo logo-normal">
                     <img src="assets/img/logo.png" alt>
                 </a>
-                <a href="index.html" class="logo logo-white">
+                <a href="#" class="logo logo-white">
                     <img src="assets/img/logo-white.png" alt>
                 </a>
-                <a href="index.html" class="logo-small">
+                <a href="#" class="logo-small">
                     <img src="assets/img/logo-small.png" alt>
                 </a>
                 <a id="toggle_btn" href="javascript:void(0);">
@@ -463,12 +463,12 @@
                         <li class="submenu-open">
                             <h6 class="submenu-hdr">Peoples</h6>
                             <ul>
-                                <li><a href="customers.html"><i data-feather="user"></i><span>Customers</span></a>
+                                <li><a href="#"><i data-feather="user"></i><span>Customers</span></a>
                                 </li>
-                                <li><a href="suppliers.html"><i data-feather="users"></i><span>Suppliers</span></a>
+                                <li><a href="#"><i data-feather="users"></i><span>Suppliers</span></a>
                                 </li>
-                                <li><a href="store-list.html"><i data-feather="home"></i><span>Stores</span></a></li>
-                                <li><a href="warehouse.html"><i data-feather="archive"></i><span>Warehouses</span></a>
+                                <li><a href="#"><i data-feather="home"></i><span>Stores</span></a></li>
+                                <li><a href="#"><i data-feather="archive"></i><span>Warehouses</span></a>
                                 </li>
                             </ul>
                         </li>
