@@ -1,0 +1,159 @@
+/* Sales receipt */
+.main-card {
+    padding: 30px;
+}
+.sales-card {
+    border: 1px solid;
+    width: 100%;
+    margin: auto;
+}
+h5.main-title {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 18px;
+    font-family: sans-serif;
+}
+h3.receipt-title {
+    text-align: center;
+    margin-top: 25px;
+    font-weight: 900;
+    font-size: x-large;
+    font-family: sans-serif;
+}
+p.main-content {
+    margin-left: 30px;
+    font-size: 16px;
+    margin-right: 30px;
+    margin-top: 0px;
+    font-family: sans-serif;
+    font-weight: 700;
+} 
+.content-details {
+    display: flex;
+    justify-content: space-between;
+    font-family: sans-serif;
+}
+p.main-content {
+    margin-left: 30px;
+    font-size: 16px;
+    margin-right: 30px;
+    font-family: sans-serif;
+}  
+p.receipt-time {
+    text-align: end;
+    margin-right: 30px;
+    margin-top: 0;
+    font-family: sans-serif;
+    font-weight: 700;
+} 
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    font-weight: 600;
+} 
+.receipt-table th, .receipt-table td {
+    border: 1px solid #787777; 
+    padding: 8px; 
+    text-align: left; 
+}
+.receipt-table th {
+    background-color: #d9d9d9; 
+    font-weight: bold; 
+}
+
+
+table.receipt-table th {
+    text-align: center;
+}  
+table.receipt-table td {
+    text-align: end;
+}
+table.receipt-table td:nth-child(1) {
+    text-align: start;
+    padding-left: 25px;
+}
+
+td.g-total {
+    text-align: start !important;
+    padding-left: 25px;
+}
+.receipt-table .empty-row td {
+    height: 30px; 
+}
+tr.single-data td {
+    text-align: unset !important;
+    border-bottom: none;
+    border-top: none;
+}   
+
+td.ship-address {
+    text-align: start !important;
+    padding-left: 25px;
+}
+/* Sales receipt end*/
+
+img#image_preview {
+    width: 15%;
+}
+
+div#method-cash {
+    margin-top: 20px;
+    display: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+   -webkit-appearance: none;
+}
+
+#invoice-details, #g-invoice-details, #error-msg, #g-error-msg{
+    display: none;
+}
+input#search-invoice {
+    width: 75%;
+    text-transform: uppercase;
+}
+#searchbox {
+    display: flex;
+    gap: 5px;
+}
+table.head-table {
+    width: 100%;
+}
+td.right {
+    float: inline-end;
+}
+p.grand-total {
+    font-size: 16px;
+    font-weight: 900;
+    margin-top: 20px;
+}
+[name="vehicle_numbers"] {
+    text-transform: uppercase;
+}
+.default-cover.active img {
+    filter: invert(75%) sepia(66%) saturate(1955%) hue-rotate(327deg) brightness(103%) contrast(102%)!important;
+}
+
+.invoice-title h2, .invoice-title h3 {
+    display: inline-block;
+}
+
+.table > tbody > tr > .no-line {
+    border-top: none;
+}
+
+.table > thead > tr > .no-line {
+    border-bottom: none;
+}
+
+.table > tbody > tr > .thick-line {
+    border-top: 2px solid;
+}
+
+h3.customer-name {
+    font-size: 24px;
+    margin: 15px auto;
+    text-transform: capitalize;
+}
