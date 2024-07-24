@@ -125,7 +125,7 @@ $('ul.tabs li').click(function(){var $this=$(this);var $theTab=$(this).attr('id'
 '</a>'+
 '</li>'+
 '<li class="sidebar-icons">'+
-'<a href="https://themeforest.net/item/dreamspos-pos-inventory-management-admin-dashboard-template/38834413" target="_blank" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Tooltip on left">'+
+'<a href="#" target="_blank" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-original-title="Tooltip on left">'+
 '<img src="assets/img/icons/sidebar-icon-03.svg" class="feather-five" alt="">'+
 '</a>'+
 '</li>'+

@@ -1,27 +1,5 @@
 @extends('admin.layouts.app')
     @section('content')
-    <!-- <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
-<style>
-    .autocomplete-items {
-        position: absolute;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        max-height: 150px;
-        overflow-y: auto;
-        z-index: 1000;
-        width: 96%;
-    }
-
-    .autocomplete-item {
-        padding: 10px;
-        cursor: pointer;
-    }
-
-    .autocomplete-item:hover {
-        background-color: #f0f0f0;
-    }
-</style> -->
     <div class="content">
         <div class="page-header">
             <div class="add-item d-flex">

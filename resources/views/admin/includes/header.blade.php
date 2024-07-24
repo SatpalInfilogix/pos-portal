@@ -132,7 +132,7 @@
             </a>
         </li> 
         <li class="nav-item nav-item-box">
-            <a href="https://dreamspos.dreamstechnologies.com/html/template/email.html">
+            <a href="#">
                 <i data-feather="mail"></i>
                 <span class="badge rounded-pill">1</span>
             </a>
@@ -150,7 +150,7 @@
                 <div class="noti-content">
                     <ul class="notification-list">
                         <li class="notification-message">
-                            <a href="https://dreamspos.dreamstechnologies.com/html/template/activities.html">
+                            <a href="#">
                                 <div class="media d-flex">
                                     <span class="avatar flex-shrink-0">
                                         <img alt
@@ -168,7 +168,7 @@
                             </a>
                         </li>
                         <li class="notification-message">
-                            <a href="https://dreamspos.dreamstechnologies.com/html/template/activities.html">
+                            <a href="#">
                                 <div class="media d-flex">
                                     <span class="avatar flex-shrink-0">
                                         <img alt
@@ -187,7 +187,7 @@
                             </a>
                         </li>
                         <li class="notification-message">
-                            <a href="https://dreamspos.dreamstechnologies.com/html/template/activities.html">
+                            <a href="#">
                                 <div class="media d-flex">
                                     <span class="avatar flex-shrink-0">
                                         <img alt
@@ -205,54 +205,16 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="notification-message">
-                            <a href="https://dreamspos.dreamstechnologies.com/html/template/activities.html">
-                                <div class="media d-flex">
-                                    <span class="avatar flex-shrink-0">
-                                        <img alt
-                                            src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avatar-17.jpg">
-                                    </span>
-                                    <div class="media-body flex-grow-1">
-                                        <p class="noti-details"><span class="noti-title">Rolland Webber</span>
-                                            completed task <span class="noti-title">Patient and Doctor video
-                                                conferencing</span>
-                                        </p>
-                                        <p class="noti-time"><span class="notification-time">12 mins
-                                                ago</span></p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="notification-message">
-                            <a href="https://dreamspos.dreamstechnologies.com/html/template/activities.html">
-                                <div class="media d-flex">
-                                    <span class="avatar flex-shrink-0">
-                                        <img alt
-                                            src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/profiles/avatar-13.jpg">
-                                    </span>
-                                    <div class="media-body flex-grow-1">
-                                        <p class="noti-details"><span class="noti-title">Bernardo
-                                                Galaviz</span>
-                                            added new task <span class="noti-title">Private chat module</span>
-                                        </p>
-                                        <p class="noti-time"><span class="notification-time">2 days ago</span>
-                                        </p>
-                                    </div>
-                                </div>
-                            </a>
-                        </li>
                     </ul>
                 </div>
                 <div class="topnav-dropdown-footer">
-                    <a href="https://dreamspos.dreamstechnologies.com/html/template/activities.html">View all
-                        Notifications</a>
+                    <a href="#">View all Notifications</a>
                 </div>
             </div>
         </li> -->
 
         <!-- <li class="nav-item nav-item-box">
-            <a href="https://dreamspos.dreamstechnologies.com/html/template/general-settings.html"><i
-                    data-feather="settings"></i></a>
+            <a href="#"><i data-feather="settings"></i></a>
         </li> -->
         <a href="{{ route('pos-dashboard') }}" target="_blank"><strong>Open POS Dashboard</strong></a>
 
@@ -295,14 +257,12 @@
 
     <div class="dropdown mobile-user-menu">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
-            aria-expanded="false"><i class="fa fa-ellipsis-v"></i></a>
+            aria-expanded="false"><i class="fa fa-ellipsis-v"></i>
+        </a>
         <div class="dropdown-menu dropdown-menu-right">
-            <a class="dropdown-item"
-                href="https://dreamspos.dreamstechnologies.com/html/template/profile.html">My Profile</a>
-            <a class="dropdown-item"
-                href="https://dreamspos.dreamstechnologies.com/html/template/general-settings.html">Settings</a>
-            <a class="dropdown-item"
-                href="https://dreamspos.dreamstechnologies.com/html/template/signin.html">Logout</a>
+            <a class="dropdown-item" href="#">My Profile</a>
+            <a class="dropdown-item" href="#">Settings</a>
+            <a class="dropdown-item" href="#">Logout</a>
         </div>
     </div>
 

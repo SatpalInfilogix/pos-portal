@@ -616,27 +616,27 @@ Adjust the appearance to reduce glare and give your eyes a break.
 </a>
 </div>
 <div class="theme-version-item">
-<a href="https://seantheme.com/color-admin/admin/transparent/index_v2.html" class="theme-version-link">
+<a href="#" class="theme-version-link">
 <span style="background-image: url(../assets/img/theme/transparent.jpg);" class="theme-version-cover"></span>
 </a>
 </div>
 <div class="theme-version-item">
-<a href="https://seantheme.com/color-admin/admin/apple/index_v2.html" class="theme-version-link">
+<a href="#" class="theme-version-link">
 <span style="background-image: url(../assets/img/theme/apple.jpg);" class="theme-version-cover"></span>
 </a>
 </div>
 <div class="theme-version-item">
-<a href="https://seantheme.com/color-admin/admin/material/index_v2.html" class="theme-version-link">
+<a href="#" class="theme-version-link">
 <span style="background-image: url(../assets/img/theme/material.jpg);" class="theme-version-cover"></span>
 </a>
 </div>
 <div class="theme-version-item">
-<a href="https://seantheme.com/color-admin/admin/facebook/index_v2.html" class="theme-version-link">
+<a href="#" class="theme-version-link">
 <span style="background-image: url(../assets/img/theme/facebook.jpg);" class="theme-version-cover"></span>
 </a>
 </div>
 <div class="theme-version-item">
-<a href="https://seantheme.com/color-admin/admin/google/index_v2.html" class="theme-version-link">
+<a href="#" class="theme-version-link">
 <span style="background-image: url(../assets/img/theme/google.jpg);" class="theme-version-cover"></span>
 </a>
 </div>
@@ -652,7 +652,7 @@ Adjust the appearance to reduce glare and give your eyes a break.
 </a>
 </div>
 <div class="theme-version-item">
-<a href="https://seantheme.com/color-admin/admin/ajax/index.html" class="theme-version-link">
+<a href="#" class="theme-version-link">
 <span style="background-image: url(../assets/img/version/ajax.jpg);" class="theme-version-cover"></span>
 </a>
 </div>

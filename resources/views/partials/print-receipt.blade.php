@@ -16,10 +16,8 @@
                 <div class="text-center info">
                     <h6>Dreamguys Technologies Pvt Ltd.,</h6>
                     <p class="mb-0">Phone Number: +1 5656665656</p>
-                    <p class="mb-0">Email: <a
-                            href="https://dreamspos.dreamstechnologies.com/cdn-cgi/l/email-protection#37524f565a475b5277505a565e5b1954585a"><span
-                                class="__cf_email__"
-                                data-cfemail="cbaeb3aaa6bba7ae8baca6aaa2a7e5a8a4a6">[email&#160;protected]</span></a>
+                    <p class="mb-0">Email: <a href="#">
+                        <span class="__cf_email__" data-cfemail="cbaeb3aaa6bba7ae8baca6aaa2a7e5a8a4a6">[email&#160;protected]</span>
                     </p>
                 </div>
                 <div class="tax-invoice">
