@@ -314,11 +314,9 @@
         </div>
     </div>
 </div>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
 
 <script>
-
-     $(function() {
+    $(function() {
         $('#discountSelect').on('change', function() {
             var discount = this.value;
             console.log(discount);
@@ -422,17 +420,13 @@
     });
 
     $(document).ready(function() {
-        $('#my-select').select2({
+        $('[name="order_customer_id"]').select2({
             placeholder: 'Enter Name',
             allowClear: true,
-            multiple: true  // Enable multiple selection
-        });
-        
-        $('.select2-search__field').on('change',function(){
-            var customer_name = $(this).val();
-            $('#my-select').append('<option value="'+customer_name+'" selected>'+customer_name+'</option>');
+            search: true
         });
     });
+
     $(document).on('submit','form#place-order',function(event){
         event.preventDefault(); 
         var payment_method = $('#payment-method').val();
@@ -440,7 +434,7 @@
             alert('Please Select Payment Method');
             return false;
         }
-        let customer_name = $('#my-select').val()[0];
+        let customer_name = $('[name="order_customer_id"]').val();
         let vehicle_number = $('[name="vehicle_number"]').val();
         let contact_number = $('[name="contact_number"]').val();
         let alternate_number = $('[name="alternate_number"]').val();
@@ -479,7 +473,6 @@
                         }, 100);
                     }                    
                     $("#place-order").modal("hide");
-                    $("#select2-my-select-container").html("");
                     $('#place-order').find('form').trigger('reset'); 
                 }
             }

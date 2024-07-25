@@ -21,7 +21,7 @@ class AdminRoleAndPermissionController extends Controller
         //     abort(403);
         // }
 
-        $roles = Role::where('name', '!=', 'super admin')->get();
+        $roles = Role::where('name', '!=', 'Super Admin')->get();
         $modules = Module::get();
 
         return view('admin.roles-and-permissions.index', compact('roles', 'modules'));
@@ -51,7 +51,7 @@ class AdminRoleAndPermissionController extends Controller
                 if(!$existingPermission){
                     Permission::create(['name' => $permission]);
                     
-                    $super_admin_role = Role::where('name', 'super admin')->first();
+                    $super_admin_role = Role::where('name', 'Super Admin')->first();
                     $super_admin_role->givePermissionTo($permission);
                 }
             }

@@ -7,7 +7,7 @@ use App\Models\User;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Seeder;
-use Database\Seeders\AdminUserSeeder;
+use Database\Seeders\UserSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -18,11 +18,11 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-         // Create roles
-         $superAdminRole = Role::create(['name' => 'super admin']);
-         $adminRole = Role::create(['name' => 'admin']);
-         $managerRole = Role::create(['name' => 'manager']);
-         $salespersonRole = Role::create(['name' => 'salesperson']);
+        // Create roles
+        Role::create(['name' => 'Super Admin']);
+        Role::create(['name' => 'Admin']);
+        Role::create(['name' => 'Manager']);
+        Role::create(['name' => 'Sales Person']);
          
          // Create permissions
         //  $backendPermission = Permission::create(['name' => 'backend']);
@@ -34,16 +34,12 @@ class DatabaseSeeder extends Seeder
         //  $managerRole->givePermissionTo($backendPermission);
         //  $salespersonRole->givePermissionTo($posPermission);
          
-         $this->command->info('Roles and permissions added successfully!');
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        $this->command->info('Roles and permissions added successfully!');
+        
         $this->call([
             RolesAndPermissionsSeeder::class,
             ModuleSeeder::class,
-            AdminUserSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

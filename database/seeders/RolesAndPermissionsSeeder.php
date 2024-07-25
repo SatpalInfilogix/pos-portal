@@ -49,16 +49,16 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'edit roles & permissions']);
         Permission::create(['name' => 'delete roles & permissions']);
 
-        $role = Role::where(['name' => 'super admin'])->first();
+        $role = Role::where(['name' => 'Super Admin'])->first();
         $role->givePermissionTo(Permission::all());
 
-        $adminRole = Role::where(['name' => 'admin'])->first();
+        $adminRole = Role::where(['name' => 'Admin'])->first();
         $adminRole->givePermissionTo('backend');
 
-        $managerRole = Role::where(['name' => 'manager'])->first();
+        $managerRole = Role::where(['name' => 'Manager'])->first();
         $managerRole->givePermissionTo('backend');
 
-        $salespersonRole = Role::where(['name' => 'salesperson'])->first();
+        $salespersonRole = Role::where(['name' => 'Sales Person'])->first();
         $salespersonRole->givePermissionTo('backend');
 
     }

@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\PriceMaster;
 use App\Models\Order;
 use App\Models\Discount;
+use App\Models\Customer;
 
 class PosDashboardController extends Controller
 {
@@ -44,7 +45,9 @@ class PosDashboardController extends Controller
         }
 
         $discounts = Discount::where('quantity', '<', $cart_quantity)->get();
+
+        $customers = Customer::all();
         
-        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discounts'));
+        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discounts', 'customers'));
     }
 }

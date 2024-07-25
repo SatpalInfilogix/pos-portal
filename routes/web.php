@@ -21,6 +21,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\PosGatePassController;
 use App\Http\Controllers\AdminSalesController;
+use App\Http\Controllers\PosCustomerController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
@@ -106,7 +107,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
         /********************** End Users Routes  **********************/
 
-        /********************** Customers Routes  **********************/
+        /********************** Admin Customers Routes  **********************/
         Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
         Route::get('/customers/create', [AdminCustomerController::class, 'create'])->name('customers.create');
         Route::post('/customers', [AdminCustomerController::class, 'store'])->name('customers.store');
@@ -114,6 +115,10 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::post('/customers/{id}', [AdminCustomerController::class, 'update'])->name('customers.update');
         Route::delete('/customers/{id}', [AdminCustomerController::class, 'destroy'])->name('customers.destroy');
         /********************** End Customers Routes  **********************/
+
+         /********************** POS Customers Routes  **********************/
+         Route::get('/customers/{customer_id}', [PosCustomerController::class, 'customerDetailsAutoFill'])->name('customers.auto_fill');
+         /********************** POS Customers Routes End **********************/
 
         /********************** Invoice Routes  **********************/
         Route::post('/pos-sale-submission', [OrderController::class, 'POSSaleSubmission'])->name('sale.submission');

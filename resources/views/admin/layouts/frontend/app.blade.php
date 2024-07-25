@@ -4,12 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
-    <meta name="description" content="POS - Bootstrap Admin Template">
-    <meta name="keywords"
-        content="admin, estimates, bootstrap, business, corporate, creative, invoice, html5, responsive, Projects">
-    <meta name="author" content="Dreamguys - Bootstrap Admin Template">
-    <meta name="robots" content="noindex, nofollow">
-    <title>Dreams Pos Admin Template</title>
+    <title>POS System</title>
 
     <link rel="shortcut icon" type="image/x-icon"
         href="https://dreamspos.dreamstechnologies.com/html/template/assets/img/favicon.png">
@@ -36,6 +31,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+
 </head>
 
 <body>
@@ -308,7 +305,11 @@
                             <div class="col-lg-6 col-sm-12 col-12">
                                 <div class="input-blocks">
                                     <label>Customer Name</label>
-                                    <select id="my-select" style="width: 100%;" required>
+                                    <select name="order_customer_id" required>
+                                        <option></option>
+                                        @foreach($customers as $customer)
+                                            <option value="{{ $customer->id }}">{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
@@ -601,7 +602,6 @@
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalerts.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme-script.js') }}"></script>

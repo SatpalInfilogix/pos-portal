@@ -6,8 +6,8 @@
     <div class="page-header">
         <div class="add-item d-flex">
             <div class="page-title">
-                <h4>Return Stock Details</h4>
-                <h6>Manage your return stock details</h6>
+                <h4>Sales Details</h4>
+                <h6>Manage your Sales details</h6>
             </div>
         </div>
 

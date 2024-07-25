@@ -145,15 +145,15 @@
                         <tbody>
                             @foreach ($products as $product)
                                 <tr>
-                                    <td><a href="javascript:void(0);">{{ $product->name }}</a></td>
-                                    <td>SKU coming soon</td>
+                                    <td><a href="{{ route('products.edit',$product->id) }}">{{ $product->name }}</a></td>
+                                    <td>{{ $product->product_code ?? '' }}</td>
                                     <td>{{ $product->manufacture_date }}</td>
                                     <td class="action-table-data">
                                         <div class="edit-delete-action">
-                                            <a class="me-2 p-2" href="#">
+                                            <a class="me-2 p-2" href="{{ route('products.edit',$product->id) }}">
                                                 <i data-feather="edit" class="feather-edit"></i>
                                             </a>
-                                            <a class=" confirm-text p-2" href="javascript:void(0);">
+                                            <a class="p-2 delete-products" id="delete-products" data-id="{{ $product->id}}" href="#">
                                                 <i data-feather="trash-2" class="feather-trash-2"></i>
                                             </a>
                                         </div>
@@ -166,4 +166,44 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('.delete-products').click(function(e) {
+                e.preventDefault();
+                var productId = $(this).data('id');
+                var token = "{{ csrf_token() }}";
+                var url = "{{route('products.destroy','')}}/" + productId;
+        
+                if (confirm('Are you sure you want to delete this product?')) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            "_token": token,
+                        },
+                        success: function(response) {
+                            if(response.status == 'success') {
+                                if(response.product == 1) {
+                                    $('#restore-products[data-id="' + productId + '"]').show();
+                                    $('#delete-products[data-id="' + productId + '"]').hide();
+                                } else {
+                                    $('#restore-products[data-id="' + productId + '"]').hide();
+                                    $('#delete-products[data-id="' + productId + '"]').show();
+                                }
+                                // $('#product-row-' + productId).remove();
+                                // alert('Product deleted successfully');
+                                // window.location.reload();
+                            } else {
+                                alert('Something went wrong. Please try again.');
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                            alert('Something went wrong. Please try again.');
+                        }
+                    });
+                }
+            });
+        });
+        </script>
 @endsection
