@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+
 </head>
 
 <body>
@@ -308,10 +310,10 @@
                             <div class="col-lg-6 col-sm-12 col-12">
                                 <div class="input-blocks">
                                     <label>Customer Name</label>
-                                    <select id="my-select" style="width: 100%;" required>
+                                    <select name="order_customer_id" required>
                                         <option></option>
                                         @foreach($customers as $customer)
-                                            <option>{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
+                                            <option value="{{ $customer->id }}">{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -570,7 +572,6 @@
 
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
 
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
 
     <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalerts.min.js') }}"></script>
