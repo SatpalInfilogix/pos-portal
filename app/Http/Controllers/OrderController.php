@@ -18,7 +18,7 @@ class OrderController extends Controller
     public function POSSaleSubmission(Request $request){
         // Create Customer
         $invoice_id = $this->generateInvoice();
-        $customer = Customer::where('customer_name','=',$request->customer_name)->where('contact_number','=',$request->contact_number)->first();
+        $customer = Customer::where('contact_number','=',$request->contact_number)->first();
         if($customer){
            
             $customer->alternate_number = $request->alternate_number;

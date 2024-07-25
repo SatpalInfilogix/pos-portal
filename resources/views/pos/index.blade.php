@@ -314,7 +314,7 @@
         </div>
     </div>
 </div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 <script>
 
@@ -457,8 +457,7 @@
     $(document).ready(function() {
         $('#my-select').select2({
             placeholder: 'Enter Name',
-            allowClear: true,
-            multiple: true  // Enable multiple selection
+            allowClear: true
         });
         
         $('.select2-search__field').on('change',function(){

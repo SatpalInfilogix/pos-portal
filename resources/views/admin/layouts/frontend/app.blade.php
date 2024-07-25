@@ -478,6 +478,10 @@
                                 <div class="input-blocks">
                                     <label>Customer Name</label>
                                     <select id="my-select" style="width: 100%;" required>
+                                        <option></option>
+                                        @foreach($customers as $customer)
+                                            <option>{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
