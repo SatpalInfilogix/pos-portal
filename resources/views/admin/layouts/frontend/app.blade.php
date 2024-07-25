@@ -494,6 +494,7 @@
                 removeFromCart(productId);
                 console.log('Product removed from cart:', productId);
             } else {
+                console.log('asd'); 
                 // Add to cart (simulated)
                 productCard.classList.add('added-to-cart');
                 addToCart(productId);
@@ -512,10 +513,18 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log(response);
+                    console.log(response.cart);
                     console.log('Product added to cart:', response);
                     if (response.success == true) {
                             updateCartUI(response.cart);
+                            console.log(response.cart.formatted_grand_total);
+                            let cart = response.cart.formatted_sub_total;
+                            let amount = '<b>' + cart + '</b>';
+                            $('.totalAmount').html(amount);
+                            $('.grandTotal').html(response.cart.formatted_grand_total);
+                            $('.tax').html(response.cart.tax);
+                            $('.payable').html(response.cart.payable);
+                            $('.count-products').html(response.cart.count);
                         } else {
                             alert('Error');
                         }
@@ -528,9 +537,10 @@
 
         function updateCartUI(cartData) {
             var cartStr = '<div class="product-list-cart">';
-            if (cartData.products.length > 0) {
+            console.log(cartData.count);
+            if (cartData.count > 0) {
                 $.each(cartData.products, function(key, product) {
-                    cartStr += '<div class="product-list d-flex align-items-center justify-content-between">' +
+                    cartStr += '<div class="product-list d-flex align-items-center justify-content-between" id="product_' + product.id + '">' +
                                     '<div class="d-flex align-items-center product-info" data-bs-toggle="modal" data-bs-target="#products">' +
                                         '<a href="javascript:void(0);" class="img-bg">' +
                                             '<img src="' + product.image + '" alt="Products">' +
@@ -572,7 +582,7 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        console.log(response.cart.formatted_grand_total);
+                        console.log(response.cart);
                         let cart = response.cart.formatted_sub_total;
                         let amount = '<b>' + cart + '</b>';
                         $('.totalAmount').html(amount);
@@ -581,6 +591,7 @@
                         $('.payable').html(response.cart.payable);
                         $('#product-check_' + productId).removeClass('added-to-cart');
                         $('#product_' + productId).remove();
+                        $('.count-products').html(response.cart.count);
                         // $('.discount-option').html(response.discountOptions);
                     }
 

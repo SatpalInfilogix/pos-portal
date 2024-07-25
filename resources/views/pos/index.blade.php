@@ -167,8 +167,7 @@
             
                 <div class="product-added block-section">
                     <div class="head-text d-flex align-items-center justify-content-between">
-                        <h6 class="d-flex align-items-center mb-0">Product Added<span
-                                class="count">@if(session('cart')) {{ session('cart')['count'] }} @else 0 @endif</span></h6>
+                        <h6 class="d-flex align-items-center mb-0">Product Added<span class="count count-products">@if(session('cart')) {{ session('cart')['count'] }} @else 0 @endif</span></h6>
                         <a href="javascript:void(0);"
                             class="d-flex align-items-center text-danger"><span class="me-1"><i
                                     data-feather="x" class="feather-16"></i></span>Clear all</a>
@@ -380,6 +379,7 @@
                         $('.tax').html(response.cart.tax);
                         $('.payable').html(response.cart.payable);
                         $('.discount-option').html(response.discountOptions);
+                        $('.count-products').html(response.cart.count);
                     } else {
                         window.location.reload();
                     }
