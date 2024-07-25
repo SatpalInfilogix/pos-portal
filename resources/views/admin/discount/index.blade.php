@@ -12,7 +12,7 @@
             
             <div class="page-btn">
                 <a href="{{ route('discounts.create') }}" class="btn btn-added"><i data-feather="plus-circle"
-                        class="me-2"></i>Add New Discount</a>
+                        class="me-2"></i>Added Discount</a>
             </div>
             <!-- <div class="page-btn import">
                 <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
@@ -32,18 +32,18 @@
                         <thead>
                             <tr>
                                 <th>Sr. No</th>
-                                <th>Quantity</th>
-                                <th>Price</th>
-                                <th class="no-sort">Action</th>
+                                <th>Roles</th>
+                                <th>Discount</th>
+                                <!-- <th class="no-sort">Action</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($discounts as $key => $discount)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ $discount->quantity }} </td>
-                                    <td>{{ $discount->discount }}</td>
-                                    <td class="action-table-data">
+                                    <td>{{ ucwords($discount->roles) }} </td>
+                                    <td>{{ $discount->discount ? $discount->discount . '%' : '0%' }}</td>
+                                    <!-- <td class="action-table-data">
                                         <div class="edit-delete-action">
                                             <a class="me-2 p-2" href="{{ route('discounts.edit', $discount->id) }}">
                                                 <i data-feather="edit" class="feather-edit"></i>
@@ -56,7 +56,7 @@
                                                 <a class="me-2 p-2 delete-product" id="restore-discount" data-id="{{ $discount->id }}" style="display: none;">Restore</a>
                                             @endif
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                             @endforeach
                         </tbody>
@@ -65,7 +65,7 @@
             </div>
         </div>
     </div>
-    <script>
+    <!-- <script>
 $(document).ready(function() {
     $('.delete-product').click(function(e) {
         e.preventDefault();
@@ -104,6 +104,6 @@ $(document).ready(function() {
         }
     });
 });
-</script>
+</script> -->
 @endsection
 

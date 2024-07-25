@@ -86,26 +86,11 @@ class PosCartController extends Controller
         } else {
             $cart['grand_total'] = $sub_total;
             $cart['formatted_grand_total'] = '$' . number_format($sub_total, 2);
-            $cart['discount'] = 0; // Assuming discount should default to 0 if not set
-            $cart['discount_amount'] = 0; // Assuming discount amount should default to 0 if not set
+            $cart['discount'] = 0;
+            $cart['discount_amount'] = 0;
             $cart['tax'] = $cart['grand_total'] * 0.15;
             $cart['payable'] = $cart['grand_total'] + $cart['tax'];
         }
-
-        // $applied_coupons = $cart['discount'] ?? [];
-        // $cart['discount'] = $applied_coupons;
-        // if($cart['discount']) {
-        //     $sub_total -= $cart['discount_amount'];
-        //     $cart['grand_total'] =  $sub_total;
-        //     $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
-        //     $cart['discount'] = $cart['discount'];
-        //     $cart['discount_amount'] = $cart['discount_amount'];
-        // } else {
-        //     $cart['grand_total'] = $sub_total;
-        //     $cart['formatted_grand_total'] = '$'.(number_format($sub_total ,2));
-        //     $cart['discount'] = 0;
-        //     $cart['discount_amount'] = '$'. 0.00;
-        // }
 
         // Store updated cart in session
         session()->put('cart', $cart);

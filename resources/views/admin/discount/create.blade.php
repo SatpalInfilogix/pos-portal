@@ -24,25 +24,16 @@
                 <div class="card-body add-product pb-0">
                     <div class="accordion-card-one accordion" id="accordionExample">
                         <div class="accordion-item">
-                            <!-- <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Product Name</label>
-                                    <input name="product" type="text" class="form-control product-autocomplete" placeholder="Product">
-                                    <div class="autocomplete-items"></div>
+                            @foreach($roles as $role)
+                                <h5>{{ ucwords($role->name) }}</h5>
+                                <input type="hidden" name="role[]" value="{{ $role->name }}">
+                                <div class="row">
+                                    <div class="mb-3 add-product">
+                                        <label class="form-label">Discount</label></label>
+                                        <input type="text" name="discount[]" id="discount" class="form-control" value="{{ $role->discount }}">
+                                    </div>
                                 </div>
-                            </div> -->
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Quantity</label></label>
-                                    <input type="text" name="quantity" id="quantity" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Discount</label></label>
-                                    <input type="text" name="discount" id="discount" class="form-control">
-                                </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <div class="col-lg-12">
@@ -55,46 +46,4 @@
         </form>
     </div>
     @endsection
-<!-- @section('script')
-<script>
-    $(document).ready(function () {
-        $('body').on('input', '.product-autocomplete', function() {
-            var input = $(this).val().trim();
-            var autocompleteContainer = $(this).siblings('.autocomplete-items');
 
-            $.ajax({
-                type: 'GET',
-                url: '{{ route('autocomplete') }}',
-                data: { input: input },
-                success: function(response) {
-                    autocompleteContainer.empty();
-                    if (response.length > 0) {
-                        $.each(response, function(key, value) {
-                            var autocompleteItem = '<div class="autocomplete-item" data-id="' + value.id + '">' + value.name + '</div>';
-                            autocompleteContainer.append(autocompleteItem);
-                        });
-                        autocompleteContainer.show();
-                    } else {
-                        autocompleteContainer.hide();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Autocomplete AJAX error:', status, error);
-                }
-            });
-        });
-
-        // Function to handle click on autocomplete-item
-        $('body').on('click', '.autocomplete-item', function() {
-            var productName = $(this).text(); // Get the text of the selected item
-            var productId = $(this).data('id'); // Get the data-id attribute of the selected item
-            var inputField = $(this).closest('.mb-3').find('.product-autocomplete'); // Find the corresponding input field
-
-            inputField.val(productName); // Set the value of the input field to the selected product name
-            $(this).parent('.autocomplete-items').empty().hide(); // Hide the autocomplete dropdown
-        });
-    });
-
-
-</script>
-@endsection -->
