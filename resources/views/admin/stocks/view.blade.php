@@ -38,19 +38,13 @@
                             <div class="col-md-6">
                                 <address>
                                 <strong>Billed To:</strong><br>
-                                @php 
-                                    $from_location = str_replace(',', "\n", $invoiceDetails->to_location);
-                                @endphp
-                                 {!! nl2br(e($from_location)) !!}
+                                 {!! nl2br(e($invoiceDetails->to_location)) !!}
                                 </address>
                             </div>
                             <div class="col-md-6 text-right">
                                 <address>
-                                    @php 
-                                        $to_location = str_replace(',', "\n", $invoiceDetails->to_location);
-                                    @endphp
                                 <strong>Shipped To:</strong><br>
-                                {!! nl2br(e($to_location)) !!}
+                                {!! nl2br(e($invoiceDetails->to_location)) !!}
                                 </address>
                             </div>
                         </div>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Str;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 
@@ -36,6 +35,48 @@ class AdminUserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
+    public function getUsers(Request $request)
+    {
+        $maxItemsPerPage = 10;
+
+        $usersQuery = User::select(['id', 'first_name', 'last_name', 'email', 'phone_number'])
+                        ->with('roles');
+
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $usersQuery->where(function ($query) use ($searchValue) {
+                $query->where('first_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('last_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('email', 'like', '%' . $searchValue . '%');
+            });
+        }
+
+        if ($request->has('order')) {
+            $orderColumn = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumn]['data'];
+            $usersQuery->orderBy($column, $orderDirection);
+        }
+
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $users = $usersQuery->paginate($perPage);
+
+        $users->getCollection()->transform(function ($user) {
+            $roles = $user->roles->pluck('name')->implode(', ');
+            $user->role = $roles;
+            return $user;
+        });
+
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $users->total(),
+            "recordsFiltered" => $users->total(),
+            "data" => $users->items()
+        ]);
+    }
+
+
+
     public function create()
     {
         $roles = Role::latest()->get();
@@ -48,7 +89,6 @@ class AdminUserController extends Controller
         User::create([
             'first_name'    => $request->first_name,
             'last_name'     => $request->last_name,
-            'name'          => $request->first_name.' '.$request->last_name,
             'email'         => $request->email,
             'phone_number'  => $request->phone_number,
             'password'      => Hash::make('Admin@12345'),
@@ -56,6 +96,7 @@ class AdminUserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
+
 
     public function edit($id)
     {

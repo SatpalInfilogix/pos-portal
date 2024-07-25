@@ -48,8 +48,13 @@ class PosDashboardController extends Controller
         $roleId = auth()->user()->roles()->first()->id;
         $discount = Discount::where('roles', $roleId)->first();
 
-        $customers = Customer::all();
+        $customers = Customer::get()->unique('contact_number');
+
+        $completedOrders = Order::where('OrderStatus','completed')->get();
+        $onHoldOrders = Order::where('OrderStatus','onhold')->get();
+        $unPaidOrders = Order::where('OrderStatus','unpaid')->get();
         
-        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discount', 'customers'));
+        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discounts', 'customers','completedOrders','onHoldOrders','unPaidOrders'));
     }
+
 }

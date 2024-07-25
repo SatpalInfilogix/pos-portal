@@ -157,3 +157,12 @@ h3.customer-name {
     margin: 15px auto;
     text-transform: capitalize;
 }
+.add-new-customer{
+    padding: 5px;
+    font-size: 10px;
+}
+a.chosen-single.chosen-single-with-deselect {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}

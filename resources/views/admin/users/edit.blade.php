@@ -4,15 +4,16 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4>New User</h4>
-                    <h6>Create new user</h6>
+                    <h4>Edit User</h4>
                 </div>
             </div>
             <ul class="table-top-head">
                 <li>
                     <div class="page-btn">
-                        <a href="{{ route('users.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to user</a>
+                        <a href="{{ route('users.index') }}" class="btn btn-secondary">
+                            <i data-feather="arrow-left" class="me-2"></i>
+                            Back to user
+                        </a>
                     </div>
                 </li>
             </ul>
@@ -21,29 +22,31 @@
         <form action="{{ route('users.update', $user->id) }}" method="post" enctype="multipart/form-data" id='user-form'>
             @csrf
             <div class="card">
-                <div class="card-body add-product pb-0">
+                <div class="card-body pb-0">
                     <div class="accordion-card-one accordion" id="accordionExample">
                         <div class="accordion-item">
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">First Name</label>
                                     <input type="text" name="first_name" class="form-control" value="{{ $user->first_name }}">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Last Name</label>
                                     <input type="text" name="last_name" class="form-control" value="{{ $user->last_name }}">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Email</label>
                                     <input type="email" name="email" class="form-control" value="{{ $user->email }}" readonly>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="number" name="phone_number" class="form-control" value="{{ $user->phone_number }}">
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="mb-3">
                                     <label class="form-label">Role</label>
                                     <select name="role" id="role" class="form-control" disabled>
                                         <option value="" selected disabled>Select Role</option>
@@ -51,12 +54,6 @@
                                             <option value="{{$role->name}}" @selected( $user->roles->pluck('name')[0] == $role->name)>{{ $role->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Phone Number</label>
-                                    <input type="text" name="phone_number" class="form-control" value="{{ $user->phone_number }}">
                                 </div>
                             </div>
                         </div>
@@ -90,13 +87,13 @@
                 phone_number: "Please enter phone_number",
                 role: "Please select role"
             },
-            errorClass: "text-danger f-12",
+            errorClass: "invalid-feedback",
             errorElement: "span",
             highlight: function(element, errorClass, validClass) {
-                $(element).addClass("form-control-danger");
+                $(element).addClass("is-invalid");
             },
             unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass("form-control-danger");
+                $(element).removeClass("is-invalid");
             },
             submitHandler: function(form) {
                 form.submit();

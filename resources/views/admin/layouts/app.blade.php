@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="{{ asset('assets/css/default/fontawesome/css/all.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap5.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/page.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/feather.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/icofont.css') }}">
@@ -66,8 +66,7 @@
     <script type="a2ed06078a827c6500801d98-text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('assets/js/waves.min.js') }}" type="a2ed06078a827c6500801d98-text/javascript"></script>
     <script type="a2ed06078a827c6500801d98-text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script> -->
-    <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}" type="186635e1e8d6037529661056-text/javascript"></script>
-<script src="{{ asset('assets/js/dataTables.bootstrap5.min.js') }}" type="186635e1e8d6037529661056-text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     @yield('script')
 </body>
 </html>

@@ -116,10 +116,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::delete('/customers/{id}', [AdminCustomerController::class, 'destroy'])->name('customers.destroy');
         /********************** End Customers Routes  **********************/
 
-         /********************** POS Customers Routes  **********************/
-         Route::get('/customers/{customer_id}', [PosCustomerController::class, 'customerDetailsAutoFill'])->name('customers.auto_fill');
-         /********************** POS Customers Routes End **********************/
-
         /********************** Invoice Routes  **********************/
         Route::post('/pos-sale-submission', [OrderController::class, 'POSSaleSubmission'])->name('sale.submission');
         Route::get('/search-invoice/{invoice_id}', [OrderController::class, 'searchInvoice'])->name('search.invoice');
@@ -150,6 +146,7 @@ Route::post('update-cart', [PosCartController::class, 'update'])->name('update-c
 Route::post('discount', [PosCartController::class, 'discountApply'])->name('discount');
 Route::post('/set-invoice-for-inventory-return', [InventoryReturnController::class, 'setInvoice'])->name('set-invoice-for-inventory-return');
 
+Route::post('/get-users', [AdminUserController::class, 'getUsers'])->name('get-users');
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');
 
 
