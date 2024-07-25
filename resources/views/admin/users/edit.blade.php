@@ -22,35 +22,31 @@
         <form action="{{ route('users.update', $user->id) }}" method="post" enctype="multipart/form-data" id='user-form'>
             @csrf
             <div class="card">
-                <div class="card-body add-product pb-0">
+                <div class="card-body pb-0">
                     <div class="accordion-card-one accordion" id="accordionExample">
                         <div class="accordion-item">
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">First Name</label>
                                     <input type="text" name="first_name" class="form-control" value="{{ $user->first_name }}">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Last Name</label>
                                     <input type="text" name="last_name" class="form-control" value="{{ $user->last_name }}">
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">User Name</label>
-                                    <input type="text" name="name" class="form-control" value="{{ $user->name }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Email</label>
                                     <input type="email" name="email" class="form-control" value="{{ $user->email }}" readonly>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="number" name="phone_number" class="form-control" value="{{ $user->phone_number }}">
+                                </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="mb-3">
                                     <label class="form-label">Role</label>
                                     <select name="role" id="role" class="form-control" disabled>
                                         <option value="" selected disabled>Select Role</option>
@@ -58,12 +54,6 @@
                                             <option value="{{$role->name}}" @selected( $user->roles->pluck('name')[0] == $role->name)>{{ $role->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Phone Number</label>
-                                    <input type="text" name="phone_number" class="form-control" value="{{ $user->phone_number }}">
                                 </div>
                             </div>
                         </div>

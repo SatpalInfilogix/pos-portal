@@ -6,13 +6,15 @@
         <div class="add-item d-flex">
             <div class="page-title">
                 <h4>User List</h4>
-                <h6>Manage your user</h6>
+                <h6>Manage your users</h6>
             </div>
         </div>
 
         <div class="page-btn">
-            <a href="{{ route('users.create') }}" class="btn btn-added"><i data-feather="plus-circle"
-                    class="me-2"></i>Add New User</a>
+            <a href="{{ route('users.create') }}" class="btn btn-added">
+                <i data-feather="plus-circle" class="me-2"></i>
+                Add New User
+            </a>
         </div>
         <!-- <div class="page-btn import">
                 <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
@@ -32,7 +34,8 @@
                     <thead>
                         <tr>
                             <th>Sr. No</th>
-                            <th>Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Phone Number</th>
@@ -43,14 +46,11 @@
                         @foreach($users as $key => $user)
                         <tr>
                             <td>{{ ++$key }}</td>
-                            <td>{{ $user->name }} </td>
+                            <td>{{ $user->first_name }} </td>
+                            <td>{{ $user->last_name }} </td>
                             <td>{{ $user->email }}</td>
-                            <td>
-                                @if ($user->roles->isNotEmpty())
-                                {{ $user->roles->pluck('name')[0] }}
-                                @endif
-                            </td>
-                            <td>{{ optional($user)->phone_number }}</td>
+                            <td>{{ auth()->user()->getRoleNames()->first() }}</td>
+                            <td>{{ $user->phone_number }}</td>
                             <td class="action-table-data">
                                 <div class="edit-delete-action">
                                     <a class="me-2 p-2" href="{{ route('users.edit', $user->id) }}">
