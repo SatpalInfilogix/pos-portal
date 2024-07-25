@@ -157,7 +157,7 @@
             </div>
         </div>
         <div class="col-md-12 col-lg-4 ps-0">
-            <aside class="product-order-list">
+            <aside class="product-order-list" data-max-discount="{{ $discount->discount }}">
                 {{-- <div class="head d-flex align-items-center justify-content-between w-100">
                     <div class>
                         <h5>Order List</h5>
@@ -227,12 +227,8 @@
                                             $discountValue = session('cart')['discount_percentage'];
                                         }
                                     @endphp
-                                    <select class="select discount-option" id="discountSelect">
-                                        <option selected disabled>Select Discount</option>
-                                        @foreach($discounts as $key =>$discount)
-                                            <option value="{{ $discount->discount }}" @selected($discount->discount == $discountValue)>{{$discount->discount}} %</option>
-                                        @endforeach
-                                    </select>
+                                    <input type="number" class="form-control" name="discount" id="discountSelect" min="0" data-max="{{ $discount->discount }}" value="{{ $discountValue }}">
+                                    <div class="text-danger" id="discountError"></div>
                                 </td>
                             </tr>
                             <tr>
@@ -288,7 +284,7 @@
                                         $cart = session('cart');
                                         $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                     @endphp
-                                    $ <span class="payable">{{ $payable }}</span>
+                                     <span class="payable">${{ $payable }}</span>
                     </a>
                 </div>
                 <div class="d-grid btn-block">
@@ -315,35 +311,63 @@
 </div>
 
 <script>
-    $(function() {
-        $('#discountSelect').on('change', function() {
-            var discount = this.value;
-            console.log(discount);
-            $.ajax({
-                    url: '{{ route('discount') }}',
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        discount: discount,
-                    },
-                    success: function(response) {
-                        console.log(response.cart);
-                        if (response.success == true) {
-                            let grandTotal = response.cart.formatted_grand_total;
-                            let discountAmount = response.cart.discount_amount;
-                            $('.discountAmount').html(discountAmount);
-                            $('.grandTotal').html(grandTotal);
-                            $('.tax').html(response.cart.tax);
-                            $('.payable').html(response.cart.payable);
-                            // $('.totalAmount').html(amount);
-                            // $('.discountPercentage').html('Total Discount (' + discount + ')');
-                        } else {
-                            $('.error-message').html(response.message);
-                        }
-                    },
-                });
+    $(document).ready(function() {
+        $('#discountSelect').on('input', function() {
+            var discountValue = $(this).val();
+            var maxDiscount = parseFloat($(this).data('max'));
+            // Clear previous error message
+            $('#discountError').text('');
+
+            // Validate discount value
+            if (discountValue === '') {
+                $('#discountError').text('Please enter a discount value.');
+            } else if (isNaN(discountValue)) {
+                $('#discountError').text('Discount must be a number.');
+            } else if (discountValue < 0 || discountValue > maxDiscount) {
+                $('#discountError').text('Maximum discount can be ' + maxDiscount + '.');
+                // Limit discountValue to maxDiscount
+                discountValue = Math.min(maxDiscount, discountValue);
+                // Update the input field value
+                $(this).val(discountValue);
+            }
         });
     });
+    $(function() {
+        $('#discountSelect').on('keyup', function() {
+            var discountValue = $(this).val();
+            $.ajax({
+                url: '{{ route('discount') }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    discount: discountValue,
+                },
+                success: function(response) {
+                    console.log(response.cart);
+                    if (response.success == true) {
+                        let grandTotal = response.cart.formatted_grand_total;
+                        $('.grandTotal').html(grandTotal);
+
+                        let discountAmount = response.cart.discount_amount;
+                        let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
+                        $('.discountAmount').html(formatedDiscountAmount);
+                        
+                        let tax = response.cart.tax;
+                        let formatedTax = '$' + tax.toFixed(2);
+                        $('.tax').html(formatedTax);
+
+                        let payable = response.cart.payable;
+                        let formatedPayable = '$' + payable.toFixed(2);
+                        $('.payable').html(formatedPayable);
+                    } else {
+                        $('.error-message').html(response.message);
+                    }
+                },
+            });
+        });
+    });
+
+ 
 
     $(document).on('click', '.close-cart', function() {
         alert('as');

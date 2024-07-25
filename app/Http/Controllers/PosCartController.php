@@ -283,17 +283,17 @@ class PosCartController extends Controller
                 );
             }
     
-            $discounts = Discount::where('quantity', '<=', $cart_quantity)->get();
-            $discountOptions = '<option selected disabled>Select Discount</option>';
-            if ($discounts->count() > 0) {
-                foreach ($discounts as $discount) {
-                    $discountOptions .= '<option value="' . $discount->discount . '">' . $discount->discount . '%</option>';
-                }
-            }
+            // $discounts = Discount::where('quantity', '<=', $cart_quantity)->get();
+            // $discountOptions = '<option selected disabled>Select Discount</option>';
+            // if ($discounts->count() > 0) {
+            //     foreach ($discounts as $discount) {
+            //         $discountOptions .= '<option value="' . $discount->discount . '">' . $discount->discount . '%</option>';
+            //     }
+            // }
             return response()->json([
                 'success' => true,
                 'cart' => $cart,
-                'discountOptions' => $discountOptions,
+                // 'discountOptions' => $discountOptions,
                 'message' => 'Cart quantity updated successfully.'
             ]);
         } else {
@@ -306,48 +306,56 @@ class PosCartController extends Controller
 
     public function discountApply(Request $request)
     {
-        $discount = Discount::where('discount', $request->discount)->first();
+        $roleId = auth()->user()->roles()->first()->id;
+        $discount = Discount::where('roles', $roleId)->first();
         if($discount) {
-            $cart = session()->get('cart');
-            if(session('cart')['discount']) {
-                unset($cart['discount']);
-                $cart['discount'] = isset($cart['discount']) ? $cart['discount'] : [];
-                 $cart['discount_percentage'] = $request->discount;
-                $cart['discount_amount'] = isset($cart['discount_amount']) ? $cart['discount_amount'] : 0;
-                $cart['grand_total'] = $cart['sub_total'];
-                $cart['formatted_grand_total'] = '$'. Number_Format( $cart['sub_total'] , 2);
-            }
-            if(session('cart')['products']) {
-                $discountAmount = ($request->discount / 100) * $cart['sub_total'];
-                $cart['grand_total'] -= $discountAmount;
-                $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
-                $cart['discount_amount'] = $discountAmount;
-
-                $cart['discount'] = [
-                    'id'              => $discount->id,
-                    'discount_percentage'=> $request->discount,
-                    'discount_amount' => $discountAmount,
-                ];
-
-                $cart['tax'] = $cart['grand_total'] * 0.15;
-                $cart['payable'] = $cart['grand_total'] + $cart['tax'];
-
-                session()->put('cart', $cart);
-                if (Auth::check()) {
-                    Cart::updateOrCreate(
-                        ['user_id' => Auth::id()],
-                        ['cart' => json_encode($cart)]
-                    );
+            if($discount >= $request->discount) {
+                $cart = session()->get('cart');
+                if(session('cart')['discount']) {
+                    unset($cart['discount']);
+                    $cart['discount'] = isset($cart['discount']) ? $cart['discount'] : [];
+                    $cart['discount_percentage'] = $request->discount;
+                    $cart['discount_amount'] = isset($cart['discount_amount']) ? $cart['discount_amount'] : 0;
+                    $cart['grand_total'] = $cart['sub_total'];
+                    $cart['formatted_grand_total'] = '$'. Number_Format( $cart['sub_total'] , 2);
                 }
-                return response()->json([
-                    'success' => true,
-                    'cart'    => $cart,
-                    'message' => 'Discount applied'
-                ]);
+                if(session('cart')['products']) {
+                    $discountAmount = ($request->discount / 100) * $cart['sub_total'];
+                    $cart['grand_total'] -= $discountAmount;
+                    $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
+                    $cart['discount_amount'] = $discountAmount;
+
+                    $cart['discount'] = [
+                        'id'              => $discount->id,
+                        'discount_percentage'=> $request->discount,
+                        'discount_amount' => $discountAmount,
+                    ];
+
+                    $cart['tax'] = $cart['grand_total'] * 0.15;
+                    $cart['payable'] = $cart['grand_total'] + $cart['tax'];
+
+                    session()->put('cart', $cart);
+                    if (Auth::check()) {
+                        Cart::updateOrCreate(
+                            ['user_id' => Auth::id()],
+                            ['cart' => json_encode($cart)]
+                        );
+                    }
+                    return response()->json([
+                        'success' => true,
+                        'cart'    => $cart,
+                        'message' => 'Discount applied'
+                    ]);
+                } else {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'cart item is empty.'
+                    ]);
+                }
             } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'cart item is empty.'
+                    'message' => 'Discount does not exist or is not valid'
                 ]);
             }
         } else {

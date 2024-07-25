@@ -41,7 +41,7 @@
                             @foreach($discounts as $key => $discount)
                                 <tr>
                                     <td>{{ ++$key }}</td>
-                                    <td>{{ ucwords($discount->roles) }} </td>
+                                    <td>{{ ucwords($discount->roleName) }} </td>
                                     <td>{{ $discount->discount ? $discount->discount . '%' : '0%' }}</td>
                                     <!-- <td class="action-table-data">
                                         <div class="edit-delete-action">
