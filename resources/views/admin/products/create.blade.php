@@ -179,13 +179,13 @@
                 image: "Please select image",
                 manufacture_date: "Please enter the manufacture date",
             },
-            errorClass: "text-danger f-12",
+            errorClass: "invalid-feedback",
             errorElement: "span",
             highlight: function(element, errorClass, validClass) {
-                $(element).addClass("form-control-danger");
+                $(element).addClass("is-invalid");
             },
             unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass("form-control-danger");
+                $(element).removeClass("is-invalid");
             },
             submitHandler: function(form) {
                 form.submit();
