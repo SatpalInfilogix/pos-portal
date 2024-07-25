@@ -87,7 +87,7 @@
                                 <img src="{{ $profile_picture }}" alt="" class="img-fluid">
                             </span>
                             <span class="user-detail">
-                                <span class="user-name">{{ auth()->user()->name }}</span>
+                                <span class="user-name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>
                                 <span class="user-role">{{ auth()->user()->getRoleNames()->first() }}</span>
                             </span>
                         </span>
@@ -100,7 +100,7 @@
                                     <span class="status online"></span>
                                 </span>
                                 <div class="profilesets">
-                                    <h6>{{ auth()->user()->name }}</h6>
+                                    <h6>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h6>
                                     <h5>{{ auth()->user()->getRoleNames()->first() }}</h5>
                                 </div>
                             </div>

@@ -48,7 +48,6 @@ class AdminUserController extends Controller
         User::create([
             'first_name'    => $request->first_name,
             'last_name'     => $request->last_name,
-            'name'          => $request->first_name.' '.$request->last_name,
             'email'         => $request->email,
             'phone_number'  => $request->phone_number,
             'password'      => Hash::make('Admin@12345'),

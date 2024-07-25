@@ -44,24 +44,13 @@
                         <img src="{{ $profile_picture }}" alt="" class="img-fluid">
                     </span>
                     <span class="user-detail">
-                        <span class="user-name">{{ auth()->user()->name }}</span>
+                        <span class="user-name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>
                         <span class="user-role">{{ auth()->user()->getRoleNames()->first() }}</span>
                     </span>
                 </span>
             </a>
             <div class="dropdown-menu menu-drop-user">
                 <div class="profilename">
-                    <div class="profileset">
-                        <span class="user-img">
-                            <img src="{{ $profile_picture }}" alt="">
-                            <span class="status online"></span>
-                        </span>
-                        <div class="profilesets">
-                            <h6>{{ auth()->user()->name }}</h6>
-                            <h5>{{ auth()->user()->getRoleNames()->first() }}</h5>
-                        </div>
-                    </div>
-                    <hr class="m-0">
                     <a class="dropdown-item" href="{{ route('profile.index') }}"> 
                         <i class="me-2" data-feather="user"></i>
                         My Profile

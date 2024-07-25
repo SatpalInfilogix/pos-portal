@@ -4,15 +4,16 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4>New User</h4>
-                    <h6>Create new user</h6>
+                    <h4>Edit User</h4>
                 </div>
             </div>
             <ul class="table-top-head">
                 <li>
                     <div class="page-btn">
-                        <a href="{{ route('users.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to user</a>
+                        <a href="{{ route('users.index') }}" class="btn btn-secondary">
+                            <i data-feather="arrow-left" class="me-2"></i>
+                            Back to user
+                        </a>
                     </div>
                 </li>
             </ul>
@@ -34,6 +35,12 @@
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Last Name</label>
                                     <input type="text" name="last_name" class="form-control" value="{{ $user->last_name }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="mb-3 add-product">
+                                    <label class="form-label">User Name</label>
+                                    <input type="text" name="name" class="form-control" value="{{ $user->name }}">
                                 </div>
                             </div>
                             <div class="row">
