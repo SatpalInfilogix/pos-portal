@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
-class AdminUserSeeder extends Seeder
+class UserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -29,7 +29,7 @@ class AdminUserSeeder extends Seeder
         ]);
 
         // Assign 'super admin' role to the super admin user
-        $superAdminRole = Role::where('name', 'super admin')->first();
+        $superAdminRole = Role::where('name', 'Super Admin')->first();
         $superAdmin->assignRole($superAdminRole);
 
         // Create admin user
@@ -44,7 +44,7 @@ class AdminUserSeeder extends Seeder
         ]);
         
         // Assign 'admin' role to the admin user
-        $adminRole = Role::where('name', 'admin')->first();
+        $adminRole = Role::where('name', 'Admin')->first();
         $admin->assignRole($adminRole);
 
         // Create manager user
@@ -59,7 +59,7 @@ class AdminUserSeeder extends Seeder
         ]);
         
         // Assign 'manager' role to the manager user
-        $managerRole = Role::where('name', 'manager')->first();
+        $managerRole = Role::where('name', 'Manager')->first();
         $manager->assignRole($managerRole);
 
         // Create salesperson user
@@ -74,7 +74,7 @@ class AdminUserSeeder extends Seeder
         ]);
         
         // Assign 'salesperson' role to the salesperson user
-        $salespersonRole = Role::where('name', 'salesperson')->first();
+        $salespersonRole = Role::where('name', 'Sales Person')->first();
         $salesperson->assignRole($salespersonRole);
 
         $this->command->info('Users created with roles and permissions!');
