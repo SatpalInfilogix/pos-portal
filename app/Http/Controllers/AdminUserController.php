@@ -37,7 +37,7 @@ class AdminUserController extends Controller
 
     public function getUsers(Request $request)
     {
-        $maxItemsPerPage = 10; // Example: You can adjust this value as needed
+        $maxItemsPerPage = 10;
 
         $usersQuery = User::select(['id', 'first_name', 'last_name', 'email', 'phone_number'])
                         ->with('roles');
