@@ -26,7 +26,7 @@
                         <div class="accordion-item">
                             @foreach($roles as $role)
                                 <h5>{{ ucwords($role->name) }}</h5>
-                                <input type="hidden" name="role[]" value="{{ $role->name }}">
+                                <input type="hidden" name="role[]" value="{{ $role->id }}">
                                 <div class="row">
                                     <div class="mb-3 add-product">
                                         <label class="form-label">Discount</label></label>

@@ -44,10 +44,12 @@ class PosDashboardController extends Controller
             }
         }
 
-        $discounts = Discount::where('quantity', '<', $cart_quantity)->get();
+        // $discounts = Discount::where('quantity', '<', $cart_quantity)->get();
+        $roleId = auth()->user()->roles()->first()->id;
+        $discount = Discount::where('roles', $roleId)->first();
 
         $customers = Customer::all();
         
-        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discounts', 'customers'));
+        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discount', 'customers'));
     }
 }

@@ -14,6 +14,11 @@ class AdminDiscountController extends Controller
     public function index()
     {
         $discounts = Discount::with('product')->latest()->get();
+        foreach($discounts as $key => $discount)
+        {
+            $roles = Role::where('id', $discount->roles)->first();
+            $discounts[$key]['roleName'] =  $roles->name;
+        }
 
         return view('admin.discount.index', compact('discounts'));
     }
@@ -22,7 +27,7 @@ class AdminDiscountController extends Controller
     {
         $roles = Role::where('name', '!=', 'super admin')->latest()->get();
         foreach($roles as $key => $role) {
-            $discount = Discount::where('roles', $role->name)->first();
+            $discount = Discount::where('roles', $role->id)->first();
             $roles[$key]['discount'] = $discount->discount ?? ' ';
         }
         return view('admin.discount.create', compact('roles'));
