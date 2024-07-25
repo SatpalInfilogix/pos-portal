@@ -455,11 +455,41 @@
     });
 
     $(document).ready(function() {
-        $('[name="order_customer_id"]').select2({
-            placeholder: 'Enter Name',
-            allowClear: true,
-            search: true
+        $('[name="order_customer_id"]').chosen({
+            placeholder_text_single: 'Enter Name',
+            allow_single_deselect: true,
+            no_results_text: 'No results matched <a class="btn btn-info add-new-customer" href="#">Add New</a>'
         });
+    });
+    // Add new customer in dropdown
+    $(document).on('click','a.add-new-customer',function(e){
+        e.preventDefault();
+        var newOption = $('.chosen-search-input').val(); 
+        if (newOption) {
+            var newOptionElement = new Option(newOption, newOption, true, true);
+            $('[name="order_customer_id"]').append(newOptionElement);
+
+            $('[name="order_customer_id"]').trigger('chosen:updated');
+
+            $('[name="order_customer_id"]').val(newOption).trigger('chosen:updated');
+
+            $('#new-option-input').val('');
+            $('#place-order').find('form').trigger('reset'); 
+        } else {
+            alert('Please enter a valid option.');
+        }
+    });
+    $(document).on('click','.chosen-results .active-result',function(){
+
+        var contact_number = $('[name="order_customer_id"]').find(':selected').data('customer-contact'); 
+        var alternate_number = $('[name="order_customer_id"]').find(':selected').data('customer-alternate'); 
+        var shipping_address = $('[name="order_customer_id"]').find(':selected').data('customer-shipping'); 
+        var billing_address = $('[name="order_customer_id"]').find(':selected').data('customer-billing'); 
+        $('[name="contact_number"]').val(contact_number);
+        $('[name="alternate_number"]').val(alternate_number);
+        $('[name="shipping_address"]').val(shipping_address);
+        $('[name="billing_address"]').val(billing_address);
+        
     });
 
     $(document).on('submit','form#place-order',function(event){
@@ -469,7 +499,7 @@
             alert('Please Select Payment Method');
             return false;
         }
-        let customer_name = $('[name="order_customer_id"]').val();
+        let customer_name = $('[name="order_customer_id"]').find(':selected').val();
         let vehicle_number = $('[name="vehicle_number"]').val();
         let contact_number = $('[name="contact_number"]').val();
         let alternate_number = $('[name="alternate_number"]').val();
@@ -506,7 +536,8 @@
                         setTimeout(() => {
                             window.focus();
                         }, 100);
-                    }                    
+                    }
+                    $('[name="order_customer_id"]').val('').trigger('chosen:updated');                    
                     $("#place-order").modal("hide");
                     $('#place-order').find('form').trigger('reset'); 
                 }
@@ -526,6 +557,14 @@
         }else{
             $('[name="change_amount"]').val(0);
         }   
+    });
+    $(document).on('keyup','[name="searchPaidOrder"]',function(){
+        var invoice_number = $(this).val().toUpperCase();
+        $('div.default-cover').hide();
+        $('[data-invoice-id="'+invoice_number+'"]').show();
+        if(invoice_number == ''){
+            $('div.default-cover').show();
+        }
     });
 </script>
 @endsection

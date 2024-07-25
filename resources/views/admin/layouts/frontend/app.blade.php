@@ -10,12 +10,12 @@
         href="https://dreamspos.dreamstechnologies.com/html/template/assets/img/favicon.png">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
+    
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/animate.css') }}">
-
-    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/dataTables.bootstrap5.min.css') }}">
 
@@ -29,9 +29,11 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
+    <link href="{{ asset('assets/css/chosen.min.css') }}" rel="stylesheet" />
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <script src="{{ asset('assets/js/chosen.jquery.min.js') }}"></script>
 
 </head>
 
@@ -305,10 +307,16 @@
                             <div class="col-lg-6 col-sm-12 col-12">
                                 <div class="input-blocks">
                                     <label>Customer Name</label>
-                                    <select name="order_customer_id" required>
+                                    <select name="order_customer_id" class="form-control chosen-select" required>
                                         <option></option>
                                         @foreach($customers as $customer)
-                                            <option value="{{ $customer->id }}">{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
+                                            <option value="{{ $customer->customer_name }}" 
+                                                data-customer-id="{{ $customer->id }}"
+                                                data-customer-contact = "{{ $customer->contact_number }}"
+                                                data-customer-alternate = "{{ $customer->alternate_number }}"
+                                                data-customer-billing = "{{ $customer->billing_address }}"
+                                                data-customer-shipping = "{{ $customer->shipping_address }}" 
+                                            >{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
                                         @endforeach
                                     </select>
                                 </div>

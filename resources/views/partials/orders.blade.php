@@ -30,98 +30,13 @@
                             aria-labelledby="onhold-tab">
                             <div class="table-top">
                                 <div class="search-set w-100 search-order">
-                                    <div class="search-input w-100">
-                                        <a class="btn btn-searchset d-flex align-items-center h-100"><img
-                                                src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/search-white.svg"
-                                                alt="img"></a>
-                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search">
                                 </div>
                             </div>
                             <div class="order-body">
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #666659</span>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr class="mb-3">
-                                                    <td>Cashier</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">admin</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Customer</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">Botsford</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr>
-                                                    <td>Total</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">$900</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">29-08-2023 13:39:11</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <p class="p-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-sm-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-danger btn-icon flex-fill">Products</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
-                                </div>
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #666660</span>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr class="mb-3">
-                                                    <td>Cashier</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">admin</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Customer</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">Smith</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr>
-                                                    <td>Total</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">$15000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">30-08-2023 15:59:11</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <p class="p-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-danger btn-icon flex-fill">Products</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
-                                </div>
+                                @foreach ($onHoldOrders as $onHoldOrder)
                                 <div class="default-cover p-4">
-                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #666661</span>
+                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $onHoldOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
                                             <table>
@@ -133,7 +48,7 @@
                                                 <tr>
                                                     <td>Customer</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">John David</td>
+                                                    <td class="text">{{ $onHoldOrder->CustomerName }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -142,40 +57,38 @@
                                                 <tr>
                                                     <td>Total</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">$2000</td>
+                                                    <td class="text">{{ $onHoldOrder->TotalAmount }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">01-09-2023 13:15:00</td>
+                                                    <td class="text">{{ $onHoldOrder->created_at }}</td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
                                     <p class="p-4 mb-4">Customer need to recheck the product once</p>
                                     <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
+                                        <a href="{{ route('sales.view',$onHoldOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-danger btn-icon flex-fill">Products</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-success btn-icon flex-fill">Print</a>
                                     </div>
                                 </div>
+                                @endforeach
                             </div>
                         </div>
                         <div class="tab-pane fade" id="unpaid" role="tabpanel">
                             <div class="table-top">
                                 <div class="search-set w-100 search-order">
-                                    <div class="search-input">
-                                        <a class="btn btn-searchset d-flex align-items-center h-100"><img
-                                                src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/search-white.svg"
-                                                alt="img"></a>
-                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search">
                                 </div>
                             </div>
                             <div class="order-body">
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-info d-inline-block mb-4">Order ID : #666662</span>
+                                @foreach ($unPaidOrders as $unPaidOrder)
+                                <div class="default-cover p-4">
+                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $unPaidOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
                                             <table>
@@ -187,7 +100,7 @@
                                                 <tr>
                                                     <td>Customer</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">Anastasia</td>
+                                                    <td class="text">{{ $unPaidOrder->CustomerName }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -196,122 +109,38 @@
                                                 <tr>
                                                     <td>Total</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">$2500</td>
+                                                    <td class="text">{{ $unPaidOrder->TotalAmount }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">10-09-2023 17:15:11</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <p class="p-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-danger btn-icon flex-fill">Products</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
-                                </div>
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-info d-inline-block mb-4">Order ID : #666663</span>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr class="mb-3">
-                                                    <td>Cashier</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">admin</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Customer</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">Lucia</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr>
-                                                    <td>Total</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">$1500</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">11-09-2023 14:50:11</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <p class="p-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-danger btn-icon flex-fill">Products</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
-                                </div>
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-info d-inline-block mb-4">Order ID : #666664</span>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr class="mb-3">
-                                                    <td>Cashier</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">admin</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Customer</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">Diego</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr>
-                                                    <td>Total</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">$30000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">12-09-2023 17:22:11</td>
+                                                    <td class="text">{{ $unPaidOrder->created_at }}</td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
                                     <p class="p-4 mb-4">Customer need to recheck the product once</p>
                                     <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
+                                        <a href="{{ route('sales.view',$unPaidOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-danger btn-icon flex-fill">Products</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-success btn-icon flex-fill">Print</a>
                                     </div>
                                 </div>
+                                @endforeach
                             </div>
                         </div>
                         <div class="tab-pane fade" id="paid" role="tabpanel">
                             <div class="table-top">
                                 <div class="search-set w-100 search-order">
-                                    <div class="search-input">
-                                        <a class="btn btn-searchset d-flex align-items-center h-100"><img
-                                                src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/search-white.svg"
-                                                alt="img"></a>
-                                    </div>
+                                    <input type="text" class="form-control" placeholder="Search" name="searchPaidOrder">
                                 </div>
                             </div>
                             <div class="order-body">
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-primary d-inline-block mb-4">Order ID : #666665</span>
+                                @foreach ($completedOrders as $completedOrder)
+                                <div class="default-cover p-4" data-invoice-id="{{ $completedOrder->OrderID}}">
+                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $completedOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
                                             <table>
@@ -323,7 +152,7 @@
                                                 <tr>
                                                     <td>Customer</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">Hugo</td>
+                                                    <td class="text">{{ $completedOrder->CustomerName }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -332,107 +161,26 @@
                                                 <tr>
                                                     <td>Total</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">$5000</td>
+                                                    <td class="text">{{ $completedOrder->TotalAmount }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">13-09-2023 19:39:11</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <p class="p-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-danger btn-icon flex-fill">Products</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
-                                </div>
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-primary d-inline-block mb-4">Order ID : #666666</span>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr class="mb-3">
-                                                    <td>Cashier</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">admin</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Customer</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">Antonio</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr>
-                                                    <td>Total</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">$7000</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">15-09-2023 18:39:11</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <p class="p-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-danger btn-icon flex-fill">Products</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
-                                </div>
-                                <div class="default-cover p-4 mb-4">
-                                    <span class="badge bg-primary d-inline-block mb-4">Order ID : #666667</span>
-                                    <div class="row">
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr class="mb-3">
-                                                    <td>Cashier</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">admin</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Customer</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">MacQuoid</td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                        <div class="col-sm-12 col-md-6 record mb-3">
-                                            <table>
-                                                <tr>
-                                                    <td>Total</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">$7050</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Date</td>
-                                                    <td class="colon">:</td>
-                                                    <td class="text">17-09-2023 19:39:11</td>
+                                                    <td class="text">{{ $completedOrder->created_at }}</td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
                                     <p class="p-4 mb-4">Customer need to recheck the product once</p>
                                     <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill">Open</a>
+                                        <a href="{{ route('sales.view',$completedOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-danger btn-icon flex-fill">Products</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-success btn-icon flex-fill">Print</a>
                                     </div>
                                 </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

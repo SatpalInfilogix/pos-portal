@@ -116,10 +116,6 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::delete('/customers/{id}', [AdminCustomerController::class, 'destroy'])->name('customers.destroy');
         /********************** End Customers Routes  **********************/
 
-         /********************** POS Customers Routes  **********************/
-         Route::get('/customers/{customer_id}', [PosCustomerController::class, 'customerDetailsAutoFill'])->name('customers.auto_fill');
-         /********************** POS Customers Routes End **********************/
-
         /********************** Invoice Routes  **********************/
         Route::post('/pos-sale-submission', [OrderController::class, 'POSSaleSubmission'])->name('sale.submission');
         Route::get('/search-invoice/{invoice_id}', [OrderController::class, 'searchInvoice'])->name('search.invoice');
