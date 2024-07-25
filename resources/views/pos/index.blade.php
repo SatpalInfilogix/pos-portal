@@ -99,7 +99,7 @@
                                 alt="Categories">
                         </a>
                         <h6><a href="javascript:void(0);">All Categories</a></h6>
-                        <span>80 Items</span>
+                        <span>{{ $totalProducs }} Items</span>
                     </li>
                     @foreach($categories as $category)
                     <li id="{{ $category->name }}">
@@ -107,7 +107,7 @@
                             <img src="{{ asset($category->image)}}" alt="Categories">
                         </a>
                         <h6><a href="javascript:void(0);">{{ $category->name }}</a></h6>
-                        <span>{{$category->count}} Items</span>
+                        <span>{{$category->products_count}} Items</span>
                     </li>
                     @endforeach
                 </ul>
@@ -129,7 +129,7 @@
                                 @endphp
 
                                 <div class="col-sm-2 col-md-6 col-lg-3 col-xl-3">
-                                    <div @class(["product-info default-cover card", "added-to-cart" => in_array($product->id, $cartProductIds)]) onclick="addToCartAndToggleTick('{{ $product->id }}')">
+                                    <div  id="product-check_{{ $product->id }}" @class(["product-info default-cover card", "added-to-cart" => in_array($product->id, $cartProductIds)]) onclick="addToCartAndToggleTick('{{ $product->id }}')">
                                         <div class="img-bg">
                                             <img  class="img-bg" id="productImage{{ $product->id }}" src="{{ asset($product->image) }}" alt="Product Image">
                                          
@@ -167,8 +167,7 @@
             
                 <div class="product-added block-section">
                     <div class="head-text d-flex align-items-center justify-content-between">
-                        <h6 class="d-flex align-items-center mb-0">Product Added<span
-                                class="count">@if(session('cart')) {{ session('cart')['count'] }} @else 0 @endif</span></h6>
+                        <h6 class="d-flex align-items-center mb-0">Product Added<span class="count count-products">@if(session('cart')) {{ session('cart')['count'] }} @else 0 @endif</span></h6>
                         <a href="javascript:void(0);"
                             class="d-flex align-items-center text-danger"><span class="me-1"><i
                                     data-feather="x" class="feather-16"></i></span>Clear all</a>
@@ -178,7 +177,7 @@
                     <div class="producr-list-cart">
                         @if (session('cart') && isset(session('cart')['products']))
                             @foreach (session('cart')['products'] as $key => $product)
-                            <div class="product-list d-flex align-items-center justify-content-between">
+                            <div class="product-list d-flex align-items-center justify-content-between" id="product_{{ $product['id']}}">
                                 <div class="d-flex align-items-center product-info" data-bs-toggle="modal"
                                     data-bs-target="#products">
                                     <a href="javascript:void(0);" class="img-bg">
@@ -315,10 +314,8 @@
     </div>
 </div>
 
-
 <script>
-
-     $(function() {
+    $(function() {
         $('#discountSelect').on('change', function() {
             var discount = this.value;
             console.log(discount);
@@ -347,40 +344,6 @@
                 });
         });
     });
-    // function generateCartData() {
-    //     var cartStr = '<div class="producr-list-cart">';
-    //     @if (session('cart') && isset(session('cart')['products']))
-    //         @foreach (session('cart')['products'] as $key => $product)
-    //             cartStr += '<div class="product-list d-flex align-items-center justify-content-between">' +
-    //                             '<div class="d-flex align-items-center product-info" data-bs-toggle="modal" data-bs-target="#products">' +
-    //                                 '<a href="javascript:void(0);" class="img-bg">' +
-    //                                     '<img src="{{ $product['image'] }}" alt="Products">' +
-    //                                 '</a>' +
-    //                                 '<div class="info">' +
-    //                                     '<span>PT0005</span>' +
-    //                                     '<h6><a href="javascript:void(0);">{{ $product['name'] }}</a></h6>' +
-    //                                     '<p>${{ $product['price'] }}</p>' +
-    //                                 '</div>' +
-    //                             '</div>' +
-    //                             '<div class="qty-item text-center">' +
-    //                                 '<a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease" data-bs-toggle="tooltip" data-id="{{ $product['id'] }}" data-bs-placement="top" title="minus">-</a>' +
-    //                                 '<input type="text" class="form-control text-center quantity__number" name="qty" value="{{ $product['quantity'] }}">' +
-    //                                 '<a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase" data-bs-toggle="tooltip" data-id="{{ $product['id'] }}" data-bs-placement="top" title="plus">+</a>' +
-    //                             '</div>' +
-    //                             '<div class="d-flex align-items-center action">' +
-    //                                 '<a class="btn-icon delete-icon confirm-text" onclick="removeFromCart({{ $product['id'] }})">' +
-    //                                     '<i data-feather="trash-2" class="feather-14"></i>' +
-    //                                 '</a>' +
-    //                             '</div>' +
-    //                         '</div>';
-    //         @endforeach
-    //     @else
-    //         cartStr += '<h3 class="font-bold text-center mt-5">{{__('Cart is empty')}}</h3>';
-    //     @endif
-    //     cartStr += '</div>';
-    //     return cartStr;
-    // }
-
 
     $(document).on('click', '.close-cart', function() {
         alert('as');
@@ -406,6 +369,7 @@
             },
             success: function(response) {
                 if (response.success) {
+                    console.log(response);
                     if (quantity > 0) {
                         console.log(response.cart.formatted_grand_total);
                         let cart = response.cart.formatted_sub_total;
@@ -415,6 +379,7 @@
                         $('.tax').html(response.cart.tax);
                         $('.payable').html(response.cart.payable);
                         $('.discount-option').html(response.discountOptions);
+                        $('.count-products').html(response.cart.count);
                     } else {
                         window.location.reload();
                     }

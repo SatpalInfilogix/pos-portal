@@ -89,7 +89,7 @@
                                 <img src="{{ $profile_picture }}" alt="" class="img-fluid">
                             </span>
                             <span class="user-detail">
-                                <span class="user-name">{{ auth()->user()->name }}</span>
+                                <span class="user-name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>
                                 <span class="user-role">{{ auth()->user()->getRoleNames()->first() }}</span>
                             </span>
                         </span>
@@ -102,7 +102,7 @@
                                     <span class="status online"></span>
                                 </span>
                                 <div class="profilesets">
-                                    <h6>{{ auth()->user()->name }}</h6>
+                                    <h6>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h6>
                                     <h5>{{ auth()->user()->getRoleNames()->first() }}</h5>
                                 </div>
                             </div>
@@ -502,13 +502,13 @@
                 removeFromCart(productId);
                 console.log('Product removed from cart:', productId);
             } else {
+                console.log('asd'); 
                 // Add to cart (simulated)
                 productCard.classList.add('added-to-cart');
                 addToCart(productId);
                 console.log('Product added to cart:', productId);
             }
         }
-
 
         function addToCart(productId) {
             let quantity = 1; // Adjust if needed
@@ -521,16 +521,21 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log(response);
+                    console.log(response.cart);
                     console.log('Product added to cart:', response);
                     if (response.success == true) {
-                        // updateCartDisplay();
-                        // $(document).find('.producr-list-cart').html(response.data);
-                        // $(document).find('.item-count-cart').html(response.count);
-                        window.location.reload();
-                    } else {
-                        alert('Error');
-                    }
+                            updateCartUI(response.cart);
+                            console.log(response.cart.formatted_grand_total);
+                            let cart = response.cart.formatted_sub_total;
+                            let amount = '<b>' + cart + '</b>';
+                            $('.totalAmount').html(amount);
+                            $('.grandTotal').html(response.cart.formatted_grand_total);
+                            $('.tax').html(response.cart.tax);
+                            $('.payable').html(response.cart.payable);
+                            $('.count-products').html(response.cart.count);
+                        } else {
+                            alert('Error');
+                        }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error adding to cart:', error);
@@ -538,6 +543,42 @@
             });
         }
 
+        function updateCartUI(cartData) {
+            var cartStr = '<div class="product-list-cart">';
+            console.log(cartData.count);
+            if (cartData.count > 0) {
+                $.each(cartData.products, function(key, product) {
+                    cartStr += '<div class="product-list d-flex align-items-center justify-content-between" id="product_' + product.id + '">' +
+                                    '<div class="d-flex align-items-center product-info" data-bs-toggle="modal" data-bs-target="#products">' +
+                                        '<a href="javascript:void(0);" class="img-bg">' +
+                                            '<img src="' + product.image + '" alt="Products">' +
+                                        '</a>' +
+                                        '<div class="info">' +
+                                            '<span>' + product.code + '</span>' +
+                                            '<h6><a href="javascript:void(0);">' + product.name + '</a></h6>' +
+                                            '<p>$' + product.price + '</p>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="qty-item text-center">' +
+                                        '<a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease" data-bs-toggle="tooltip" data-id="' + product.id + '" data-bs-placement="top" title="minus">-</a>' +
+                                        '<input type="text" class="form-control text-center quantity__number" name="qty" value="' + product.quantity + '">' +
+                                        '<a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase" data-bs-toggle="tooltip" data-id="' + product.id + '" data-bs-placement="top" title="plus">+</a>' +
+                                    '</div>' +
+                                    '<div class="d-flex align-items-center action">' +
+                                        '<a class="btn-icon delete-icon confirm-text" onclick="removeFromCart(' + product.id + ')">' +
+                                            '<i data-feather="trash-2" class="feather-14"></i>' +
+                                        '</a>' +
+                                    '</div>' +
+                                '</div>';
+                });
+            } else {
+                cartStr += '<h3 class="font-bold text-center mt-5">{{__('Cart is empty')}}</h3>';
+            }
+            cartStr += '</div>';
+
+            $('.producr-list-cart').html(cartStr); // Update the cart HTML
+        }
+        
         // Function to remove product from cart in backend (AJAX request)
         function removeFromCart(productId) {
             $.ajax({
@@ -548,8 +589,20 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log('Product removed from cart:', response);
-                    window.location.reload();
+                    if (response.success) {
+                        console.log(response.cart);
+                        let cart = response.cart.formatted_sub_total;
+                        let amount = '<b>' + cart + '</b>';
+                        $('.totalAmount').html(amount);
+                        $('.grandTotal').html(response.cart.formatted_grand_total);
+                        $('.tax').html(response.cart.tax);
+                        $('.payable').html(response.cart.payable);
+                        $('#product-check_' + productId).removeClass('added-to-cart');
+                        $('#product_' + productId).remove();
+                        $('.count-products').html(response.cart.count);
+                        // $('.discount-option').html(response.discountOptions);
+                    }
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error removing from cart:', error);
@@ -559,23 +612,15 @@
     </script>
 
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/jquery.slimscroll.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTables.bootstrap5.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/js/chart-data.js') }}"></script>
-
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
-
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
-
-
     <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalerts.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme-script.js') }}"></script>

@@ -34,7 +34,6 @@ class DashboardSettingController extends Controller
         $user->update([
             'first_name'      => $request->first_name,
             'last_name'       => $request->last_name,
-            'name'            => $request->first_name.' '.$request->last_name,
             'phone_number'    => $request->phone_number,
             'profile_image'   => isset($filename) ? 'uploads/profile-pic/'. $filename : $oldProfile,
         ]);

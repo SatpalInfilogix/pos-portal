@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 use App\Models\Product;
 use App\Models\Discount;
 
@@ -19,16 +20,35 @@ class AdminDiscountController extends Controller
 
     public function create()
     {
-        return view('admin.discount.create');
+        $roles = Role::where('name', '!=', 'super admin')->latest()->get();
+        foreach($roles as $key => $role) {
+            $discount = Discount::where('roles', $role->name)->first();
+            $roles[$key]['discount'] = $discount->discount ?? ' ';
+        }
+        return view('admin.discount.create', compact('roles'));
     }
 
     public function store(Request $request)
     {
-        Discount::create([
-            'discount'          => $request->discount,
-            'quantity'          => $request->quantity,
-            'created_by'        => Auth::id(),
-        ]);
+        $roles = $request->input('role');
+        $discounts = $request->input('discount');
+        
+        foreach ($roles as $index => $role) {
+            $discount = isset($discounts[$index]) ? $discounts[$index] : null;
+            
+            $existingDiscount = Discount::where('roles', $role)->first();
+            if ($existingDiscount) {
+                $existingDiscount->update([
+                        'discount' => $discount,
+                    ]);
+            } else {
+                Discount::create([
+                    'roles' => $role,
+                    'discount' => $discount,
+                    'created_by' => Auth::id(),
+                ]);
+            }
+        }
 
         return redirect()->route('discounts.index')->with('success', 'Discount created successfully.');
     }
