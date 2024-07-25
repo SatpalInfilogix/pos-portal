@@ -27734,8 +27734,8 @@ span.badge.badges-warning {
     z-index: 9;
     cursor: pointer;
     position: absolute;
-    bottom: 10px;
-    left: 42px
+    top: 0;
+    right: 0
 }
 
 .profile-set .profile-top .profileupload a {
@@ -27754,8 +27754,8 @@ span.badge.badges-warning {
     z-index: 1;
     border-radius: 50px;
     position: absolute;
-    bottom: 10px;
-    left: 41px
+    top: 0;
+    right: 0
 }
 
 .profile-set .profile-top .profile-contentname {
