@@ -501,7 +501,6 @@
             }
         }
 
-
         function addToCart(productId) {
             let quantity = 1; // Adjust if needed
             $.ajax({
@@ -516,13 +515,10 @@
                     console.log(response);
                     console.log('Product added to cart:', response);
                     if (response.success == true) {
-                        // updateCartDisplay();
-                        // $(document).find('.producr-list-cart').html(response.data);
-                        // $(document).find('.item-count-cart').html(response.count);
-                        window.location.reload();
-                    } else {
-                        alert('Error');
-                    }
+                            updateCartUI(response.cart);
+                        } else {
+                            alert('Error');
+                        }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error adding to cart:', error);
@@ -530,6 +526,41 @@
             });
         }
 
+        function updateCartUI(cartData) {
+            var cartStr = '<div class="product-list-cart">';
+            if (cartData.products.length > 0) {
+                $.each(cartData.products, function(key, product) {
+                    cartStr += '<div class="product-list d-flex align-items-center justify-content-between">' +
+                                    '<div class="d-flex align-items-center product-info" data-bs-toggle="modal" data-bs-target="#products">' +
+                                        '<a href="javascript:void(0);" class="img-bg">' +
+                                            '<img src="' + product.image + '" alt="Products">' +
+                                        '</a>' +
+                                        '<div class="info">' +
+                                            '<span>' + product.code + '</span>' +
+                                            '<h6><a href="javascript:void(0);">' + product.name + '</a></h6>' +
+                                            '<p>$' + product.price + '</p>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="qty-item text-center">' +
+                                        '<a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease" data-bs-toggle="tooltip" data-id="' + product.id + '" data-bs-placement="top" title="minus">-</a>' +
+                                        '<input type="text" class="form-control text-center quantity__number" name="qty" value="' + product.quantity + '">' +
+                                        '<a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase" data-bs-toggle="tooltip" data-id="' + product.id + '" data-bs-placement="top" title="plus">+</a>' +
+                                    '</div>' +
+                                    '<div class="d-flex align-items-center action">' +
+                                        '<a class="btn-icon delete-icon confirm-text" onclick="removeFromCart(' + product.id + ')">' +
+                                            '<i data-feather="trash-2" class="feather-14"></i>' +
+                                        '</a>' +
+                                    '</div>' +
+                                '</div>';
+                });
+            } else {
+                cartStr += '<h3 class="font-bold text-center mt-5">{{__('Cart is empty')}}</h3>';
+            }
+            cartStr += '</div>';
+
+            $('.producr-list-cart').html(cartStr); // Update the cart HTML
+        }
+        
         // Function to remove product from cart in backend (AJAX request)
         function removeFromCart(productId) {
             $.ajax({
@@ -540,8 +571,19 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log('Product removed from cart:', response);
-                    window.location.reload();
+                    if (response.success) {
+                        console.log(response.cart.formatted_grand_total);
+                        let cart = response.cart.formatted_sub_total;
+                        let amount = '<b>' + cart + '</b>';
+                        $('.totalAmount').html(amount);
+                        $('.grandTotal').html(response.cart.formatted_grand_total);
+                        $('.tax').html(response.cart.tax);
+                        $('.payable').html(response.cart.payable);
+                        $('#product-check_' + productId).removeClass('added-to-cart');
+                        $('#product_' + productId).remove();
+                        // $('.discount-option').html(response.discountOptions);
+                    }
+
                 },
                 error: function(xhr, status, error) {
                     console.error('Error removing from cart:', error);
@@ -551,23 +593,15 @@
     </script>
 
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/jquery.slimscroll.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/js/dataTables.bootstrap5.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
-
     <script src="{{ asset('assets/js/apexcharts.min.js') }}"></script>
     <script src="{{ asset('assets/js/chart-data.js') }}"></script>
-
     <script src="{{ asset('assets/js/moment.min.js') }}"></script>
     <script src="{{ asset('assets/js/daterangepicker.js') }}"></script>
-
     <script src="{{ asset('assets/js/owl.carousel.min.js') }}"></script>
-
-
     <script src="{{ asset('assets/js/sweetalert2.all.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweetalerts.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme-script.js') }}"></script>

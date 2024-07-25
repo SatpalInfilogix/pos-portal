@@ -14,16 +14,16 @@ class PosDashboardController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('status', 0)->latest()->get();
-        foreach ($categories as $key => $category) {
-            $categories[$key]['count'] = Product::where('category_id', $category->id)->where('status', 0)->count();
-        }
+        $categories = Category::where('status', 0)
+                    ->withCount(['products' => function ($query) {
+                    $query->where('status', 0); // Condition for products status
+                    }])->latest()->get();
 
-
+        $totalProducs = $categories->sum('products_count');
+    
         $products = Product::where('status', 0)->latest()->get();
         foreach ($products as $proKey => $product) {
             $category = Category::where('id', $product->category_id)->first();
-            // dd($categories);
             $price = PriceMaster::where('product_id', $product->id)->where('status', 0)->first();
             $products[$proKey]['categoryName'] = $category->name ?? '';
             $products[$proKey]['price'] = optional($price)->price;
@@ -48,6 +48,6 @@ class PosDashboardController extends Controller
 
         $customers = Customer::all();
         
-        return view('pos.index', compact('categories', 'products','invoiceId', 'discounts', 'customers'));
+        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discounts', 'customers'));
     }
 }
