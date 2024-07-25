@@ -25,15 +25,14 @@
                     <div class="profile-top">
                         <div class="profile-content">
                             <div class="profile-contentimg">
-                                @if($user->profile_image == '')
-                                <img src="{{ asset('assets/img/customer/customer5.jpg') }}" alt="img" id="blah">
-                                @else
+                                @if($user->profile_image)
                                 <img src="{{ asset($user->profile_image) }}" alt="img" id="blah">
+                                @else
+                                <img src="{{ asset('assets/img/default-user.png') }}" alt="img" id="blah">
                                 @endif
                                 <div class="profileupload">
                                     <input type="file" id="imgInp" name="profile_image">
-                                    <a href="javascript:void(0);"><img src="assets/img/icons/edit-set.svg"
-                                            alt="img"></a>
+                                    <a href="javascript:void(0);"><img src="{{ asset('assets/img/icons/edit-set.svg') }}" alt="img"></a>
                                 </div>
                             </div>
                             <div class="profile-contentname">
