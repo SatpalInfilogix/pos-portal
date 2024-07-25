@@ -11,7 +11,5 @@ use Illuminate\Http\Request;
 
 class PosCustomerController extends Controller
 {
-    public function customerDetailsAutoFill($customer_id){
 
-    }
 }

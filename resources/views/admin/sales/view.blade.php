@@ -37,20 +37,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <address>
-                                    @php 
-                                        $BillingAddress = str_replace(',', "\n", $orders->BillingAddress);
-                                    @endphp
                                 <strong>Billed To:</strong><br>
-                                {!! nl2br(e($BillingAddress)) !!}
+                                {!! nl2br(e($orders->BillingAddress)) !!}
                                 </address>
                             </div>
                             <div class="col-md-6 text-right">
                                 <address>
-                                    @php 
-                                        $ShippingAddress = str_replace(',', "\n", $orders->ShippingAddress);
-                                    @endphp
                                 <strong>Shipped To:</strong><br>
-                                {!! nl2br(e($ShippingAddress)) !!}
+                                {!! nl2br(e($orders->ShippingAddress)) !!}
                                 </address>
                             </div>
                         </div>
