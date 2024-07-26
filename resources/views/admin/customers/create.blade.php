@@ -30,81 +30,34 @@
                                     <input type="text" name="name" class="form-control">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                            <div class="row mb-3">
+                                <div class="col-md-6 add-product">
                                     <label class="form-label">Phone Numbere</label>
                                     <input type="text" name="phone_number" class="form-control">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 add-product">
                                     <label class="form-label">Alternate Phone Number</label>
                                     <input type="text" name="alternate_number" class="form-control">
                                 </div>
                             </div>
-                            <h6 >Shipping Address</h6>
-                            <br>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" name="shipping_address" class="form-control">
+                            <div class="row mb-3">
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label"><b>Shipping Address</b></label>
+                                    <textarea rows="4" name="shipping_address" class="form-control"></textarea>
+                                </div>
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label"><b>Billing Address</b></label>
+                                    <textarea rows="4" name="billing_address" class="form-control"></textarea>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">City</label>
-                                    <input type="text" name="shipping_city" class="form-control">
+                            <div class="row mb-3">
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label">Shipping Pincode</label>
+                                    <input type="text" name="shipping_address_pin_code" class="form-control">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">State</label>
-                                    <input type="text" name="shipping_state" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Country</label>
-                                    <input type="text" name="shipping_country" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Pin Code</label>
-                                    <input type="text" name="shipping_pin_Code" class="form-control">
-                                </div>
-                            </div>
-
-                            <h6>Billing Address</h6>
-                            <br>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" name="billing_address" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">City</label>
-                                    <input type="text" name="billing_city" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">State</label>
-                                    <input type="text" name="billing_state" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Country</label>
-                                    <input type="text" name="billing_country" class="form-control">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Pin Code</label>
-                                    <input type="text" name="billing_pin_Code" class="form-control">
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label">Billing Pincode</label>
+                                    <input type="text" name="billing_address_pin_code" class="form-control">
                                 </div>
                             </div>
                         </div>

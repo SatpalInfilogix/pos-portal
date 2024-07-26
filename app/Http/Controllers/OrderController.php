@@ -24,6 +24,8 @@ class OrderController extends Controller
             $customer->alternate_number = $request->alternate_number;
             $customer->shipping_address = $request->shipping_address;
             $customer->billing_address = $request->billing_address;
+            $customer->shipping_address_pin_code = $request->shipping_address_pin_code;
+            $customer->billing_address_pin_code = $request->billing_address_pin_code;
             $customer->save();
 
         }else{
@@ -32,7 +34,10 @@ class OrderController extends Controller
                 'contact_number' => $request->contact_number,
                 'alternate_number' => $request->alternate_number,
                 'shipping_address' => $request->shipping_address,
+                'shipping_address_pin_code' => $request->shipping_address_pin_code,
                 'billing_address' => $request->billing_address,
+                'billing_address_pin_code' => $request->billing_address_pin_code,
+                'created_by' => Auth::id(),
             ]);
         }
 
