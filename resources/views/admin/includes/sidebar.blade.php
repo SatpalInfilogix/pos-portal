@@ -71,35 +71,53 @@
                                 </a>
                             </li>
                         @endcanany
-                        <li @class(['active' => Request::is('admin/sales', 'admin/sales/*')])>
-                            <a href="{{ route('sales.index') }}">
-                                <i data-feather="box"></i>
-                                <span>Sales Details</span>
-                            </a>
-                        </li>
-                        <li @class([
-                            'active' => Request::is(
-                                'admin/return-stock-details',
-                                'admin/return-stock-details/*'),
-                        ])>
-                            <a href="{{ route('return.stock.index') }}">
-                                <i data-feather="box"></i>
-                                <span>Return Stock Details</span>
-                            </a>
-                        </li>
-                        <li @class(['active' => Request::is('admin/customers', 'admin/customers/*')])>
-                            <a href="{{ route('customers.index') }}">
-                                <i data-feather="codepen"></i>
-                                <span>Customer Master</span>
-                            </a>
-                        </li>
-                        <li @class(['active' => Request::is('admin/inventory-transfer', 'admin/inventory-transfer/*')])>
-                            <a href="#"><i data-feather="tag"></i>
-                                <span>Inventory Transfer</span>
-                            </a>
-                        </li>
+                        @canany(['view sales'])
+                            <li @class(['active' => Request::is('admin/sales', 'admin/sales/*')])>
+                                <a href="{{ route('sales.index') }}">
+                                    <i data-feather="box"></i>
+                                    <span>Sales Details</span>
+                                </a>
+                            </li>
+                        @endcanany
+                        @canany(['view return stocks'])
+                            <li @class([
+                                'active' => Request::is(
+                                    'admin/return-stocks',
+                                    'admin/return-stocks/*'),
+                            ])>
+                                <a href="{{ route('return_stocks.index') }}">
+                                    <i data-feather="box"></i>
+                                    <span>Return Stocks</span>
+                                </a>
+                            </li>
+                        @endcanany
+                        @canany(['view customers'])
+                            <li @class([
+                                'active' => Request::is('admin/customers', 'admin/customers/*'),
+                            ])>
+                                <a href="{{ route('customers.index') }}">
+                                    <i data-feather="codepen"></i>
+                                    <span>Customer Master</span>
+                                </a>
+                            </li>
+                        @endcanany
+                        @canany(['view inventory transfers'])
+                            <li @class([
+                                'active' => Request::is(
+                                    'admin/inventory transfers',
+                                    'admin/inventory transfers/*'),
+                            ])>
+                                <a href="#"><i data-feather="tag"></i>
+                                    <span>Inventory Transfer</span>
+                                </a>
+                            </li>
+                        @endcanany
                         @canany(['view roles & permissions'])
-                            <li @class(['active' => Request::is('admin/roles-and-permissions', 'admin/roles-and-permissions/*')])>
+                            <li @class([
+                                'active' => Request::is(
+                                    'admin/roles-and-permissions',
+                                    'admin/roles-and-permissions/*'),
+                            ])>
                                 <a href="{{ route('roles-and-permissions.index') }}">
                                     <i data-feather="shield"></i>
                                     <span>Roles & Permissions</span>
