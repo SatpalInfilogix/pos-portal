@@ -27,8 +27,8 @@
 
     <div class="card table-list-card">
         <div class="card-body">
-            <div class="table-responsive dataview">
-                <table class="table dashboard-expired-products">
+            <div class="table-responsive p-0 m-0">
+                <table id="customers-table" class="table customers-table">
                     <thead>
                         <tr>
                             <th>Sr. No</th>
@@ -38,7 +38,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($customers as $key => $customer)
+                        <!-- @foreach($customers as $key => $customer)
                         <tr>
                             <td>{{ ++$key }}</td>
                             <td>{{ $customer->customer_name }} </td>
@@ -59,7 +59,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @endforeach -->
                     </tbody>
                 </table>
             </div>
@@ -67,45 +67,96 @@
     </div>
 </div>
 <script>
-$(document).ready(function() {
-    $('.delete-product').click(function(e) {
-        e.preventDefault();
-        var productId = $(this).data('id');
-        var token = "{{ csrf_token() }}";
-        var url = "{{ route('customers.destroy','') }}/" + productId; // Use Laravel helper for URL
+    $(function() {
+        $('.customers-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                "url": "{{ route('get-customers') }}",
+                "type": "POST",
+                "data": {
+                    _token: "{{ csrf_token() }}"
+                }
+            },
+            columns: [
+                { "data": "id" },
+                { "data": "customer_name" },
+                { "data": "contact_number", },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        var actions = '<div class="edit-delete-action">';
+                        actions += `<a class="me-2 p-2 edit-btn" href="./customers/${row.id}/edit">`;
+                        actions += '<i class="fa fa-edit"></i>';
+                        actions += '</a>';
 
-        if (confirm('Are you sure you want to delete this Customer?')) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    "_token": token,
-                },
-                success: function(response) {
-                    console.log(response.customerStatus);
-                    if (response.status == 'success') {
-                        if(response.customerStatus == 1) {
-                            $('#restore-customer[data-id="' + productId + '"]').show();
-                            $('#delete-product[data-id="' + productId + '"]').hide();
+                        if (row.status == 1) {
+                            actions += '<a class="me-2 p-2 delete-btn" id="restore-customer" data-id="' +
+                                row.id + '" href="#">Restore</a>';
+                            actions += '<a class="me-2 p-2 delete-btn" id="delete-customer" data-id="' + row.id +
+                                '" style="display: none;"><i class="fa fa-trash"></i></a>';
                         } else {
-                            console.log('restore');
-                            $('#restore-customer[data-id="' + productId + '"]').hide();
-                            $('#delete-product[data-id="' + productId + '"]').show();
+                            actions += '<a class="me-2 p-2 delete-btn" id="delete-customer" data-id="' +
+                                row.id + '" href="#"><i class="fa fa-trash"></i></a>';
+                            actions += '<a class="me-2 p-2 delete-btn" id="restore-customer" data-id="' +
+                                row.id + '" style="display: none;">Restore</a>';
                         }
-                        // $('#product-row-' + productId).remove();
-                        // alert('Customer deleted successfully');
-                        // window.location.reload();
-                    } else {
+                        actions += '</div>';
+                        return actions;
+                    }
+                }
+            ],
+            columnDefs: [
+                {
+                    "orderable": false,
+                    "targets": 3,  // Adjust this index based on the actual number of columns
+                    "className": "action-table-data"
+                }
+            ],
+            paging: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100]
+        });
+    });
+    $(document).ready(function() {
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+            var productId = $(this).data('id');
+            var token = "{{ csrf_token() }}";
+            var url = "{{ route('customers.destroy','') }}/" + productId; // Use Laravel helper for URL
+
+            if (confirm('Are you sure you want to delete this Customer?')) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        "_token": token,
+                    },
+                    success: function(response) {
+                        console.log(response.customerStatus);
+                        if (response.status == 'success') {
+                            if(response.customerStatus == 1) {
+                                $('#restore-customer[data-id="' + productId + '"]').show();
+                                $('#delete-customer[data-id="' + productId + '"]').hide();
+                            } else {
+                                console.log('restore');
+                                $('#restore-customer[data-id="' + productId + '"]').hide();
+                                $('#delete-customer[data-id="' + productId + '"]').show();
+                            }
+                            // $('#product-row-' + productId).remove();
+                            // alert('Customer deleted successfully');
+                            // window.location.reload();
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
                         alert('Something went wrong. Please try again.');
                     }
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    alert('Something went wrong. Please try again.');
-                }
-            });
-        }
+                });
+            }
+        });
     });
-});
 </script>
 @endsection

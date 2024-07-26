@@ -27,8 +27,8 @@
 
         <div class="card table-list-card">
             <div class="card-body">
-                <div class="table-responsive dataview">
-                    <table class="table dashboard-expired-products">
+                <div class="table-responsive p-0 m-0">
+                    <table id="prices-table" class="table prices-table">
                         <thead>
                             <tr>
                                 <th>Sr. No</th>
@@ -39,7 +39,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($prices as $key => $price)
+                            <!-- @foreach($prices as $key => $price)
                                 <tr>
                                     <td>{{ ++$key }}</td>
                                     <td>{{ $price->product->product_code }} </td>
@@ -57,58 +57,104 @@
                                                 <a class="me-2 p-2 delete-product" id="delete-price" data-id="{{ $price->id}}" href="#"><i data-feather="trash-2" class="feather-trash-2"></i></a>
                                                 <a class="me-2 p-2 delete-product" id="restore-price" data-id="{{ $price->id }}" style="display: none;">Restore</a>
                                             @endif
-                                            <!-- <a class="p-2 delete-product" data-id="{{$price->id}}">
-                                                <i data-feather="trash-2" class="feather-trash-2"></i>
-                                            </a> -->
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
+                            @endforeach -->
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
-    <script>
-$(document).ready(function() {
-    $('.delete-product').click(function(e) {
-        e.preventDefault();
-        var productId = $(this).data('id');
-        var token = "{{ csrf_token() }}";
-        var url = "{{route('prices.destroy','')}}/" + productId;
+<script>
+    $(function() {
+        $('.prices-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('get-prices') }}",
+                type: "POST",
+                data: function(d) {
+                    d._token = "{{ csrf_token() }}";
+                    return d;
+                }
+            },
+            columns: [
+                { data: "id" },
+                { data: "product_code" }, // Ensure this matches the key from the backend
+                { data: "product_name" }, // Ensure this matches the key from the backend
+                { data: "price" },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        var actions = '<div class="edit-delete-action">';
+                        actions += `<a class="me-2 p-2 edit-btn" href="./prices/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
 
-        if (confirm('Are you sure you want to delete this price record?')) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    "_token": token,
-                },
-                success: function(response) {
-                    if(response.status == 'success') {
-                        if(response.price == 1) {
-                            $('#restore-price[data-id="' + productId + '"]').show();
-                            $('#delete-price[data-id="' + productId + '"]').hide();
+                        if (row.status == 1) {
+                            actions += `<a class="me-2 p-2 delete-btn" id="restore-price" data-id="${row.id}" href="#">Restore</a>`;
+                            actions += `<a class="me-2 p-2 delete-btn" id="delete-price" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
                         } else {
-                            $('#restore-price[data-id="' + productId + '"]').hide();
-                            $('#delete-price[data-id="' + productId + '"]').show();
+                            actions += `<a class="me-2 p-2 delete-btn" id="delete-price" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
+                            actions += `<a class="me-2 p-2 delete-btn" id="restore-price" data-id="${row.id}" style="display: none;">Restore</a>`;
                         }
-                        // $('#product-row-' + productId).remove();
-                        // alert('rtecord deleted successfully');
-                        // window.location.reload();
-                    } else {
+                        actions += '</div>';
+                        return actions;
+                    }
+                }
+            ],
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 4, // Adjust based on the actual number of columns
+                    className: "action-table-data"
+                }
+            ],
+            paging: true,
+            pageLength: 10, // Adjusted to match the lengthMenu
+            lengthMenu: [10, 25, 50, 100],
+            order: [[1, 'asc']] // Optional: Default ordering by the product_code column
+        });
+    });
+
+    $(document).ready(function() {
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+            var productId = $(this).data('id');
+            var token = "{{ csrf_token() }}";
+            var url = "{{route('prices.destroy','')}}/" + productId;
+
+            if (confirm('Are you sure you want to delete this price record?')) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        "_token": token,
+                    },
+                    success: function(response) {
+                        if(response.status == 'success') {
+                            if(response.price == 1) {
+                                $('#restore-price[data-id="' + productId + '"]').show();
+                                $('#delete-price[data-id="' + productId + '"]').hide();
+                            } else {
+                                $('#restore-price[data-id="' + productId + '"]').hide();
+                                $('#delete-price[data-id="' + productId + '"]').show();
+                            }
+                            // $('#product-row-' + productId).remove();
+                            // alert('rtecord deleted successfully');
+                            // window.location.reload();
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
                         alert('Something went wrong. Please try again.');
                     }
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    alert('Something went wrong. Please try again.');
-                }
-            });
-        }
+                });
+            }
+        });
     });
-});
 </script>
 @endsection
 

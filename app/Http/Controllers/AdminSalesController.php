@@ -21,6 +21,52 @@ class AdminSalesController extends Controller
         ]);
 
     }
+
+    public function getSalesOrder(Request $request)
+    {
+        $maxItemsPerPage = 10;
+    
+        // Base query
+        $salesQuery = Order::select(['id', 'OrderId', 'TotalAmount', 'CustomerName', 'ShippingAddress', 'transit_status']);
+    
+        // Search filter
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $salesQuery->where('OrderId', 'like', '%' . $searchValue . '%')
+                        ->orWhere('TotalAmount', 'like', '%' . $searchValue . '%')
+                        ->orWhere('CustomerName', 'like', '%' . $searchValue . '%')
+                        ->orWhere('ShippingAddress', 'like', '%' . $searchValue . '%')
+                        ->orWhere('transit_status', 'like', '%' . $searchValue . '%');
+        }
+    
+        // Sorting
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumnIndex]['data'];
+    
+            // Sort by valid columns only
+            $validColumns = ['id', 'OrderId', 'TotalAmount', 'CustomerName', 'ShippingAddress', 'transit_status']; // Define valid columns
+            if (in_array($column, $validColumns)) {
+                $salesQuery->orderBy($column, $orderDirection);
+            }
+        }
+    
+        // Pagination
+        $totalRecords = $salesQuery->count();
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $currentPage = (int) ($request->input('start', 0) / $perPage);
+        $sales = $salesQuery->skip($currentPage * $perPage)->take($perPage)->get();
+    
+        // Respond with data
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords, // Adjust if filtered records are different
+            "data" => $sales
+        ]);
+    }
+
     public function show($id){
 
         $orders = Order::with('productDetails')->where('OrderID','=',$id)->first();

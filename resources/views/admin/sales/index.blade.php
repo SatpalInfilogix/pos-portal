@@ -25,8 +25,8 @@
 
     <div class="card table-list-card">
         <div class="card-body">
-            <div class="table-responsive dataview">
-                <table class="table dashboard-expired-products">
+            <div class="table-responsive p-0 m-0">
+                <table id="sales-table" class="table sales-table">
                     <thead>
                         <tr>
                             <th>Sr. No</th>
@@ -39,7 +39,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($orderSet as $key => $order)
+                         <!-- @foreach($orderSet as $key => $order)
                         <tr>
                           <td>
                               {{$order->id}}
@@ -69,7 +69,7 @@
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @endforeach -->
                     </tbody>
                 </table>
             </div>
@@ -77,45 +77,48 @@
     </div>
 </div>
 <script>
-$(document).ready(function() {
-    $('.delete-product').click(function(e) {
-        e.preventDefault();
-        var productId = $(this).data('id');
-        var token = "{{ csrf_token() }}";
-        var url = "{{ route('customers.destroy','') }}/" + productId; // Use Laravel helper for URL
-
-        if (confirm('Are you sure you want to delete this Customer?')) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    "_token": token,
-                },
-                success: function(response) {
-                    console.log(response.customerStatus);
-                    if (response.status == 'success') {
-                        if(response.customerStatus == 1) {
-                            $('#restore-customer[data-id="' + productId + '"]').show();
-                            $('#delete-product[data-id="' + productId + '"]').hide();
-                        } else {
-                            console.log('restore');
-                            $('#restore-customer[data-id="' + productId + '"]').hide();
-                            $('#delete-product[data-id="' + productId + '"]').show();
-                        }
-                        // $('#product-row-' + productId).remove();
-                        // alert('Customer deleted successfully');
-                        // window.location.reload();
-                    } else {
-                        alert('Something went wrong. Please try again.');
-                    }
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    alert('Something went wrong. Please try again.');
+    $(function() {
+        $('.sales-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('get-sales') }}",
+                type: "POST",
+                data: function(d) {
+                    d._token = "{{ csrf_token() }}";
+                    return d;
                 }
-            });
-        }
+            },
+            columns: [
+                { data: "id" },
+                { data: "OrderId" },
+                { data: "TotalAmount" },
+                { data: "CustomerName" },
+                { data: "ShippingAddress" },
+                { data: "transit_status" },
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        var actions = '<div class="edit-delete-action">';
+                        actions += `<a class="me-2 p-2 btn-secondary-light" href="./sales/${row.OrderId}">`;
+                        actions += '<i class="fa fa-eye"></i>';
+                        actions += '</a>';
+                        actions += '</div>';
+                        return actions;
+                    }
+                }
+            ],
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 6  // Index for the actions column
+                }
+            ],
+            paging: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100]
+        });
     });
-});
+
 </script>
 @endsection

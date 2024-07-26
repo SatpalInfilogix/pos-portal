@@ -45,6 +45,49 @@ class AdminCustomerController extends Controller
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
 
+    public function getCustomers(Request $request)
+    {
+        $maxItemsPerPage = 10;
+
+        // Base query
+        $customersQuery = Customer::select(['id', 'customer_name', 'contact_number', 'status']);
+
+        // Search filter
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $customersQuery->where('customer_name', 'like', '%' . $searchValue . '%')
+                            ->orWhere('contact_number', 'like', '%' . $searchValue . '%');
+        }
+
+        // Sorting
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumnIndex]['data'];
+
+            // Sort by valid columns only
+            $validColumns = ['id', 'customer_name', 'contact_number', 'status']; // Define valid columns
+            if (in_array($column, $validColumns)) {
+                $customersQuery->orderBy($column, $orderDirection);
+            }
+        }
+
+        // Pagination
+        $totalRecords = $customersQuery->count();
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $currentPage = (int) ($request->input('start', 0) / $perPage);
+        $customers = $customersQuery->skip($currentPage * $perPage)->take($perPage)->get();
+
+
+        // Respond with data
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords, // Adjust if filtered records are different
+            "data" => $customers
+        ]);
+    }
+
     public function edit($id)
     {
         $customer = Customer::where('id', $id)->first();
