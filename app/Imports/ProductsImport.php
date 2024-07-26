@@ -31,7 +31,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             $category = Category::firstOrCreate(
                 ['name' => $category_name],
                 [
-                    'image' => $this->uploadImageFromUrl('category', $category_image),
+                    'image' => $this->uploadImageFromUrl('categories', $category_image),
                     'created_by' => Auth::id(),
                 ]
             );
@@ -44,15 +44,31 @@ class ProductsImport implements ToModel, WithHeadingRow
         if(isset($row['quantity'])){
             $product_quantity = json_encode($row['quantity']);
         }
+        
+        if(!empty($row['product_code'])){
+            $product_code = $row['product_code'];
+        } else if(!empty($row['lot_number'])){
+            $product_code = $row['lot_number'];
+        } else {
+            $product = Product::orderByDesc('lot_number')->first();
+            if (!$product) {
+                $product_code =  'PR0001';
+            } else {
+                $numericPart = (int)substr($product->lot_number, 3);
+                $nextNumericPart = str_pad($numericPart + 1, 4, '0', STR_PAD_LEFT);
+                $product_code = 'PR' . $nextNumericPart;
+            }
+        }
 
         $product = Product::updateOrCreate(
             ['name' => $row['name']],
             [
                 'quantity' => $product_quantity,
+                'product_code' => $product_code,
                 'manufacture_date' => $row['manufacture_date'],
                 'category_id' => $category->id,
                 'lot_number' => $row['lot_number'],
-                'image' => $this->uploadImageFromUrl('product', $row['image']),
+                'image' => $this->uploadImageFromUrl('products', $row['image']),
                 'created_by' => Auth::id()
             ]
         );        
