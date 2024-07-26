@@ -29,7 +29,6 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->string('price');
             $table->string('product_total_amount');
-            $table->integer('created_by');
             $table->timestamps();
         });
     }
