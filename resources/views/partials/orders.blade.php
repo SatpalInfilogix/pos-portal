@@ -30,12 +30,12 @@
                             aria-labelledby="onhold-tab">
                             <div class="table-top">
                                 <div class="search-set w-100 search-order">
-                                    <input type="text" class="form-control" placeholder="Search">
+                                    <input type="text" class="form-control" placeholder="Search" name="searchOrder">
                                 </div>
                             </div>
                             <div class="order-body">
                                 @foreach ($onHoldOrders as $onHoldOrder)
-                                <div class="default-cover p-4">
+                                <div class="default-cover p-4" data-invoice-id="{{ $onHoldOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $onHoldOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
@@ -82,12 +82,12 @@
                         <div class="tab-pane fade" id="unpaid" role="tabpanel">
                             <div class="table-top">
                                 <div class="search-set w-100 search-order">
-                                    <input type="text" class="form-control" placeholder="Search">
+                                    <input type="text" class="form-control" placeholder="Search" name="searchOrder">
                                 </div>
                             </div>
                             <div class="order-body">
                                 @foreach ($unPaidOrders as $unPaidOrder)
-                                <div class="default-cover p-4">
+                                <div class="default-cover p-4" data-invoice-id="{{ $unPaidOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $unPaidOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
@@ -134,7 +134,7 @@
                         <div class="tab-pane fade" id="paid" role="tabpanel">
                             <div class="table-top">
                                 <div class="search-set w-100 search-order">
-                                    <input type="text" class="form-control" placeholder="Search" name="searchPaidOrder">
+                                    <input type="text" class="form-control" placeholder="Search" name="searchOrder">
                                 </div>
                             </div>
                             <div class="order-body">

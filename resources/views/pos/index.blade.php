@@ -475,10 +475,14 @@
         var alternate_number = $('[name="order_customer_id"]').find(':selected').data('customer-alternate'); 
         var shipping_address = $('[name="order_customer_id"]').find(':selected').data('customer-shipping'); 
         var billing_address = $('[name="order_customer_id"]').find(':selected').data('customer-billing'); 
+        var shipping_pincode = $('[name="order_customer_id"]').find(':selected').data('shipping-pincode'); 
+        var billing_pincode = $('[name="order_customer_id"]').find(':selected').data('billing-pincode'); 
         $('[name="contact_number"]').val(contact_number);
         $('[name="alternate_number"]').val(alternate_number);
         $('[name="shipping_address"]').val(shipping_address);
         $('[name="billing_address"]').val(billing_address);
+        $('[name="shipping_address_pin_code"]').val(shipping_pincode);
+        $('[name="billing_address_pin_code"]').val(billing_pincode);
         
     });
 
@@ -552,7 +556,7 @@
             $('[name="change_amount"]').val(0);
         }   
     });
-    $(document).on('keyup','[name="searchPaidOrder"]',function(){
+    $(document).on('keyup','input[name="searchOrder"]',function(){
         var invoice_number = $(this).val().toUpperCase();
         $('div.default-cover').hide();
         $('[data-invoice-id="'+invoice_number+'"]').show();
