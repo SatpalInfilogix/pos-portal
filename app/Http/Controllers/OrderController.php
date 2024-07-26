@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\Discount; 
 use App\Models\Product; 
 use App\Models\ProductOrderHistory; 
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -77,12 +78,13 @@ class OrderController extends Controller
                 'CustomerPhone' => $request->contact_number,
                 'ShippingAddress' => $request->shipping_address,
                 'BillingAddress' => $request->billing_address,
-                'OrderStatus' => 'completed',
+                'OrderStatus' => 'onhold',
                 'PaymentMethod' => $request->payment_method,
                 'PaymentStatus' => 'success',
                 'TotalAmount' => $cart['payable'],
                 'TaxAmount' => $cart['tax'],
                 'DiscountAmount' => $cart['discount_amount'],
+                'CreatedBy' => Auth::id(),
             ]);
 
             foreach($cart['products'] as $product){
@@ -97,7 +99,7 @@ class OrderController extends Controller
                     'lot_number' => $productDetails->lot_number,
                     'image' => $productDetails->image,
                     'status' => $productDetails->status,
-                    'created_by' => $productDetails->created_by,
+                    'created_by' => Auth::id(),
                     'category_id' => $productDetails->category_id,
                     'price' => $product['price'],
                     'product_total_amount' => $product['product_total_amount']
