@@ -58,10 +58,12 @@ class AdminUserController extends Controller
             $usersQuery->orderBy($column, $orderDirection);
         }
 
+        $totalRecords = $usersQuery->count();
         $perPage = $request->input('length', $maxItemsPerPage);
-        $users = $usersQuery->paginate($perPage);
+        $currentPage = $request->input('start', 0) / $perPage;
+        $users = $usersQuery->skip($currentPage * $perPage)->take($perPage)->get();
 
-        $users->getCollection()->transform(function ($user) {
+        $users->transform(function ($user) {
             $roles = $user->roles->pluck('name')->implode(', ');
             $user->role = $roles;
             return $user;
@@ -69,9 +71,9 @@ class AdminUserController extends Controller
 
         return response()->json([
             "draw" => intval($request->input('draw')),
-            "recordsTotal" => $users->total(),
-            "recordsFiltered" => $users->total(),
-            "data" => $users->items()
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $users
         ]);
     }
 
