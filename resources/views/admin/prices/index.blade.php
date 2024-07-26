@@ -32,6 +32,7 @@
                         <thead>
                             <tr>
                                 <th>Sr. No</th>
+                                <th>Product Code</th>
                                 <th>Product</th>
                                 <th>Price</th>
                                 <th class="no-sort">Action</th>
@@ -41,8 +42,9 @@
                             @foreach($prices as $key => $price)
                                 <tr>
                                     <td>{{ ++$key }}</td>
+                                    <td>{{ $price->product->product_code }} </td>
                                     <td>{{ $price->product->name }} </td>
-                                    <td>{{ $price->price }}</td>
+                                    <td>${{ $price->price }}</td>
                                     <td class="action-table-data">
                                         <div class="edit-delete-action">
                                             <a class="me-2 p-2" href="{{ route('prices.edit', $price->id) }}">

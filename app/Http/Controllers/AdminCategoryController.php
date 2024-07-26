@@ -17,6 +17,42 @@ class AdminCategoryController extends Controller
         return view('admin.categories.index', compact('categories'));
     }
 
+    public function getCategories(Request $request)
+    {
+        $maxItemsPerPage = 10;
+
+        // Base query
+        $categoriesQuery = Category::select(['id', 'name', 'image', 'status']);
+
+        // Search filter
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $categoriesQuery->where('name', 'like', '%' . $searchValue . '%');
+        }
+
+        // Ordering
+        if ($request->has('order')) {
+            $orderColumn = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumn]['data'];
+            $categoriesQuery->orderBy($column, $orderDirection);
+        }
+
+        // Pagination
+        $totalRecords = $categoriesQuery->count();
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $currentPage = $request->input('start', 0) / $perPage;
+        $categories = $categoriesQuery->skip($currentPage * $perPage)->take($perPage)->get();
+
+        // Respond with data
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords, // This should reflect the filtered count if filtering is applied
+            "data" => $categories
+        ]);
+    }
+
     public function create()
     {
         return view('admin.categories.create');

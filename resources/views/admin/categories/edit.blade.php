@@ -40,7 +40,7 @@
                         </div>
                         <div id="imagePreview">
                             @if ($category->image)
-                                <img src="{{ asset($category->image) }}" id="preview-Img" class="img-preview" width="50" height="50">
+                                <img src="{{ asset($category->image) }}" id="preview-Img" class="img-preview" style="width: 50px; height: 50px;">
                             @else
                                 <img src="" id="preview-Img" height="50" width="50" name="image" hidden>
                             @endif
