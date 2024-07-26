@@ -89,9 +89,9 @@ class AdminPriceController extends Controller
             $priceData->update([
                 'status' => $status
             ]);
-            return response()->json(['status' => 'success', 'price'=> $status, 'message' => 'Category deleted successfully.'], 200);
+            return response()->json(['status' => 'success', 'price'=> $status, 'message' => 'Price deleted successfully.'], 200);
         } else {
-            return response()->json(['status' => 'error', 'message' => 'Category not found.'], 404);
+            return response()->json(['status' => 'error', 'message' => 'Price not found.'], 404);
         }
     }
 }

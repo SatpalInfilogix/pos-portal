@@ -149,9 +149,6 @@
                                     $('#restore-user[data-id="' + productId + '"]').hide();
                                     $('#delete-user[data-id="' + productId + '"]').show();
                                 }
-                                // $('#product-row-' + productId).remove();
-                                // alert('User deleted successfully');
-                                // window.location.reload();
                             } else {
                                 alert('Something went wrong. Please try again.');
                             }

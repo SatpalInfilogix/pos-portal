@@ -39,7 +39,7 @@ class AdminUserController extends Controller
     {
         $maxItemsPerPage = 10;
 
-        $usersQuery = User::select(['id', 'first_name', 'last_name', 'email', 'phone_number'])
+        $usersQuery = User::select(['id', 'first_name', 'last_name', 'email', 'status', 'phone_number'])
                         ->with('roles');
 
         if ($request->has('search') && !empty($request->search['value'])) {
@@ -132,9 +132,9 @@ class AdminUserController extends Controller
             $user->update([
                 'status' => $status
             ]);
-            return response()->json(['status' => 'success', 'user' => $status, 'message' => 'Category deleted successfully.'], 200);
+            return response()->json(['status' => 'success', 'user' => $status, 'message' => 'User deleted successfully.'], 200);
         } else {
-            return response()->json(['status' => 'error', 'message' => 'Category not found.'], 404);
+            return response()->json(['status' => 'error', 'message' => 'User not found.'], 404);
         }
     }
 }

@@ -92,9 +92,6 @@
                                             $('#restore-category[data-id="' + productId + '"]').hide();
                                             $('#delete-category[data-id="' + productId + '"]').show();
                                         }
-                                        // $('#product-row-' + productId).remove();
-                                        // alert('Category deleted successfully');
-                                        // window.location.reload();
                                     } else {
                                         alert('Something went wrong. Please try again.');
                                     }
