@@ -17,9 +17,9 @@
                 </a>
             </div>
             <!-- <div class="page-btn import">
-                                                    <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
-                                                            data-feather="download" class="me-2"></i>Import Product</a>
-                                                </div> -->
+                                                        <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
+                                                                data-feather="download" class="me-2"></i>Import Product</a>
+                                                    </div> -->
         </div>
         @if (session('success'))
             <div class="alert alert-success">
@@ -48,46 +48,6 @@
             </div>
         </div>
     </div>
-    <script>
-        $(document).ready(function() {
-            $(document).on('click', '.delete-product', function(e) {
-                e.preventDefault();
-                var productId = $(this).data('id');
-                var token = "{{ csrf_token() }}";
-                var url = "{{ route('users.destroy', '') }}/" + productId; // Use Laravel helper for URL
-
-                if (confirm('Are you sure you want to delete this User?')) {
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        data: {
-                            "_token": token,
-                        },
-                        success: function(response) {
-                            if (response.status == 'success') {
-                                if (response.user == 1) {
-                                    $('#restore-user[data-id="' + productId + '"]').show();
-                                    $('#delete-user[data-id="' + productId + '"]').hide();
-                                } else {
-                                    $('#restore-user[data-id="' + productId + '"]').hide();
-                                    $('#delete-user[data-id="' + productId + '"]').show();
-                                }
-                                // $('#product-row-' + productId).remove();
-                                // alert('User deleted successfully');
-                                // window.location.reload();
-                            } else {
-                                alert('Something went wrong. Please try again.');
-                            }
-                        },
-                        error: function(xhr) {
-                            console.log(xhr.responseText);
-                            alert('Something went wrong. Please try again.');
-                        }
-                    });
-                }
-            });
-        });
-    </script>
 @endsection
 
 
@@ -126,19 +86,24 @@
                         data: null,
                         render: function(data, type, row) {
                             var actions = '<div class="edit-delete-action">';
-                            actions += `<a class="me-2 p-2" href="./users/${row.id}/edit">`;
+                            actions +=
+                            `<a class="me-2 p-2 edit-btn" href="./users/${row.id}/edit">`;
                             actions += '<i class="fa fa-edit"></i>';
                             actions += '</a>';
 
                             if (row.status == 1) {
-                                actions += '<a class="me-2 p-2" id="restore-user" data-id="' +
+                                actions +=
+                                    '<a class="me-2 p-2 delete-btn" id="restore-user" data-id="' +
                                     row.id + '" href="#">Restore</a>';
-                                actions += '<a class="me-2 p-2" id="delete-user" data-id="' + row.id +
+                                actions +=
+                                    '<a class="me-2 p-2 delete-btn" id="delete-user" data-id="' +row.id +
                                     '" style="display: none;"><i class="fa fa-trash"></i></a>';
                             } else {
-                                actions += '<a class="me-2 p-2" id="delete-user" data-id="' + row.id +
+                                actions +=
+                                    '<a class="me-2 p-2 delete-btn" id="delete-user" data-id="' +row.id +
                                     '" href="#"><i class="fa fa-trash"></i></a>';
-                                actions += '<a class="me-2 p-2" id="restore-user" data-id="' +
+                                actions +=
+                                    '<a class="me-2 p-2 delete-btn" id="restore-user" data-id="' +
                                     row.id + '" style="display: none;">Restore</a>';
                             }
 
@@ -154,9 +119,47 @@
                     } // Disable sorting on 'Action' column
                 ],
                 paging: true,
-                pageLength: 10,
-                lengthMenu: [10, 25, 50, 100]
+                pageLength: 2,
+                lengthMenu: [2, 4, 50, 100]
             });
         })
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $(document).on('click', '.delete-btn', function(e) {
+                e.preventDefault();
+                var productId = $(this).data('id');
+                var token = "{{ csrf_token() }}";
+                var url = "{{ route('users.destroy', '') }}/" + productId; // Use Laravel helper for URL
+
+                if (confirm('Are you sure you want to delete this User?')) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            "_token": token,
+                        },
+                        success: function(response) {
+                            if (response.status == 'success') {
+                                if (response.user == 1) {
+                                    $('#restore-user[data-id="' + productId + '"]').show();
+                                    $('#delete-user[data-id="' + productId + '"]').hide();
+                                } else {
+                                    $('#restore-user[data-id="' + productId + '"]').hide();
+                                    $('#delete-user[data-id="' + productId + '"]').show();
+                                }
+                            } else {
+                                alert('Something went wrong. Please try again.');
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                            alert('Something went wrong. Please try again.');
+                        }
+                    });
+                }
+            });
+        });
     </script>
 @endsection

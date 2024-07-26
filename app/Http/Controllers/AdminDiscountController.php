@@ -90,9 +90,9 @@ class AdminDiscountController extends Controller
             $discountData->update([
                 'status' => $status
             ]);
-            return response()->json(['status' => 'success', 'discount' => $status, 'message' => 'Category deleted successfully.'], 200);
+            return response()->json(['status' => 'success', 'discount' => $status, 'message' => 'Discount deleted successfully.'], 200);
         } else {
-            return response()->json(['status' => 'error', 'message' => 'Category not found.'], 404);
+            return response()->json(['status' => 'error', 'message' => 'Discount not found.'], 404);
         }
     }
 }

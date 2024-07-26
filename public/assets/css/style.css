@@ -30676,6 +30676,28 @@ table tbody td.action-table-data a .add-checkbox {
     margin-bottom: 24px
 }
 
+.edit-btn{
+    color: #3577f1!important;
+}
+
+.delete-btn{
+    color: red!important;
+}
+
+.edit-btn:hover i, .delete-btn:hover i{
+    color: #fff!important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover{
+    background: #ff9f43 !important;
+    border: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button{
+    padding: 2px 8px!important;
+}
+
+
 .barcode-content-list .search-modal-header table thead th {
     padding: 15px 17px !important
 }

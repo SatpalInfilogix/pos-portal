@@ -21,14 +21,14 @@ class AdminCustomerController extends Controller
 
     public function store(Request $request)
     {
-        // $customerUniqueNumber = Customer::orderByDesc('customer_id')->first();
-        // if (!$customerUniqueNumber) {
-        //     $cusId =  'CUS0001';
-        // } else {
-        //     $numericPart = (int)substr($customerUniqueNumber->customer_id, 3);
-        //     $nextNumericPart = str_pad($numericPart + 1, 4, '0', STR_PAD_LEFT);
-        //     $cusId = 'CUS' . $nextNumericPart;
-        // }
+        /* $customerUniqueNumber = Customer::orderByDesc('customer_id')->first();
+        if (!$customerUniqueNumber) {
+            $cusId =  'CUS0001';
+        } else {
+            $numericPart = (int)substr($customerUniqueNumber->customer_id, 3);
+            $nextNumericPart = str_pad($numericPart + 1, 4, '0', STR_PAD_LEFT);
+            $cusId = 'CUS' . $nextNumericPart;
+        } */
 
         $customer['shipping_address'] = [
             'address'       => $request->shipping_address,
