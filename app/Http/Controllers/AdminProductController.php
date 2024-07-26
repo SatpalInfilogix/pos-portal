@@ -19,6 +19,56 @@ class AdminProductController extends Controller
         return view('admin.products.index', compact('products'));
     }
 
+    public function getProducts(Request $request)
+    {
+        $maxItemsPerPage = 10;
+
+        // Base query
+        $productsQuery = Product::select(['id', 'name', 'manufacture_date', 'image', 'status', 'category_id'])
+                                ->with('category');
+
+        // Search filter
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $productsQuery->where('name', 'like', '%' . $searchValue . '%')
+                            ->orWhere('manufacture_date', 'like', '%' . $searchValue . '%');
+        }
+
+        // Sorting
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumnIndex]['data'];
+
+            // Sort by valid columns only
+            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status']; // Define valid columns
+            if (in_array($column, $validColumns)) {
+                $productsQuery->orderBy($column, $orderDirection);
+            }
+        }
+
+        // Pagination
+        $totalRecords = $productsQuery->count();
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $currentPage = (int) ($request->input('start', 0) / $perPage);
+        $products = $productsQuery->skip($currentPage * $perPage)->take($perPage)->get();
+
+        // Transform data to include category_name
+        $products->transform(function ($product) {
+            $product->category_name = $product->category ? $product->category->name : 'N/A';
+            return $product;
+        });
+
+        // Respond with data
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords, // Adjust if filtered records are different
+            "data" => $products
+        ]);
+    }
+
+
     public function create()
     {
         $categories = Category::latest()->where('status', 0)->get();

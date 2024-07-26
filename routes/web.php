@@ -148,7 +148,11 @@ Route::post('/set-invoice-for-inventory-return', [InventoryReturnController::cla
 
 /************************* DataTables Routes ************************/
 Route::post('/get-users', [AdminUserController::class, 'getUsers'])->name('get-users');
-Route::post('/get-categories', [AdminCategoryController::Class, 'getCategories'])->name('get-categories');
+Route::post('/get-categories', [AdminCategoryController::class, 'getCategories'])->name('get-categories');
+Route::post('/get-products', [AdminProductController::class, 'getProducts'])->name('get-products');
+Route::post('/get-prices', [AdminPriceController::class, 'getPrices'])->name('get-prices');
+Route::post('/get-customers', [AdminCustomerController::class, 'getCustomers'])->name('get-customers');
+Route::post('/get-sales', [AdminSalesController::class, 'getSalesOrder'])->name('get-sales');
 /************************* End DataTables Routes ************************/
 
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');

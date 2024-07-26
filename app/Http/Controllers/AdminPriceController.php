@@ -17,6 +17,60 @@ class AdminPriceController extends Controller
         return view('admin.prices.index', compact('prices'));
     }
 
+    public function getPrices(Request $request)
+    {
+        $maxItemsPerPage = 10;
+    
+        // Base query
+        $pricesQuery = PriceMaster::select(['id', 'price', 'product_id', 'status'])
+                            ->with('product'); // Ensure 'product' relationship is defined in Price model
+    
+        // Search filter
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $pricesQuery->whereHas('product', function($query) use ($searchValue) {
+                $query->where('name', 'like', '%' . $searchValue . '%')
+                      ->orWhere('product_code', 'like', '%' . $searchValue . '%')
+                      ->orWhere('price', 'like', '%' . $searchValue . '%');
+            });
+        }
+    
+        // Sorting
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumnIndex]['data'];
+    
+            // Sort by valid columns only
+            $validColumns = ['id', 'price', 'status']; // Define valid columns
+            if (in_array($column, $validColumns)) {
+                $productsQuery->orderBy($column, $orderDirection);
+            }
+        }
+    
+        // Pagination
+        $totalRecords = $pricesQuery->count();
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $currentPage = (int) ($request->input('start', 0) / $perPage);
+        $prices = $pricesQuery->skip($currentPage * $perPage)->take($perPage)->get();
+    
+        // Transform data to include product_name and product_code
+        $prices->transform(function ($price) {
+            $price->product_name = $price->product ? $price->product->name : 'N/A';
+            $price->product_code = $price->product ? $price->product->product_code : 'N/A';
+            return $price;
+        });
+    
+        // Respond with data
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords, // Adjust if filtered records are different
+            "data" => $prices
+        ]);
+    }
+    
+
     public function autocomplete(Request $request)
     {
         $searchTerm = $request->input('input');

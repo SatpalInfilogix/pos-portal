@@ -121,8 +121,8 @@
                 }
             ],
             paging: true,
-            pageLength: 2,
-            lengthMenu: [2, 4, 50, 100]
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100]
         });
     });
 

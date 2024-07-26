@@ -55,8 +55,8 @@
 
     <div class="card table-list-card">
         <div class="card-body">
-            <div class="table-responsive dataview">
-                <table class="table dashboard-expired-products">
+            <div class="table-responsive p-0 m-0">
+                <table id="products-table" class="table products-table">
                     <thead>
                         <tr>
                             <th>Sr. No</th>
@@ -68,7 +68,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($products as $key => $product)
+                        <!-- @foreach($products as $key => $product)
                         <tr id="product-row-{{ $product->id }}">
                             <td>{{ ++$key }}</td>
                             <td>{{ $product->category->name ?? '' }}</td>
@@ -87,13 +87,10 @@
                                         <a class="me-2 p-2 delete-product" id="delete-product" data-id="{{ $product->id}}" href="#"><i data-feather="trash-2" class="feather-trash-2"></i></a>
                                         <a class="me-2 p-2 delete-product" id="restore-product" data-id="{{ $product->id }}" style="display: none;">Restore</a>
                                     @endif
-                                    <!-- <a class="p-2 delete-product" data-id="{{ $product->id }}" href="#">
-                                        <i data-feather="trash-2" class="feather-trash-2"></i>
-                                    </a> -->
                                 </div>
                             </td>
                         </tr>
-                        @endforeach
+                        @endforeach -->
                     </tbody>
                 </table>
             </div>
@@ -101,44 +98,100 @@
     </div>
 </div>
 <script>
-$(document).ready(function() {
-    $('.delete-product').click(function(e) {
-        e.preventDefault();
-        var productId = $(this).data('id');
-        var token = "{{ csrf_token() }}";
-        var url = "{{route('products.destroy','')}}/" + productId;
-
-        if (confirm('Are you sure you want to delete this product?')) {
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                data: {
-                    "_token": token,
-                },
-                success: function(response) {
-                    if(response.status == 'success') {
-                        if(response.product == 1) {
-                            $('#restore-product[data-id="' + productId + '"]').show();
-                            $('#delete-product[data-id="' + productId + '"]').hide();
-                        } else {
-                            $('#restore-product[data-id="' + productId + '"]').hide();
-                            $('#delete-product[data-id="' + productId + '"]').show();
-                        }
-                        // $('#product-row-' + productId).remove();
-                        // alert('Product deleted successfully');
-                        // window.location.reload();
-                    } else {
-                        alert('Something went wrong. Please try again.');
+    $(function() {
+        $('.products-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: "{{ route('get-products') }}",
+                type: "POST",
+                data: function(d) {
+                    d._token = "{{ csrf_token() }}";
+                    return d;
+                }
+            },
+            columns: [
+                { data: "id" },
+                { data: "category_name" }, // Ensure this matches the key from the backend
+                { data: "name" },
+                { data: "manufacture_date" },
+                { 
+                    data: "image",
+                    render: function(data, type, row) {
+                        // Check if image data is being processed correctly
+                        return `<img src="${data ? '{{ url('') }}' + '/' + data : 'default-image-url'}" alt="${row.name}" style="width: 50px; height: 50px;">`;
                     }
                 },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    alert('Something went wrong. Please try again.');
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        var actions = '<div class="edit-delete-action">';
+                        actions += `<a class="me-2 p-2 edit-btn" href="./products/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
+
+                        if (row.status == 1) {
+                            actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
+                            actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
+                        } else {
+                            actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
+                            actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" style="display: none;">Restore</a>`;
+                        }
+                        actions += '</div>';
+                        return actions;
+                    }
                 }
-            });
-        }
+            ],
+            columnDefs: [
+                {
+                    orderable: false,
+                    targets: 5,  // Adjust this index based on the actual number of columns
+                    className: "action-table-data"
+                }
+            ],
+            paging: true,
+            pageLength: 10, // Adjusted to match the lengthMenu
+            lengthMenu: [10, 25, 50, 100],
+            order: [[1, 'asc']] // Optional: Default ordering by the category column
+        });
     });
-});
+
+    $(document).ready(function() {
+        $(document).on('click', '.delete-btn', function(e) {
+            e.preventDefault();
+            var productId = $(this).data('id');
+            var token = "{{ csrf_token() }}";
+            var url = "{{route('products.destroy','')}}/" + productId;
+
+            if (confirm('Are you sure you want to delete this product?')) {
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    data: {
+                        "_token": token,
+                    },
+                    success: function(response) {
+                        if(response.status == 'success') {
+                            if(response.product == 1) {
+                                $('#restore-product[data-id="' + productId + '"]').show();
+                                $('#delete-product[data-id="' + productId + '"]').hide();
+                            } else {
+                                $('#restore-product[data-id="' + productId + '"]').hide();
+                                $('#delete-product[data-id="' + productId + '"]').show();
+                            }
+                            // $('#product-row-' + productId).remove();
+                            // alert('Product deleted successfully');
+                            // window.location.reload();
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                        alert('Something went wrong. Please try again.');
+                    }
+                });
+            }
+        });
+    });
 </script>
 @endsection
 
