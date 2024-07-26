@@ -47,25 +47,18 @@
         </div>
         <!-- container -->
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/js/feather.min.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/js/jquery.slimscroll.min.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/css/default/apexchart/apexcharts.min.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/css/default/apexchart/chart-data.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/css/default/sweetalert/sweetalert2.all.min.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/css/default/sweetalert/sweetalerts.min.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/js/theme-script.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
-    <script src="{{ asset('assets/js/script.js') }}" type="8c3c6b194b68e17fc7217ea3-text/javascript"></script>
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <script src="{{ asset('assets/js/feather.min.js') }}"></script>
+    <script src="{{ asset('assets/js/jquery.slimscroll.min.js') }}"></script>
+    <script src="{{ asset('assets/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="{{ asset('assets/css/default/apexchart/apexcharts.min.js') }}"></script>
+    <script src="{{ asset('assets/css/default/apexchart/chart-data.js') }}"></script>
+    <script src="{{ asset('assets/css/default/sweetalert/sweetalert2.all.min.js') }}"></script>
+    <script src="{{ asset('assets/css/default/sweetalert/sweetalerts.min.js') }}"></script>
+    <script src="{{ asset('assets/js/theme-script.js') }}"></script>
+    <script src="{{ asset('assets/js/script.js') }}"></script>
     <script src="{{ asset('assets/js/rocket-loader.min.js') }}" data-cf-settings="8c3c6b194b68e17fc7217ea3-|49" defer></script>
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-    <!-- <script type="a2ed06078a827c6500801d98-text/javascript" src="{{ asset('assets/js/jquery.min.js') }}"></script>
-    <script type="a2ed06078a827c6500801d98-text/javascript" src="{{ asset('assets/js/jquery-ui.min.js') }}"></script>
-    <script type="a2ed06078a827c6500801d98-text/javascript" src="{{ asset('assets/js/popper.min.js') }}"></script>
-    <script type="a2ed06078a827c6500801d98-text/javascript" src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('assets/js/waves.min.js') }}" type="a2ed06078a827c6500801d98-text/javascript"></script>
-    <script type="a2ed06078a827c6500801d98-text/javascript" src="{{ asset('assets/js/modernizr.js') }}"></script> -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     @yield('script')
 </body>
