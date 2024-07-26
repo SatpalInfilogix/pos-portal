@@ -46,7 +46,7 @@ class PosDashboardController extends Controller
 
         // $discounts = Discount::where('quantity', '<', $cart_quantity)->get();
         $roleId = auth()->user()->roles()->first()->id;
-        $discount = Discount::where('roles', $roleId)->first();
+        $discount = Discount::where('role_id', $roleId)->first();
 
         $customers = Customer::get()->unique('contact_number');
 

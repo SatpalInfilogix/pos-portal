@@ -221,12 +221,12 @@
                             <tr>
                                 <td>Discount</td>
                                 <td class="">
-                                    @php
+                                    <?php
                                         $discountValue = '';
                                         if(session()->has('cart') && array_key_exists('discount_percentage', session('cart'))) {
                                             $discountValue = session('cart')['discount_percentage'];
                                         }
-                                    @endphp
+                                        ?>
                                     <input type="number" class="form-control" name="discount" id="discountSelect" min="0" data-max="{{ $discount->discount ?? '' }}" value="{{ $discountValue }}">
                                     <div class="text-danger" id="discountError"></div>
                                 </td>
@@ -360,6 +360,7 @@
                         let formatedPayable = '$' + payable.toFixed(2);
                         $('.payable').html(formatedPayable);
                     } else {
+                        $('#discountError').html(response.message);
                         $('.error-message').html(response.message);
                     }
                 },

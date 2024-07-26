@@ -16,7 +16,7 @@ class AdminDiscountController extends Controller
         $discounts = Discount::with('product')->latest()->get();
         foreach($discounts as $key => $discount)
         {
-            $roles = Role::where('id', $discount->roles)->first();
+            $roles = Role::where('id', $discount->role_id)->first();
             $discounts[$key]['roleName'] =  $roles->name;
         }
 
@@ -27,7 +27,7 @@ class AdminDiscountController extends Controller
     {
         $roles = Role::where('name', '!=', 'super admin')->latest()->get();
         foreach($roles as $key => $role) {
-            $discount = Discount::where('roles', $role->id)->first();
+            $discount = Discount::where('role_id', $role->id)->first();
             $roles[$key]['discount'] = $discount->discount ?? ' ';
         }
         return view('admin.discount.create', compact('roles'));
@@ -41,14 +41,14 @@ class AdminDiscountController extends Controller
         foreach ($roles as $index => $role) {
             $discount = isset($discounts[$index]) ? $discounts[$index] : null;
             
-            $existingDiscount = Discount::where('roles', $role)->first();
+            $existingDiscount = Discount::where('role_id', $role)->first();
             if ($existingDiscount) {
                 $existingDiscount->update([
                         'discount' => $discount,
                     ]);
             } else {
                 Discount::create([
-                    'roles' => $role,
+                    'role_id' => $role,
                     'discount' => $discount,
                     'created_by' => Auth::id(),
                 ]);
