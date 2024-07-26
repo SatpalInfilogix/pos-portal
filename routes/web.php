@@ -146,7 +146,11 @@ Route::post('update-cart', [PosCartController::class, 'update'])->name('update-c
 Route::post('discount', [PosCartController::class, 'discountApply'])->name('discount');
 Route::post('/set-invoice-for-inventory-return', [InventoryReturnController::class, 'setInvoice'])->name('set-invoice-for-inventory-return');
 
+/************************* DataTables Routes ************************/
 Route::post('/get-users', [AdminUserController::class, 'getUsers'])->name('get-users');
+Route::post('/get-categories', [AdminCategoryController::Class, 'getCategories'])->name('get-categories');
+/************************* End DataTables Routes ************************/
+
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');
 
 
