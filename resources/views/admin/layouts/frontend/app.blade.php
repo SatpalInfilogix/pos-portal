@@ -10,7 +10,7 @@
         href="https://dreamspos.dreamstechnologies.com/html/template/assets/img/favicon.png">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
-    
+
     <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap-datetimepicker.min.css') }}">
@@ -89,7 +89,8 @@
                                 <img src="{{ $profile_picture }}" alt="" class="img-fluid">
                             </span>
                             <span class="user-detail">
-                                <span class="user-name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>
+                                <span class="user-name">{{ auth()->user()->first_name }}
+                                    {{ auth()->user()->last_name }}</span>
                                 <span class="user-role">{{ auth()->user()->getRoleNames()->first() }}</span>
                             </span>
                         </span>
@@ -309,14 +310,15 @@
                                     <label>Customer Name</label>
                                     <select name="order_customer_id" class="form-control chosen-select" required>
                                         <option></option>
-                                        @foreach($customers as $customer)
-                                            <option value="{{ $customer->customer_name }}" 
+                                        @foreach ($customers as $customer)
+                                            <option value="{{ $customer->customer_name }}"
                                                 data-customer-id="{{ $customer->id }}"
                                                 data-customer-contact = "{{ $customer->contact_number }}"
                                                 data-customer-alternate = "{{ $customer->alternate_number }}"
                                                 data-customer-billing = "{{ $customer->billing_address }}"
-                                                data-customer-shipping = "{{ $customer->shipping_address }}" 
-                                            >{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
+                                                data-customer-shipping = "{{ $customer->shipping_address }}">
+                                                {{ $customer->customer_name . ' ( ' . $customer->contact_number . ' )' }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -354,7 +356,8 @@
                             <div class="col-lg-6 col-sm-12 col-12">
                                 <div class="input-blocks">
                                     <label>Shipping Pincode</label>
-                                    <input type="text" name="shipping_address_pin_code" class="form-control" required>
+                                    <input type="text" name="shipping_address_pin_code" class="form-control"
+                                        required>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-sm-12 col-12">
@@ -507,19 +510,70 @@
             let productImage = document.getElementById(`productImage${productId}`);
             let productCard = productImage.closest('.product-info');
 
+            $('body').addClass('updated-cart');
+
             // Check if product is already in cart
             if (productCard.classList.contains('added-to-cart')) {
                 // Remove from cart (simulated)
                 productCard.classList.remove('added-to-cart');
                 removeFromCart(productId);
-                console.log('Product removed from cart:', productId);
             } else {
-                console.log('asd'); 
                 // Add to cart (simulated)
                 productCard.classList.add('added-to-cart');
                 addToCart(productId);
-                console.log('Product added to cart:', productId);
             }
+        }
+
+
+        function updateCartUI(cartData) {
+            let cartHtml = ``;
+
+            if (cartData.count == 0) {
+                $(`.cart-indicator`).addClass('d-none');
+                cartHtml = `<h3 class="font-bold text-center mt-5">Cart is empty</h3>`;
+            } else {
+                $(`.cart-indicator`).removeClass('d-none');
+                $.each(cartData.products, function(key, product) {
+                    cartHtml += `<div class="product-list d-flex align-items-center justify-content-between" id="product_${product.id}">
+                        <div class="d-flex align-items-center product-info">
+                            <a href="javascript:void(0);" class="img-bg">
+                                <img src="${product.image}" alt="Products">
+                            </a>
+                            <div class="info">
+                                <span>${product.code}</span>
+                                <h6><a href="javascript:void(0);">${product.name}</a></h6>
+                                <p>$${product.price}</p>
+                            </div>
+                        </div>
+                        <div class="qty-item text-center">
+                            <a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease" data-bs-toggle="tooltip" data-id="${product.id}" data-bs-placement="top" title="decrease">
+                                <i data-feather="minus-circle" class="feather-14"></i>
+                            </a>
+                            <input type="text" class="form-control text-center quantity__number" name="qty" value="${product.quantity}">
+                            <a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase" data-bs-toggle="tooltip" data-id="${product.id}" data-bs-placement="top" title="increase">
+                                <i data-feather="plus-circle" class="feather-14"></i>
+                            </a>
+                        </div>
+                        <div class="d-flex align-items-center action">
+                            <a class="btn-icon delete-icon confirm-text" onclick="removeFromCart(${product.id})">
+                                <i data-feather="trash-2" class="feather-14"></i>
+                            </a>
+                        </div>
+                    </div>`;
+                });
+            }
+
+            $('.product-list-cart').html(cartHtml);
+
+            let cart = cartData.formatted_sub_total;
+            let amount = '<b>' + cart + '</b>';
+            $('.totalAmount').html(amount);
+            $('.grandTotal').html(cartData.formatted_grand_total);
+            $('.tax').html(`$${cartData.tax}`);
+            $('.payable').html(`$${cartData.payable}`);
+            $('.count-products').html(cartData.count);
+
+            feather.replace();
         }
 
         function addToCart(productId) {
@@ -533,21 +587,11 @@
                     _token: '{{ csrf_token() }}'
                 },
                 success: function(response) {
-                    console.log(response.cart);
-                    console.log('Product added to cart:', response);
                     if (response.success == true) {
-                            updateCartUI(response.cart);
-                            console.log(response.cart.formatted_grand_total);
-                            let cart = response.cart.formatted_sub_total;
-                            let amount = '<b>' + cart + '</b>';
-                            $('.totalAmount').html(amount);
-                            $('.grandTotal').html(response.cart.formatted_grand_total);
-                            $('.tax').html(response.cart.tax);
-                            $('.payable').html(response.cart.payable);
-                            $('.count-products').html(response.cart.count);
-                        } else {
-                            alert('Error');
-                        }
+                        updateCartUI(response.cart);
+                    } else {
+                        alert('Error');
+                    }
                 },
                 error: function(xhr, status, error) {
                     console.error('Error adding to cart:', error);
@@ -555,46 +599,10 @@
             });
         }
 
-        function updateCartUI(cartData) {
-            var cartStr = '<div class="product-list-cart">';
-            console.log(cartData.count);
-            if (cartData.count > 0) {
-                $.each(cartData.products, function(key, product) {
-                    cartStr += '<div class="product-list d-flex align-items-center justify-content-between" id="product_' + product.id + '">' +
-                                    '<div class="d-flex align-items-center product-info" data-bs-toggle="modal" data-bs-target="#products">' +
-                                        '<a href="javascript:void(0);" class="img-bg">' +
-                                            '<img src="' + product.image + '" alt="Products">' +
-                                        '</a>' +
-                                        '<div class="info">' +
-                                            '<span>' + product.code + '</span>' +
-                                            '<h6><a href="javascript:void(0);">' + product.name + '</a></h6>' +
-                                            '<p>$' + product.price + '</p>' +
-                                        '</div>' +
-                                    '</div>' +
-                                    '<div class="qty-item text-center">' +
-                                        '<a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease" data-bs-toggle="tooltip" data-id="' + product.id + '" data-bs-placement="top" title="minus">-</a>' +
-                                        '<input type="text" class="form-control text-center quantity__number" name="qty" value="' + product.quantity + '">' +
-                                        '<a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase" data-bs-toggle="tooltip" data-id="' + product.id + '" data-bs-placement="top" title="plus">+</a>' +
-                                    '</div>' +
-                                    '<div class="d-flex align-items-center action">' +
-                                        '<a class="btn-icon delete-icon confirm-text" onclick="removeFromCart(' + product.id + ')">' +
-                                            '<i data-feather="trash-2" class="feather-14"></i>' +
-                                        '</a>' +
-                                    '</div>' +
-                                '</div>';
-                });
-            } else {
-                cartStr += '<h3 class="font-bold text-center mt-5">{{__('Cart is empty')}}</h3>';
-            }
-            cartStr += '</div>';
-
-            $('.producr-list-cart').html(cartStr); // Update the cart HTML
-        }
-        
         // Function to remove product from cart in backend (AJAX request)
         function removeFromCart(productId) {
             $.ajax({
-                url: '{{ route('remove-from-cart') }}',
+                url: "{{ route('remove-from-cart') }}",
                 method: 'POST',
                 data: {
                     product_id: productId,
@@ -602,19 +610,7 @@
                 },
                 success: function(response) {
                     if (response.success) {
-                        console.log(response.cart);
-                        let cart = response.cart.formatted_sub_total;
-                        let amount = '<b>' + cart + '</b>';
-                        $('.totalAmount').html(amount);
-                        $('.grandTotal').html(response.cart.formatted_grand_total);
-                        $('.tax').html(response.cart.tax);
-                        $('.payable').html(response.cart.payable);
-                        $('#product-check_' + productId).removeClass('added-to-cart');
-                        $('#product_' + productId).remove();
-                        $('.count-products').html(response.cart.count);
-                        // $('.discount-option').html(response.discountOptions);
-                        $('.discountAmount').html( response.cart.discount_amount);
-                        $('#discountSelect').val(response.cart.discount_percentage);
+                        updateCartUI(response.cart);
                     }
 
                 },
