@@ -59,8 +59,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
         Route::get('/sales/{id}',[AdminSalesController::class,'show'])->name('sales.view');
-        Route::get('/return-stock-detail',[InventoryReturnController::class,'returnStockList'])->name('return.stock.index');
-        Route::get('/return-stock-detail/{id}',[InventoryReturnController::class,'show'])->name('view.stock.index');
+        Route::get('/return-stocks',[InventoryReturnController::class,'returnStockList'])->name('return_stocks.index');
+        Route::get('/return-stocks/{id}',[InventoryReturnController::class,'show'])->name('view_return_stocks.index');
         /********************** Sales Routes Ends Here  **********************/
          
          Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');

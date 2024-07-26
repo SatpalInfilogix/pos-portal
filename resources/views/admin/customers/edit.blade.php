@@ -30,83 +30,37 @@
                                     <input type="text" name="name" class="form-control" value="{{ $customer->customer_name }}">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                            <div class="row mb-3">
+                                <div class="col-md-6 add-product">
                                     <label class="form-label">Phone Numbere</label>
                                     <input type="text" name="phone_number" class="form-control" value="{{ $customer->contact_number }}">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 add-product">
                                     <label class="form-label">Alternate Phone Number</label>
                                     <input type="text" name="alternate_number" class="form-control" value="{{ $customer->alternate_number }}">
                                 </div>
                             </div>
-                            <h6 >Shipping Address</h6>
-                            <br>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" name="shipping_address" class="form-control" value="{{ $customer->shipping_address->address }}">
+                            <div class="row mb-3">
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label"><b>Shipping Address</b></label>
+                                    <textarea rows="4" name="shipping_address" class="form-control" >{{ $customer->shipping_address }}</textarea>
+                                </div>
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label"><b>Billing Address</b></label>
+                                    <textarea rows="4" name="billing_address" class="form-control">{{ $customer->billing_address }}</textarea>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">City</label>
-                                    <input type="text" name="shipping_city" class="form-control" value="{{ $customer->shipping_address->city }}">
+                            <div class="row mb-3">
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label">Shipping Pincode</label>
+                                    <input type="text" name="shipping_address_pin_code" class="form-control" value="{{ $customer->shipping_address_pin_code }}">
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">State</label>
-                                    <input type="text" name="shipping_state" class="form-control" value="{{ $customer->shipping_address->state }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Country</label>
-                                    <input type="text" name="shipping_country" class="form-control" value="{{ $customer->shipping_address->country }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Pin Code</label>
-                                    <input type="text" name="shipping_pin_Code" class="form-control" value="{{ $customer->shipping_address->postal_code }}">
+                                <div class="col-md-6 add-product">
+                                    <label class="form-label">Billing Pincode</label>
+                                    <input type="text" name="billing_address_pin_code" class="form-control" value="{{ $customer->billing_address_pin_code }}">
                                 </div>
                             </div>
 
-                            <h6>Billing Address</h6>
-                            <br>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Address</label>
-                                    <input type="text" name="billing_address" class="form-control" value="{{ $customer->billing_address->address}}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">City</label>
-                                    <input type="text" name="billing_city" class="form-control" value="{{ $customer->billing_address->city}}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">State</label>
-                                    <input type="text" name="billing_state" class="form-control" value="{{ $customer->billing_address->state }}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Country</label>
-                                    <input type="text" name="billing_country" class="form-control" value="{{ $customer->billing_address->country}}">
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Pin Code</label>
-                                    <input type="text" name="billing_pin_Code" class="form-control" value="{{ $customer->billing_address->postal_code}}">
-                                </div>
-                            </div>
                         </div>
                     </div>
                     <div class="col-lg-12">

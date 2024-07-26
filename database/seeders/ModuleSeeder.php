@@ -34,6 +34,22 @@ class ModuleSeeder extends Seeder
             'slug' => 'users'
         ]);
         Module::create([
+            'name' => 'Sales',
+            'slug' => 'sales'
+        ]);
+        Module::create([
+            'name' => 'Return Stocks',
+            'slug' => 'return stocks'
+        ]);
+        Module::create([
+            'name' => 'Inventory Transfers',
+            'slug' => 'inventory transfers'
+        ]);
+        Module::create([
+            'name' => 'Customers',
+            'slug' => 'customers'
+        ]);
+        Module::create([
             'name' => 'Roles & Permissions',
             'slug' => 'roles & permissions'
         ]);
