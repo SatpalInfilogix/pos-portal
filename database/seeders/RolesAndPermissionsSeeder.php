@@ -44,6 +44,26 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'edit discounts']);
         Permission::create(['name' => 'delete discounts']);
 
+        Permission::create(['name' => 'view sales']);
+        Permission::create(['name' => 'create sales']);
+        Permission::create(['name' => 'edit sales']);
+        Permission::create(['name' => 'delete sales']);
+
+        Permission::create(['name' => 'view return stocks']);
+        Permission::create(['name' => 'create return stocks']);
+        Permission::create(['name' => 'edit return stocks']);
+        Permission::create(['name' => 'delete return stocks']);
+
+        Permission::create(['name' => 'view inventory transfers']);
+        Permission::create(['name' => 'create inventory transfers']);
+        Permission::create(['name' => 'edit inventory transfers']);
+        Permission::create(['name' => 'delete inventory transfers']);
+
+        Permission::create(['name' => 'view customers']);
+        Permission::create(['name' => 'create customers']);
+        Permission::create(['name' => 'edit customers']);
+        Permission::create(['name' => 'delete customers']);
+
         Permission::create(['name' => 'view roles & permissions']);
         Permission::create(['name' => 'create roles & permissions']);
         Permission::create(['name' => 'edit roles & permissions']);

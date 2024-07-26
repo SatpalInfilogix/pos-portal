@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('discounts', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('role_id');
             $table->string('discount')->nullable();
             $table->string('quantity')->nullable();
             $table->boolean('status')->default('0');
             $table->unsignedBigInteger('created_by');
             $table->timestamps();
 
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->foreign('created_by')->references('id')->on('users');
         });
     }
