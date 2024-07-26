@@ -601,6 +601,8 @@
                         $('#product_' + productId).remove();
                         $('.count-products').html(response.cart.count);
                         // $('.discount-option').html(response.discountOptions);
+                        $('.discountAmount').html( response.cart.discount_amount);
+                        $('#discountSelect').val(response.cart.discount_percentage);
                     }
 
                 },
