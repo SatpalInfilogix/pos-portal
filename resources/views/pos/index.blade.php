@@ -157,7 +157,7 @@
             </div>
         </div>
         <div class="col-md-12 col-lg-4 ps-0">
-            <aside class="product-order-list" data-max-discount="{{ $discount->discount }}">
+            <aside class="product-order-list" data-max-discount="{{ $discount->discount ?? '' }}">
                 {{-- <div class="head d-flex align-items-center justify-content-between w-100">
                     <div class>
                         <h5>Order List</h5>
@@ -227,7 +227,7 @@
                                             $discountValue = session('cart')['discount_percentage'];
                                         }
                                     @endphp
-                                    <input type="number" class="form-control" name="discount" id="discountSelect" min="0" data-max="{{ $discount->discount }}" value="{{ $discountValue }}">
+                                    <input type="number" class="form-control" name="discount" id="discountSelect" min="0" data-max="{{ $discount->discount ?? '' }}" value="{{ $discountValue }}">
                                     <div class="text-danger" id="discountError"></div>
                                 </td>
                             </tr>
