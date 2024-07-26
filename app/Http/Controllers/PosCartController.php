@@ -105,46 +105,6 @@ class PosCartController extends Controller
         ]);
     }
 
-    /* private function generateCartData(){
-        $cartStr = '<div class="product-list-cart">';
-        if (session('cart') && isset(session('cart')['products']))
-        {
-            foreach(session('cart')['products'] as $key => $product)
-            {
-                $cartStr .= '<div class="product-list d-flex align-items-center justify-content-between">
-                            <div class="d-flex align-items-center product-info" data-bs-toggle="modal"
-                                data-bs-target="#products">
-                                <a href="javascript:void(0);" class="img-bg">
-                                    <img src="'. $product['image'] .'"
-                                        alt="Products">
-                                </a>
-                                <div class="info">
-                                    <span>PT0005</span>
-                                    <h6><a href="javascript:void(0);">'. $product['name'] .'</a></h6>
-                                    <p>$'. $product['price'] .'</p>
-                                </div>
-                            </div>
-                            <div class="qty-item text-center">
-                                <a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease"data-bs-toggle="tooltip" data-id = "'. $product['id'] .'" data-bs-placement="top" title="minus">-</a>
-                                <input type="text" class="form-control text-center quantity__number" name="qty" value="'. $product['quantity'] .'">
-                                <a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase" data-bs-toggle="tooltip" data-id = "'. $product['id'] .'" data-bs-placement="top" title="plus">+</a>
-                            </div>
-                            <div class="d-flex align-items-center action">
-                                <!-- <a class="btn-icon edit-icon me-2" href="#"
-                                    data-bs-toggle="modal" data-bs-target="#edit-product">
-                                    <i data-feather="edit" class="feather-14"></i>
-                                </a> -->
-                                <a class="btn-icon delete-icon close-cart" onclick="removeFromCart('. $product['id'] .')">
-                                    <i data-feather="trash-2" class="feather-14"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>';
-            }
-        }
-        return $cartStr;
-    } */
-
     public function remove(Request $request)
     {
         if ($request->product_id) 
@@ -266,8 +226,8 @@ class PosCartController extends Controller
                 $cart['discount_amount'] = 0;
             }
 
-            $cart['tax'] = $cart['grand_total'] * 0.15;
-            $cart['payable'] = $cart['grand_total'] + $cart['tax'];
+            $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+            $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
 
             $cart['count']  = count($cart['products']);
             session()->put('cart', $cart);
