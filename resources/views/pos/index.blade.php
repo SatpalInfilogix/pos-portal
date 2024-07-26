@@ -494,6 +494,8 @@
         let alternate_number = $('[name="alternate_number"]').val();
         let shipping_address = $('[name="shipping_address"]').val();
         let billing_address = $('[name="billing_address"]').val();
+        let shipping_address_pin_code = $('[name="shipping_address_pin_code"]').val();
+        let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
         let tender_amount = $('[name="tender_amount"]').val();
         let change_amount = $('[name="change_amount"]').val();
         $.ajax({
@@ -510,6 +512,8 @@
                 payment_method : payment_method,
                 tender_amount : tender_amount,
                 change_amount : change_amount,
+                shipping_address_pin_code : shipping_address_pin_code,
+                billing_address_pin_code : billing_address_pin_code,
             },success : function(resp){
                 
                 if (resp.success) {

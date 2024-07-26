@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->integer('customer_id')->nullable();
             $table->string('customer_name')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('alternate_number')->nullable();
@@ -21,6 +20,7 @@ return new class extends Migration
             $table->text('shipping_address_pin_code')->nullable();
             $table->text('billing_address')->nullable();
             $table->text('billing_address_pin_code')->nullable();
+            $table->integer('created_by')->nullable();
             $table->timestamps();
         });
     }

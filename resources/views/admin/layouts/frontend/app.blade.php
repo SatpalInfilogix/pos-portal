@@ -351,6 +351,18 @@
                                     <textarea name="billing_address" required></textarea>
                                 </div>
                             </div>
+                            <div class="col-lg-6 col-sm-12 col-12">
+                                <div class="input-blocks">
+                                    <label>Shipping Pincode</label>
+                                    <input type="text" name="shipping_address_pin_code" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-sm-12 col-12">
+                                <div class="input-blocks">
+                                    <label>Billing Pincode</label>
+                                    <input type="text" name="billing_address_pin_code" class="form-control">
+                                </div>
+                            </div>
                         </div>
                         <div class="block-section payment-method">
                             <h6>Payment Method</h6>

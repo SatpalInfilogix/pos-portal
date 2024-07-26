@@ -30,28 +30,16 @@ class AdminCustomerController extends Controller
             $cusId = 'CUS' . $nextNumericPart;
         } */
 
-        $customer['shipping_address'] = [
-            'address'       => $request->shipping_address,
-            'city'          => $request->shipping_city,
-            'country'       => $request->shipping_country,
-            'state'         => $request->shipping_state,
-            'postal_code'   => $request->shipping_pin_Code,
-        ];
-        $customer['billing_address'] = [
-            'address'       => $request->billing_address,
-            'city'          => $request->billing_city,
-            'country'    => $request->billing_country,
-            'state'      => $request->billing_state,
-            'postal_code'   => $request->billing_pin_Code,
-        ];
 
         Customer::create([
-            'customer_id'       => Auth::id(),
             'customer_name'     => $request->name,
             'contact_number'    => $request->phone_number,
             'alternate_number'  => $request->alternate_number,
-            'shipping_address'  => json_encode($customer['shipping_address']),
-            'billing_address'   => json_encode($customer['billing_address']) ?? json_encode($customer['shipping_address']),
+            'shipping_address'  => $request->shipping_address,
+            'billing_address'   => $request->billing_address ?? $request->shipping_address,
+            'shipping_address_pin_code'   => $request->shipping_address_pin_code,
+            'billing_address_pin_code'   => $request->billing_address_pin_code ?? $request->shipping_address_pin_code,
+            'created_by'   => Auth::id(),
         ]);
 
         return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
@@ -60,8 +48,6 @@ class AdminCustomerController extends Controller
     public function edit($id)
     {
         $customer = Customer::where('id', $id)->first();
-        $customer['shipping_address'] = json_decode($customer->shipping_address);
-        $customer['billing_address']  = json_decode($customer->billing_address);
 
         return view('admin.customers.edit', compact('customer'));
     }
@@ -69,27 +55,14 @@ class AdminCustomerController extends Controller
     public function update(Request $request, $id)
     {
         $customer = Customer::where('id', $id)->first();
-
-        $customer['shipping_address'] = [
-            'address'       => $request->shipping_address,
-            'city'          => $request->shipping_city,
-            'country'       => $request->shipping_country,
-            'state'         => $request->shipping_state,
-            'postal_code'   => $request->shipping_pin_Code,
-        ];
-        $customer['billing_address'] = [
-            'address'       => $request->billing_address,
-            'city'          => $request->billing_city,
-            'country'    => $request->billing_country,
-            'state'      => $request->billing_state,
-            'postal_code'   => $request->billing_pin_Code,
-        ];
         $customer->update([
             'customer_name'     => $request->name,
             'contact_number'    => $request->phone_number,
             'alternate_number'  => $request->alternate_number,
-            'shipping_address'  => json_encode($customer['shipping_address']),
-            'billing_address'   => json_encode($customer['billing_address']) ?? json_encode($customer['shipping_address']),
+            'shipping_address'  => $request->shipping_address,
+            'billing_address'   => $request->billing_address ?? $request->shipping_address,
+            'shipping_address_pin_code'   => $request->shipping_address_pin_code,
+            'billing_address_pin_code'   => $request->billing_address_pin_code ?? $request->shipping_address_pin_code,
         ]);
 
         return redirect()->route('customers.index')->with('success', 'Customer updated successfully.');
