@@ -316,9 +316,10 @@
                                                 data-customer-contact = "{{ $customer->contact_number }}"
                                                 data-customer-alternate = "{{ $customer->alternate_number }}"
                                                 data-customer-billing = "{{ $customer->billing_address }}"
-                                                data-customer-shipping = "{{ $customer->shipping_address }}">
-                                                {{ $customer->customer_name . ' ( ' . $customer->contact_number . ' )' }}
-                                            </option>
+                                                data-customer-shipping = "{{ $customer->shipping_address }}" 
+                                                data-shipping-pincode = "{{ $customer->shipping_address_pin_code }}" 
+                                                data-billing-pincode = "{{ $customer->billing_address_pin_code }}" 
+                                            >{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
                                         @endforeach
                                     </select>
                                 </div>

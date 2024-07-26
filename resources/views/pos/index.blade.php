@@ -85,11 +85,11 @@
             </div>
             <div class="btn-row d-sm-flex">
                 <!-- <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inventory-return-modal">
-                                                            <span class="me-1 d-flex align-items-center">
-                                                                <i data-feather="refresh-ccw" class="feather-16"></i>
-                                                            </span>
-                                                            Inventory Return
-                                                        </a> -->
+                                                                <span class="me-1 d-flex align-items-center">
+                                                                    <i data-feather="refresh-ccw" class="feather-16"></i>
+                                                                </span>
+                                                                Inventory Return
+                                                            </a> -->
             </div>
         </div>
         <div class="row align-items-start pos-wrapper">
@@ -281,7 +281,9 @@
                                         $cart = session('cart');
                                     @endphp
                                     @if (is_array($cart) && isset($cart['sub_total']))
-                                        <td class="danger text-end discountAmount"> ${{ isset($cart['discount']['discount_amount']) ? $cart['discount']['discount_amount'] : '0' }}</td>
+                                        <td class="danger text-end discountAmount">
+                                            ${{ isset($cart['discount']['discount_amount']) ? $cart['discount']['discount_amount'] : '0' }}
+                                        </td>
                                     @else
                                         <td class="danger text-end discountAmount">0 </td>
                                     @endif
@@ -511,6 +513,7 @@
                 no_results_text: 'No results matched <a class="btn btn-info add-new-customer" href="#">Add New</a>'
             });
         });
+
         // Add new customer in dropdown
         $(document).on('click', 'a.add-new-customer', function(e) {
             e.preventDefault();
@@ -529,8 +532,8 @@
                 alert('Please enter a valid option.');
             }
         });
-        $(document).on('click', '.chosen-results .active-result', function() {
 
+        $(document).on('click', '.chosen-results .active-result', function() {
             var contact_number = $('[name="order_customer_id"]').find(':selected').data('customer-contact');
             var alternate_number = $('[name="order_customer_id"]').find(':selected').data('customer-alternate');
             var shipping_address = $('[name="order_customer_id"]').find(':selected').data('customer-shipping');
@@ -539,7 +542,6 @@
             $('[name="alternate_number"]').val(alternate_number);
             $('[name="shipping_address"]').val(shipping_address);
             $('[name="billing_address"]').val(billing_address);
-
         });
 
         $(document).on('submit', 'form#place-order', function(event) {
@@ -613,11 +615,155 @@
                 $('[name="change_amount"]').val(0);
             }
         });
-        $(document).on('keyup', '[name="searchPaidOrder"]', function() {
+
+
+        $(document).on('click', '.increase', function() {
+            var productId = $(this).attr("data-id");
+            var quantityInput = $(this).parent().find('.quantity__number');
+            var currentValue = parseInt(quantityInput.val());
+            var qty = currentValue;
+            updateQuantity(productId, qty);
+        });
+
+        $(document).on('click', '.decrease', function() {
+            var productId = $(this).attr("data-id");
+            console.log(productId);
+            var quantityInput = $(this).parent().find('.quantity__number');
+            var currentValue = parseInt(quantityInput.val());
+            var qty = currentValue;
+            updateQuantity(productId, qty);
+        });
+
+        // Select payment method
+        $(document).on('click', 'div.default-cover.method', function() {
+            var payment_method = $(this).data('method');
+            $('div.default-cover.method').removeClass('active');
+            $(this).addClass('active');
+            $('#payment-method').val(payment_method);
+            if (payment_method == 'cash') {
+                $('#method-cash').css('display', 'flex');
+                $('[name="tender_amount"]').attr('required', '');
+            } else {
+                $('#method-cash').hide();
+                $('[name="tender_amount"]').removeAttr('required');
+            }
+        });
+
+        $(document).ready(function() {
+            $('[name="order_customer_id"]').chosen({
+                placeholder_text_single: 'Enter Name',
+                allow_single_deselect: true,
+                no_results_text: 'No results matched <a class="btn btn-info add-new-customer" href="#">Add New</a>'
+            });
+        });
+
+        // Add new customer in dropdown
+        $(document).on('click', 'a.add-new-customer', function(e) {
+            e.preventDefault();
+            var newOption = $('.chosen-search-input').val();
+            if (newOption) {
+                var newOptionElement = new Option(newOption, newOption, true, true);
+                $('[name="order_customer_id"]').append(newOptionElement);
+
+                $('[name="order_customer_id"]').trigger('chosen:updated');
+
+                $('[name="order_customer_id"]').val(newOption).trigger('chosen:updated');
+
+                $('#new-option-input').val('');
+                $('#place-order').find('form').trigger('reset');
+            } else {
+                alert('Please enter a valid option.');
+            }
+        });
+
+        $(document).on('click', '.chosen-results .active-result', function() {
+            var contact_number = $('[name="order_customer_id"]').find(':selected').data('customer-contact');
+            var alternate_number = $('[name="order_customer_id"]').find(':selected').data('customer-alternate');
+            var shipping_address = $('[name="order_customer_id"]').find(':selected').data('customer-shipping');
+            var billing_address = $('[name="order_customer_id"]').find(':selected').data('customer-billing');
+            var shipping_pincode = $('[name="order_customer_id"]').find(':selected').data('shipping-pincode');
+            var billing_pincode = $('[name="order_customer_id"]').find(':selected').data('billing-pincode');
+            $('[name="contact_number"]').val(contact_number);
+            $('[name="alternate_number"]').val(alternate_number);
+            $('[name="shipping_address"]').val(shipping_address);
+            $('[name="billing_address"]').val(billing_address);
+            $('[name="shipping_address_pin_code"]').val(shipping_pincode);
+            $('[name="billing_address_pin_code"]').val(billing_pincode);
+        });
+
+        $(document).on('submit', 'form#place-order', function(event) {
+            event.preventDefault();
+            var payment_method = $('#payment-method').val();
+            if (payment_method == '') {
+                alert('Please Select Payment Method');
+                return false;
+            }
+            let customer_name = $('[name="order_customer_id"]').find(':selected').val();
+            let vehicle_number = $('[name="vehicle_number"]').val();
+            let contact_number = $('[name="contact_number"]').val();
+            let alternate_number = $('[name="alternate_number"]').val();
+            let shipping_address = $('[name="shipping_address"]').val();
+            let billing_address = $('[name="billing_address"]').val();
+            let shipping_address_pin_code = $('[name="shipping_address_pin_code"]').val();
+            let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
+            let tender_amount = $('[name="tender_amount"]').val();
+            let change_amount = $('[name="change_amount"]').val();
+            $.ajax({
+                url: "{{ url('admin/pos-sale-submission') }}",
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    customer_name: customer_name,
+                    vehicle_number: vehicle_number,
+                    contact_number: contact_number,
+                    alternate_number: alternate_number,
+                    shipping_address: shipping_address,
+                    billing_address: billing_address,
+                    payment_method: payment_method,
+                    tender_amount: tender_amount,
+                    change_amount: change_amount,
+                    shipping_address_pin_code: shipping_address_pin_code,
+                    billing_address_pin_code: billing_address_pin_code,
+                },
+                success: function(resp) {
+                    if (resp.success) {
+                        Swal.fire({
+                            title: "Order Placed!",
+                            text: "Your Order Placed " + resp.orderId,
+                            icon: "success",
+                            timer: 1000
+                        });
+                        $('#invoice-id').text(resp.orderId);
+                        const newWindow = window.open(resp.pdfUrl, '_blank', 'noopener,noreferrer');
+                        if (newWindow) {
+                            setTimeout(() => {
+                                window.focus();
+                            }, 100);
+                        }
+                        $('[name="order_customer_id"]').val('').trigger('chosen:updated');
+                        $("#place-order").modal("hide");
+                        $('#place-order').find('form').trigger('reset');
+                    }
+                }
+            });
+        });
+        $(document).on('keyup', '[name="tender_amount"]', function() {
+            var tender_amount = $(this).val();
+            var payable = parseInt($('span.payable:first').text());
+
+            if (tender_amount > payable) {
+                var total_change = tender_amount - payable;
+                $('[name="change_amount"]').val(total_change);
+            } else {
+                $('[name="change_amount"]').val(0);
+            }
+        });
+
+        $(document).on('keyup', 'input[name="searchOrder"]', function() {
             var invoice_number = $(this).val().toUpperCase();
             $('div.default-cover').hide();
             $('[data-invoice-id="' + invoice_number + '"]').show();
-            if (invoice_number == '') {
+            if (!invoice_number) {
                 $('div.default-cover').show();
             }
         });
