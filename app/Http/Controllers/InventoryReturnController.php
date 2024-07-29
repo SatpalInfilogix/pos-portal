@@ -48,8 +48,10 @@ class InventoryReturnController extends Controller
      */
     public function create(Request $request)
     {
+        
         $invoice = Order::where('OrderID', '=', $request->invoice_id)->first();
         $orderProducts = ProductOrderHistory::where('order_id', $request->invoice_id)->get();
+
         return view('pos.inventory_return', compact('invoice', 'orderProducts'));
     }
 

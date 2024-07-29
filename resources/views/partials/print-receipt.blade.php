@@ -9,7 +9,7 @@
             <div class="modal-body">
                 <div class="icon-head text-center">
                     <a href="javascript:void(0);">
-                        <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/logo.png"
+                        <img src="{{ asset('assets/img/logo.png') }}"
                             width="100" height="30" alt="Receipt Logo">
                     </a>
                 </div>
