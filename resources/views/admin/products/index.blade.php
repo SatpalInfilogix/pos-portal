@@ -59,7 +59,7 @@
                 <table id="products-table" class="table products-table">
                     <thead>
                         <tr>
-                            <th>Sr. No</th>
+                            <th>#</th>
                             <!-- <th>Barcode</th> -->
                             <th>Category</th>
                             <th>Product</th>
