@@ -86,8 +86,7 @@
                     <ul class="tabs owl-carousel pos-category">
                         <li id="all">
                             <a href="javascript:void(0);">
-                                <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/categories/category-01.png"
-                                    alt="Categories">
+                                <img src="{{ asset('assets/img/category-icon.png') }}" alt="Categories">
                             </a>
                             <h6><a href="javascript:void(0);">All Categories</a></h6>
                             <span>{{ $totalProducs }} Items</span>
@@ -418,7 +417,6 @@
 
 
         $(document).on('click', '.close-cart', function() {
-            alert('as');
             if ($('body').hasClass('product-list-cart_active')) {
                 $('body').removeClass('product-list-cart_active');
             }

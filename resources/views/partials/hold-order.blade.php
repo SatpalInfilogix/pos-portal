@@ -8,8 +8,8 @@
                 </button>
             </div>
             <div class="modal-body p-4">
-                <form action="https://dreamspos.dreamstechnologies.com/html/template/pos.html">
-                    <h2 class="text-center p-4">4500.00</h2>
+                <form action="#">
+                    <h2 class="text-center p-4">$4500.00</h2>
                     <div class="input-block">
                         <label>Order Reference</label>
                         <input class="form-control" type="text" value placeholder>
