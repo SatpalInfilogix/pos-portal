@@ -61,6 +61,9 @@
             text-transform: uppercase;
         }
     </style>
+    @php
+        $cart = session('cart');
+    @endphp
     <div class="content pos-design p-0">
         <div class="d-sm-flex justify-content-between">
             <div class="btn-row d-sm-flex align-items-center">
@@ -277,9 +280,6 @@
                                 </tr>
                                 <tr>
                                     <td class="danger discountPercentage">Total Discount</td>
-                                    @php
-                                        $cart = session('cart');
-                                    @endphp
                                     @if (is_array($cart) && isset($cart['sub_total']))
                                         <td class="danger text-end discountAmount">
                                             ${{ isset($cart['discount']['discount_amount']) ? $cart['discount']['discount_amount'] : '0' }}
@@ -302,7 +302,6 @@
                                     <td>Tax (GCT 15%)</td>
                                     <td class="text-end tax">
                                         @php
-                                            $cart = session('cart');
                                             $tax = isset($cart['tax']) ? $cart['tax'] : 0;
                                         @endphp
                                         ${{ $tax }}
@@ -312,7 +311,6 @@
                                     <td>Total Payable</td>
                                     <td class="text-end payable">
                                         @php
-                                            $cart = session('cart');
                                             $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                         @endphp
                                         ${{ $payable }}
@@ -326,7 +324,6 @@
                             <a class="btn btn-secondary" href="javascript:void(0);">
                                 Grand Total :
                                 @php
-                                    $cart = session('cart');
                                     $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                 @endphp
                                 <span class="payable">${{ $payable }}</span>

@@ -49,7 +49,6 @@ class PosDashboardController extends Controller
         $discount = Discount::where('role_id', $roleId)->first();
 
         $customers = Customer::get()->unique('contact_number');
-
         $completedOrders = Order::where('OrderStatus','completed')->get();
         $onHoldOrders = Order::where('OrderStatus','onhold')->get();
         $unPaidOrders = Order::where('OrderStatus','unpaid')->get();
