@@ -73,26 +73,12 @@
                     </span>
                     View Orders
                 </a>
-                <a href="javascript:void(0);" class="btn btn-info">
-                    <span class="me-1 d-flex align-items-center">
-                        <i data-feather="rotate-cw" class="feather-16"></i>
-                    </span>
-                    Reset
-                </a>
-                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recents">
+                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recent-transactions">
                     <span class="me-1 d-flex align-items-center">
                         <i data-feather="refresh-ccw" class="feather-16"></i>
                     </span>
-                    Transaction
+                    Recent Transactions
                 </a>
-            </div>
-            <div class="btn-row d-sm-flex">
-                <!-- <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#inventory-return-modal">
-                                                                <span class="me-1 d-flex align-items-center">
-                                                                    <i data-feather="refresh-ccw" class="feather-16"></i>
-                                                                </span>
-                                                                Inventory Return
-                                                            </a> -->
             </div>
         </div>
         <div class="row align-items-start pos-wrapper">
