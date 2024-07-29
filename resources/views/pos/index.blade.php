@@ -76,7 +76,7 @@
                     </span>
                     Reset
                 </a>
-                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recents">
+                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recent-transactions">
                     <span class="me-1 d-flex align-items-center">
                         <i data-feather="refresh-ccw" class="feather-16"></i>
                     </span>
