@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <title>POS System</title>
 
-    <link rel="shortcut icon" type="image/x-icon"
-        href="https://dreamspos.dreamstechnologies.com/html/template/assets/img/favicon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
 
@@ -130,7 +129,7 @@
                 <div class="dropdown-menu dropdown-menu-right">
                     <a class="dropdown-item" href="#">My Profile</a>
                     <a class="dropdown-item" href="#">Settings</a>
-                    <a class="dropdown-item" href="#">Logout</a>
+                    <a class="dropdown-item" href="{{ route('logout') }}">Logout</a>
                 </div>
             </div>
 
@@ -143,151 +142,6 @@
 
     @include('partials.payment-completed')
     @include('partials.print-receipt')
-
-    <div class="modal fade modal-default pos-modal" id="products" aria-labelledby="products">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header p-4 d-flex align-items-center justify-content-between">
-                    <div class="d-flex align-items-center">
-                        <h5 class="me-4">Products</h5>
-                        <span class="badge bg-info d-inline-block mb-0">Order ID : #666614</span>
-                    </div>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body p-4">
-                    <form action="#">
-                        <div class="product-wrap">
-                            <div class="product-list d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center flex-fill">
-                                    <a href="javascript:void(0);" class="img-bg me-2">
-                                        <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/products/pos-product-16.png"
-                                            alt="Products">
-                                    </a>
-                                    <div class="info d-flex align-items-center justify-content-between flex-fill">
-                                        <div>
-                                            <span>PT0005</span>
-                                            <h6><a href="javascript:void(0);">Red Nike Laser</a></h6>
-                                        </div>
-                                        <p>$2000</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product-list d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center flex-fill">
-                                    <a href="javascript:void(0);" class="img-bg me-2">
-                                        <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/products/pos-product-17.png"
-                                            alt="Products">
-                                    </a>
-                                    <div class="info d-flex align-items-center justify-content-between flex-fill">
-                                        <div>
-                                            <span>PT0235</span>
-                                            <h6><a href="javascript:void(0);">Iphone 14</a></h6>
-                                        </div>
-                                        <p>$3000</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product-list d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center flex-fill">
-                                    <a href="javascript:void(0);" class="img-bg me-2">
-                                        <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/products/pos-product-16.png"
-                                            alt="Products">
-                                    </a>
-                                    <div class="info d-flex align-items-center justify-content-between flex-fill">
-                                        <div>
-                                            <span>PT0005</span>
-                                            <h6><a href="javascript:void(0);">Red Nike Laser</a></h6>
-                                        </div>
-                                        <p>$2000</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="product-list d-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center flex-fill">
-                                    <a href="javascript:void(0);" class="img-bg me-2">
-                                        <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/products/pos-product-17.png"
-                                            alt="Products">
-                                    </a>
-                                    <div class="info d-flex align-items-center justify-content-between flex-fill">
-                                        <div>
-                                            <span>PT0005</span>
-                                            <h6><a href="javascript:void(0);">Red Nike Laser</a></h6>
-                                        </div>
-                                        <p>$2000</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer d-sm-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="create" tabindex="-1" aria-labelledby="create" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Create</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="https://dreamspos.dreamstechnologies.com/html/template/pos.html">
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks">
-                                    <label>Customer Name</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks">
-                                    <label>Email</label>
-                                    <input type="email" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks">
-                                    <label>Phone</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks">
-                                    <label>Country</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks">
-                                    <label>City</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks">
-                                    <label>Address</label>
-                                    <input type="text">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer d-sm-flex justify-content-end">
-                            <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-submit me-2">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     {{-- Place Order --}}
     <div class="modal fade" id="place-order" tabindex="-1" aria-labelledby="place-order" aria-hidden="true">
@@ -425,74 +279,6 @@
     {{-- Place Order End --}}
     @include('partials.order-inventory-return')
     @include('partials.hold-order')
-
-    <div class="modal fade modal-default pos-modal" id="edit-product" aria-labelledby="edit-product">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header p-4">
-                    <h5>Red Nike Laser</h5>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body p-4">
-                    <form action="https://dreamspos.dreamstechnologies.com/html/template/pos.html">
-                        <div class="row">
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks add-product">
-                                    <label>Product Name <span>*</span></label>
-                                    <input type="text" placeholder="45">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks add-product">
-                                    <label>Tax Type <span>*</span></label>
-                                    <select class="select">
-                                        <option>Exclusive</option>
-                                        <option>Inclusive</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks add-product">
-                                    <label>Tax <span>*</span></label>
-                                    <input type="text" placeholder="% 15">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks add-product">
-                                    <label>Discount Type <span>*</span></label>
-                                    <select class="select">
-                                        <option>Percentage</option>
-                                        <option>Early payment discounts</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks add-product">
-                                    <label>Discount <span>*</span></label>
-                                    <input type="text" placeholder="15">
-                                </div>
-                            </div>
-                            <div class="col-lg-6 col-sm-12 col-12">
-                                <div class="input-blocks add-product">
-                                    <label>Sale Unit <span>*</span></label>
-                                    <select class="select">
-                                        <option>Kilogram</option>
-                                        <option>Grams</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer d-sm-flex justify-content-end">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 
     @include('partials.recent-transactions')
     @include('partials.orders')
