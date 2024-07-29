@@ -366,6 +366,15 @@
         </div>
     </div>
 
+    
+    @include('partials.place-order')
+    @include('partials.order-inventory-return')
+    @include('partials.hold-order')
+
+    @include('partials.recent-transactions')
+    @include('partials.orders')
+
+
     <script>
         $(document).ready(function() {
             $('#discountSelect').on('input', function() {
@@ -761,10 +770,10 @@
 
         $(document).on('keyup', 'input[name="searchOrder"]', function() {
             var invoice_number = $(this).val().toUpperCase();
-            $('div.default-cover').hide();
+            $('div.search-order-box').hide();
             $('[data-invoice-id="' + invoice_number + '"]').show();
             if (!invoice_number) {
-                $('div.default-cover').show();
+                $('div.search-order-box').show();
             }
         });
     </script>

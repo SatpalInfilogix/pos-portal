@@ -34,8 +34,8 @@
                                 </div>
                             </div>
                             <div class="order-body">
-                                @foreach ($onHoldOrders as $onHoldOrder)
-                                <div class="default-cover p-4" data-invoice-id="{{ $onHoldOrder->OrderID}}">
+                            @forelse ($holdOrders as $onHoldOrder)
+                                <div class="default-cover p-4 search-order-box" data-invoice-id="{{ $onHoldOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $onHoldOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
@@ -76,7 +76,11 @@
                                             class="btn btn-success btn-icon flex-fill">Print</a>
                                     </div>
                                 </div>
-                                @endforeach
+                                @empty
+                                    <div class="record-not-found">
+                                        <p>Orders Not Available</p>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                         <div class="tab-pane fade" id="unpaid" role="tabpanel">
@@ -86,8 +90,8 @@
                                 </div>
                             </div>
                             <div class="order-body">
-                                @foreach ($unPaidOrders as $unPaidOrder)
-                                <div class="default-cover p-4" data-invoice-id="{{ $unPaidOrder->OrderID}}">
+                                @forelse ($unPaidOrders as $unPaidOrder)
+                                <div class="default-cover p-4 search-order-box" data-invoice-id="{{ $unPaidOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $unPaidOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
@@ -128,7 +132,11 @@
                                             class="btn btn-success btn-icon flex-fill">Print</a>
                                     </div>
                                 </div>
-                                @endforeach
+                                @empty
+                                    <div class="record-not-found">
+                                        <p>Orders Not Available</p>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                         <div class="tab-pane fade" id="paid" role="tabpanel">
@@ -138,8 +146,8 @@
                                 </div>
                             </div>
                             <div class="order-body">
-                                @foreach ($completedOrders as $completedOrder)
-                                <div class="default-cover p-4" data-invoice-id="{{ $completedOrder->OrderID}}">
+                                @forelse ($completedOrders as $completedOrder)
+                                <div class="default-cover p-4 search-order-box" data-invoice-id="{{ $completedOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $completedOrder->OrderID}}</span>
                                     <div class="row">
                                         <div class="col-sm-12 col-md-6 record mb-3">
@@ -180,7 +188,11 @@
                                             class="btn btn-success btn-icon flex-fill">Print</a>
                                     </div>
                                 </div>
-                                @endforeach
+                                @empty
+                                    <div class="record-not-found">
+                                        <p>Orders Not Available</p>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>

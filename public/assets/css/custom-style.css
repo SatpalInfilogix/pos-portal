@@ -166,3 +166,8 @@ a.chosen-single.chosen-single-with-deselect {
     display: flex;
     align-items: center;
 }
+.record-not-found {
+    text-align: center;
+    color: red;
+    font-weight: 600;
+}
