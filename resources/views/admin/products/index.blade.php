@@ -60,6 +60,7 @@
                     <thead>
                         <tr>
                             <th>Sr. No</th>
+                            <!-- <th>Barcode</th> -->
                             <th>Category</th>
                             <th>Product</th>
                             <th>Manufactured Date</th>
@@ -98,61 +99,70 @@
     </div>
 </div>
 <script>
-    $(function() {
-        $('.products-table').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: "{{ route('get-products') }}",
-                type: "POST",
-                data: function(d) {
-                    d._token = "{{ csrf_token() }}";
-                    return d;
+  $(function() {
+    $('.products-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: "{{ route('get-products') }}",
+            type: "POST",
+            data: function(d) {
+                d._token = "{{ csrf_token() }}";
+                return d;
+            }
+        },
+        columns: [
+            { data: "id" },
+            // { 
+            //     data: "barcode", // Column for barcode
+            //     render: function(data, type, row) {
+            //         console.log(data);
+            //         return data; // Render barcode HTML directly
+            //     },
+            //     type: 'html' // Ensure DataTables treats this column as HTML
+            // },
+            { data: "category_name" },
+            { data: "name" },
+            { data: "manufacture_date" },
+            { 
+                data: "image",
+                render: function(data, type, row) {
+                    return `<img src="${data ? '{{ url('') }}' + '/' + data : 'default-image-url'}" alt="${row.name}" style="width: 50px; height: 50px;">`;
                 }
             },
-            columns: [
-                { data: "id" },
-                { data: "category_name" }, // Ensure this matches the key from the backend
-                { data: "name" },
-                { data: "manufacture_date" },
-                { 
-                    data: "image",
-                    render: function(data, type, row) {
-                        // Check if image data is being processed correctly
-                        return `<img src="${data ? '{{ url('') }}' + '/' + data : 'default-image-url'}" alt="${row.name}" style="width: 50px; height: 50px;">`;
-                    }
-                },
-                {
-                    data: null,
-                    render: function(data, type, row) {
-                        var actions = '<div class="edit-delete-action">';
-                        actions += `<a class="me-2 p-2 edit-btn" href="./products/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
+            {
+                data: null,
+                render: function(data, type, row) {
+                    var actions = '<div class="edit-delete-action">';
+                    actions += `<a class="me-2 p-2 edit-btn" href="./products/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
 
-                        if (row.status == 1) {
-                            actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
-                            actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
-                        } else {
-                            actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
-                            actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" style="display: none;">Restore</a>`;
-                        }
-                        actions += '</div>';
-                        return actions;
+                    if (row.status == 1) {
+                        actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
+                        actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
+                    } else {
+                        actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
+                        actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" style="display: none;">Restore</a>`;
                     }
+                    actions += '</div>';
+                    return actions;
                 }
-            ],
-            columnDefs: [
-                {
-                    orderable: false,
-                    targets: 5,  // Adjust this index based on the actual number of columns
-                    className: "action-table-data"
-                }
-            ],
-            paging: true,
-            pageLength: 10, // Adjusted to match the lengthMenu
-            lengthMenu: [10, 25, 50, 100],
-            order: [[1, 'asc']] // Optional: Default ordering by the category column
-        });
+            }
+        ],
+        columnDefs: [
+            {
+                orderable: false,
+                targets: 5,  // Adjust this index based on the actual number of columns
+                className: "action-table-data"
+            }
+        ],
+        paging: true,
+        pageLength: 10,
+        lengthMenu: [10, 25, 50, 100],
+        order: [[1, 'asc']] // Optional: Default ordering by the category column
     });
+});
+
+
 
     $(document).ready(function() {
         $(document).on('click', '.delete-btn', function(e) {

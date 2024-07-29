@@ -77,11 +77,24 @@ class PosCartController extends Controller
 
         $cart['discount'] = isset($cart['discount']) ? $cart['discount'] : [];
         $cart['discount_amount'] = isset($cart['discount_amount']) ? $cart['discount_amount'] : 0;
-        
         if (!empty($cart['discount'])) {
+            $discountPercentage =  $cart['discount_percentage'];
+            unset($cart['discount']);
+            $discountAmount = ($discountPercentage / 100) * $cart['sub_total'];
             $sub_total -= $cart['discount_amount'];
             $cart['grand_total'] = $sub_total;
-            $cart['formatted_grand_total'] = '$' . number_format($cart['grand_total'], 2);
+            $cart['formatted_grand_total'] = '$'. number_format( $cart['grand_total'] , 2);
+            $cart['discount_amount'] = $discountAmount;
+            $cart['discount_percentage'] = $discountPercentage;
+
+            $cart['discount'] = [
+                'id'                   => $discount->id ?? 0,
+                'discount_percentage'  => $discountPercentage,
+                'discount_amount'      => $discountAmount,
+            ];
+            // $sub_total -= $cart['discount_amount'];
+            // $cart['grand_total'] = $sub_total;
+            // $cart['formatted_grand_total'] = '$' . number_format($cart['grand_total'], 2);
             $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
             $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
         } else {
@@ -94,9 +107,9 @@ class PosCartController extends Controller
             $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
         }
 
+        // echo"<pre>"; print_R($cart); die();
         // Store updated cart in session
         session()->put('cart', $cart);
-     
         return response()->json([
             'success'=>true,
             'message'=>'Product Added to Cart', 
@@ -110,7 +123,6 @@ class PosCartController extends Controller
         if ($request->product_id) 
         {
             $cart = session()->get('cart');
-
             foreach ($cart['products'] ?? [] as $key => $product) {
                 if ($product['id'] == $request->product_id) {
                     unset($cart['products'][$key]); // Unset the product from the cart
@@ -138,13 +150,31 @@ class PosCartController extends Controller
             $cart['discount'] = $applied_coupons;
             if (count($cart['products']) > 0) {
                 if($cart['discount']) {
+                    $discountPercentage =  $cart['discount_percentage'];
+                    unset($cart['discount']);
+                    $discountAmount = ($discountPercentage / 100) * $cart['sub_total'];
                     $sub_total -= $cart['discount_amount'];
-                    $cart['grand_total'] =  $sub_total;
-                    $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
-                    $cart['discount'] = $cart['discount'];
-                    $cart['discount_amount'] = $cart['discount_amount'];
-                    $cart['discount_percentage'] = $cart['discount_percentage'];
+                    $cart['discount_amount'] = $discountAmount;
+                    $cart['discount_percentage'] = $discountPercentage;
+
+                    $cart['discount'] = [
+                        'id'                   => $discount->id ?? 0,
+                        'discount_percentage'  => $discountPercentage,
+                        'discount_amount'      => $discountAmount,
+                    ];
+
+                    // $sub_total -= $cart['discount_amount'];
+                    // $cart['grand_total'] =  $sub_total;
+                    // $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
+                    // $cart['discount'] = $cart['discount'];
+                    // $cart['discount_amount'] = $cart['discount_amount'];
+                    // $cart['discount_percentage'] = $cart['discount_percentage'];
                 }
+                $cart['grand_total'] = $sub_total;
+                $cart['formatted_grand_total'] = '$'. number_format( $cart['grand_total'] , 2);
+                $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+                $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
+
             } else {
                 $cart['grand_total'] = $sub_total;
                 $cart['formatted_grand_total'] = '$'.(number_format($sub_total ,2));
@@ -214,11 +244,29 @@ class PosCartController extends Controller
             $applied_coupons = $cart['discount'] ?? [];
             $cart['discount'] = $applied_coupons;
             if($cart['discount']) {
+                $discountPercentage =  $cart['discount_percentage'];
+                unset($cart['discount']);
+                $discountAmount = ($discountPercentage / 100) * $cart['sub_total'];
                 $sub_total -= $cart['discount_amount'];
-                $cart['grand_total'] =  $sub_total;
-                $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
-                $cart['discount'] = $cart['discount'];
-                $cart['discount_amount'] = $cart['discount_amount'];
+                $cart['grand_total'] = $sub_total;
+                $cart['formatted_grand_total'] = '$'. number_format( $cart['grand_total'] , 2);
+                $cart['discount_amount'] = $discountAmount;
+                $cart['discount_percentage'] = $discountPercentage;
+
+                $cart['discount'] = [
+                    'id'                   => $discount->id ?? 0,
+                    'discount_percentage'  => $discountPercentage,
+                    'discount_amount'      => $discountAmount,
+                ];
+                // $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+                // $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
+
+
+                // $sub_total -= $cart['discount_amount'];
+                // $cart['grand_total'] =  $sub_total;
+                // $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
+                // $cart['discount'] = $cart['discount'];
+                // $cart['discount_amount'] = $cart['discount_amount'];
             } else {
                 $cart['grand_total'] = $sub_total;
                 $cart['formatted_grand_total'] = '$'.(number_format($sub_total ,2));
@@ -258,6 +306,16 @@ class PosCartController extends Controller
                 'message' => 'Product ID and quantity are required.'
             ]);
         }
+    }
+
+    public function clearCart(Request $request)
+    {
+        $request->session()->forget('cart');
+
+        return response()->json([
+            'success' => true,
+            'message' => 'All Products removed from cart.'
+        ]);
     }
 
     public function discountApply(Request $request)
