@@ -144,6 +144,7 @@ Route::post('add-to-cart', [PosCartController::class, 'addToCart'])->name('add-t
 Route::post('remove-from-cart', [PosCartController::class, 'remove'])->name('remove-from-cart');
 Route::post('update-cart', [PosCartController::class, 'update'])->name('update-cart');
 Route::post('discount', [PosCartController::class, 'discountApply'])->name('discount');
+Route::post('clear-cart', [PosCartController::class, 'clearCart'])->name('clear-cart');
 Route::post('/set-invoice-for-inventory-return', [InventoryReturnController::class, 'setInvoice'])->name('set-invoice-for-inventory-return');
 
 /************************* DataTables Routes ************************/

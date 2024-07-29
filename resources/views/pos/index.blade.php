@@ -93,7 +93,7 @@
                                     alt="Categories">
                             </a>
                             <h6><a href="javascript:void(0);">All Categories</a></h6>
-                            <span>{{ $totalProducs }} Items</span>
+                            <span>{{ $totalProducts }} Items</span>
                         </li>
                         @foreach ($categories as $category)
                             <li id="{{ $category->name }}">
@@ -123,7 +123,7 @@
 
                                         <div class="col-sm-2 col-md-6 col-lg-3 col-xl-3">
                                             <div id="product-check_{{ $product->id }}" @class([
-                                                'product-info default-cover card',
+                                                'product-info default-cover card', 'products-' . $product->id,
                                                 'added-to-cart' => in_array($product->id, $cartProductIds),
                                             ])
                                                 onclick="addToCartAndToggleTick('{{ $product->id }}')">
@@ -178,8 +178,9 @@
                                     @endif
                                 </span>
                             </h6>
+
                             <a href="javascript:void(0);" @class([
-                                'd-flex align-items-center text-danger cart-indicator',
+                                'd-flex align-items-center text-danger cart-indicator empty-cart',
                                 'd-none' => $isCartEmpty,
                             ])>
                                 <span class="me-1">
@@ -248,7 +249,7 @@
                                             $discountValue = session('cart')['discount_percentage'];
                                         }
                                         ?>
-                                        <input type="number" class="form-control" name="discount" id="discountSelect"
+                                        <input type="number" class="form-control discountSelect" name="discount" id="discountSelect"
                                             min="0" data-max="{{ $discount->discount ?? '' }}"
                                             value="{{ $discountValue }}">
                                         <div class="text-danger" id="discountError"></div>
@@ -290,7 +291,7 @@
                                         @php
                                             $tax = isset($cart['tax']) ? $cart['tax'] : 0;
                                         @endphp
-                                        ${{ $tax }}
+                                        ${{ number_format($tax, 2) }}
                                     </td>
                                 </tr>
                                 <tr>
@@ -299,7 +300,7 @@
                                         @php
                                             $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                         @endphp
-                                        ${{ $payable }}
+                                        ${{ number_format($payable, 2) }}
                                     </td>
                                 </tr>
                             </table>
@@ -312,7 +313,7 @@
                                 @php
                                     $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                 @endphp
-                                <span class="payable">${{ $payable }}</span>
+                                <span class="payable">${{ number_format($payable, 2) }}</span>
                             </a>
                         </div>
                         <div class="d-grid btn-block">
@@ -404,13 +405,47 @@
             });
         });
 
+        function emptyCart()
+        {
+            $.ajax({
+                url: "{{ route('clear-cart') }}",
+                method: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) {
+                    let cartHtml = ``;
+                    if (response.success) {
+                        $(`.cart-indicator`).addClass('d-none');
+                        cartHtml = `<h3 class="font-bold text-center mt-5">Cart is empty</h3>`;
+                    }
+                    $('.count-products').html(0);
+                    $('.product-list-cart').html(cartHtml);
+                    $('.product-info').removeClass('added-to-cart');
+                    $('.discountSelect').val(' ');
+                }
+            });
+        }
 
-        $(document).on('click', '.close-cart', function() {
-            alert('as');
-            if ($('body').hasClass('product-list-cart_active')) {
-                $('body').removeClass('product-list-cart_active');
-            }
-            $('.product-list-cart').removeClass('active');
+        $(document).on('click', '.empty-cart', function() {
+            emptyCart();
+            // $.ajax({
+            //     url: "{{ route('clear-cart') }}",
+            //     method: "POST",
+            //     data: {
+            //         _token: '{{ csrf_token() }}',
+            //     },
+            //     success: function(response) {
+            //         let cartHtml = ``;
+            //         if (response.success) {
+            //             $(`.cart-indicator`).addClass('d-none');
+            //             cartHtml = `<h3 class="font-bold text-center mt-5">Cart is empty</h3>`;
+            //         }
+            //         $('.count-products').html(0);
+            //         $('.product-list-cart').html(cartHtml);
+            //         $('.product-info').removeClass('added-to-cart');
+            //     }
+            // });
         });
 
         function updateQuantity(productId, quantity) {
@@ -438,6 +473,10 @@
                             $('.payable').html(response.cart.payable);
                             $('.discount-option').html(response.discountOptions);
                             $('.count-products').html(response.cart.count);
+
+                            let discountAmount = response.cart.discount_amount;
+                            let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
+                            $('.discountAmount').html(formatedDiscountAmount);
                         } else {
                             window.location.reload();
                         }
