@@ -20,16 +20,7 @@ class OrderController extends Controller
         // Create Customer
         $invoice_id = $this->generateInvoice();
         $customer = Customer::where('contact_number','=',$request->contact_number)->first();
-        if($customer){
-           
-            $customer->alternate_number = $request->alternate_number;
-            $customer->shipping_address = $request->shipping_address;
-            $customer->billing_address = $request->billing_address;
-            $customer->shipping_address_pin_code = $request->shipping_address_pin_code;
-            $customer->billing_address_pin_code = $request->billing_address_pin_code;
-            $customer->save();
-
-        }else{
+        if(!$customer){
             $customer = Customer::create([
                 'customer_name' => $request->customer_name,
                 'contact_number' => $request->contact_number,
@@ -40,17 +31,25 @@ class OrderController extends Controller
                 'billing_address_pin_code' => $request->billing_address_pin_code,
                 'created_by' => Auth::id(),
             ]);
+        } else {
+            $customer->alternate_number = $request->alternate_number;
+            $customer->shipping_address = $request->shipping_address;
+            $customer->billing_address = $request->billing_address;
+            $customer->shipping_address_pin_code = $request->shipping_address_pin_code;
+            $customer->billing_address_pin_code = $request->billing_address_pin_code;
+            $customer->save();
         }
-
-
         $cart  = session('cart');
         $customerDetails = $request;
+        $discountDetails = [];
+        
         if(isset($cart['discount']) && !empty($cart['discount'])){
             $discount = Discount::find($cart['discount']['id']);
-            $discountDetails = ["name" => "Buy ".$discount->quantity." get ".$discount->discount."%", "discount_amount"=>$cart['discount']['discount_amount']];
-        }else{
-            $discountDetails = [];
+            if($discount){
+                $discountDetails = ["name" => "", "discount_amount"=>$cart['discount']['discount_amount']];
+            }
         }
+
         // Payment Process
         if ($request->payment_method == 'cash') {
 

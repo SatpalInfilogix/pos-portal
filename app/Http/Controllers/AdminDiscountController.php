@@ -13,7 +13,7 @@ class AdminDiscountController extends Controller
 {
     public function index()
     {
-        $discounts = Discount::with('product')->latest()->get();
+        $discounts = Discount::with('product')->where('role_id', '!=', 1)->latest()->get();
         foreach($discounts as $key => $discount)
         {
             $roles = Role::where('id', $discount->role_id)->first();
@@ -25,7 +25,7 @@ class AdminDiscountController extends Controller
 
     public function create()
     {
-        $roles = Role::where('name', '!=', 'super admin')->latest()->get();
+        $roles = Role::where('name', '!=', 'Super Admin')->latest()->get();
         foreach($roles as $key => $role) {
             $discount = Discount::where('role_id', $role->id)->first();
             $roles[$key]['discount'] = $discount->discount ?? ' ';
@@ -44,8 +44,8 @@ class AdminDiscountController extends Controller
             $existingDiscount = Discount::where('role_id', $role)->first();
             if ($existingDiscount) {
                 $existingDiscount->update([
-                        'discount' => $discount,
-                    ]);
+                    'discount' => $discount,
+                ]);
             } else {
                 Discount::create([
                     'role_id' => $role,
@@ -53,6 +53,16 @@ class AdminDiscountController extends Controller
                     'created_by' => Auth::id(),
                 ]);
             }
+        }
+
+        // Save upto 100% discount for super admin if not existing
+        $existingDiscount = Discount::where('role_id', 1)->first();
+        if(!$existingDiscount){
+            Discount::create([
+                'role_id' => 1,
+                'discount' => 100,
+                'created_by' => Auth::id(),
+            ]);
         }
 
         return redirect()->route('discounts.index')->with('success', 'Discount created successfully.');
