@@ -10,9 +10,6 @@
         <a href="{{ route('backend-dashboard') }}" class="logo-small">
             <img src="{{ asset('assets/img/logo-small.png') }}" alt>
         </a>
-        <a id="toggle_btn" href="javascript:void(0);">
-            <i data-feather="chevrons-left" class="feather-16"></i>
-        </a>
     </div>
 
     <a id="mobile_btn" class="mobile_btn" href="#sidebar">
