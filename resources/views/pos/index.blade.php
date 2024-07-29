@@ -87,7 +87,7 @@
                     <h5>Categories</h5>
                     <p>Select From Below Categories</p>
                     <ul class="tabs owl-carousel pos-category">
-                        <li id="all">
+                        <li id="all" data-category-id="">
                             <a href="javascript:void(0);">
                                 <img src="{{ asset('assets/img/category-icon.png') }}" alt="Categories">
                             </a>
@@ -95,7 +95,7 @@
                             <span>{{ $totalProducts }} Items</span>
                         </li>
                         @foreach ($categories as $category)
-                            <li id="{{ $category->name }}">
+                            <li id="{{ $category->id }}" data-category-id="{{ $category->id }}">
                                 <a href="javascript:void(0);">
                                     <img src="{{ asset($category->image) }}" alt="Categories">
                                 </a>
@@ -110,7 +110,7 @@
                         </div>
                         <div class="tabs_container">
                             <div class="tab_content active" data-tab="all">
-                                <div class="row">
+                                <div class="row"  id="products-container">
                                     @foreach ($products as $product)
                                         @php
                                             $cartProducts = session('cart.products', []); // Retrieve the 'products' array from session or default to an empty array
@@ -359,6 +359,30 @@
 
 
     <script>
+         $(document).ready(function() {
+        // Handle category click
+            $('.pos-category li').click(function() {
+                var categoryId = $(this).data('category-id');
+                console.log(categoryId);
+                $.ajax({
+                    url: "{{ route('pos-dashboard') }}", // Update this with your route
+                    method: "GET",
+                    data: {
+                        category_id: categoryId,
+                    },
+                    success: function(response) {
+                        if(response.success == true) {
+                            // Update products container with the response data
+                            $('#products-container').html(response.productsHtml);
+                            $('.tab_content').addClass('active');
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error("An error occurred:", xhr.responseText);
+                    }
+                });
+            });
+        });
         $(document).ready(function() {
             $('#discountSelect').on('input', function() {
                 var discountValue = $(this).val();

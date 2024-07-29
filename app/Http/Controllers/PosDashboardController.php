@@ -12,20 +12,26 @@ use App\Models\Customer;
 
 class PosDashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $categories = Category::where('status', 0)->withCount(['products' => function ($query) {
                         $query->where('status', 0); // Condition for products status
-                        }])->latest()->take(15)->get();
-
+                    }])->latest()->take(15)->get();
+       
         $productsTotal = Category::where('status', 0)->with('products')->get();
-
         // Calculate the total number of products
         $totalProducts = $productsTotal->flatMap(function ($productCount) {
             return $productCount->products;
         })->count();
 
-        $products = Product::where('status', 0)->latest()->get();
+        $selectedCategoryId = $request->input('category_id');
+
+        $productsQuery  = Product::where('status', 0)->latest();
+        if ($selectedCategoryId) {
+            $productsQuery->where('category_id', $selectedCategoryId);
+        }
+    
+        $products = $productsQuery->latest()->get();
         foreach ($products as $proKey => $product) {
             $category = Category::where('id', $product->category_id)->first();
             $price = PriceMaster::where('product_id', $product->id)->where('status', 0)->first();
@@ -58,6 +64,15 @@ class PosDashboardController extends Controller
         $holdOrders = Order::where('OrderStatus','onhold')->orderBy('OrderID', 'DESC')->get();
         $unPaidOrders = Order::where('OrderStatus','unpaid')->orderBy('OrderID', 'DESC')->get();
         
+        if ($request->ajax()) {
+            // Return filtered products as HTML
+            $productsHtml = view('partials.products', compact('products'))->render();
+            return response()->json([
+                'success'   => true,
+                'productsHtml' => $productsHtml,
+            ]);
+        }
+
         return view('pos.index', compact('categories', 'totalProducts', 'products','invoiceId', 'discount', 'customers','completedOrders','holdOrders','unPaidOrders'));
     }
 
