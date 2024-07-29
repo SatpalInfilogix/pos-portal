@@ -118,6 +118,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 
         /********************** Invoice Routes  **********************/
         Route::post('/pos-sale-submission', [OrderController::class, 'POSSaleSubmission'])->name('sale.submission');
+        Route::get('/pos-hold-order', [OrderController::class, 'posHoldOrder'])->name('hold.order');
         Route::get('/search-invoice/{invoice_id}', [OrderController::class, 'searchInvoice'])->name('search.invoice');
         Route::get('/view-invoice/{invoice_id}', [OrderController::class, 'viewInvoice'])->name('view.invoice');
         Route::get('/print-gatepass/{invoice_id}', [PosGatePassController::class, 'printGatePass'])->name('print.gatepass');

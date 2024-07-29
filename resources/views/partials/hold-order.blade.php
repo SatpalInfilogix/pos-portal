@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body p-4">
                 <form action="#">
-                    <h2 class="text-center p-4">$4500.00</h2>
+                    <h2 class="text-center p-4">$<span class="payable">{{ $payable }}</span></h2>
                     <div class="input-block">
                         <label>Order Reference</label>
                         <input class="form-control" type="text" value placeholder>
@@ -18,7 +18,7 @@
                         button. Providing a reference to it might help you to identify the order more quickly.</p>
                     <div class="modal-footer d-sm-flex justify-content-end">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Confirm</button>
+                        <button type="submit" class="btn btn-primary" id="order-on-hold">Confirm</button>
                     </div>
                 </form>
             </div>

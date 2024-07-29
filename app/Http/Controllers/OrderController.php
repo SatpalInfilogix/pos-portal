@@ -77,7 +77,7 @@ class OrderController extends Controller
                 'CustomerPhone' => $request->contact_number,
                 'ShippingAddress' => $request->shipping_address,
                 'BillingAddress' => $request->billing_address,
-                'OrderStatus' => 'onhold',
+                'OrderStatus' => 'completed',
                 'PaymentMethod' => $request->payment_method,
                 'PaymentStatus' => 'success',
                 'TotalAmount' => $cart['payable'],
@@ -213,7 +213,51 @@ class OrderController extends Controller
 
         $invoice = Order::where('OrderID', '=', $invoice_id)->first();
         echo '<pre>';
-        print_r($invoice);
+        print_r($invoice);      
  
+    }
+
+    public function posHoldOrder(){
+        
+        $invoice_id = $this->generateInvoice();
+
+        $cart  = session('cart');
+            $order = Order::create([
+                'OrderDate' => now(),
+                'OrderID' => $invoice_id,
+                'OrderStatus' => 'onhold',
+                'PaymentStatus' => 'success',
+                'TotalAmount' => $cart['payable'],
+                'TaxAmount' => $cart['tax'],
+                'DiscountAmount' => $cart['discount_amount'],
+                'CreatedBy' => Auth::id(),
+            ]);
+
+            foreach($cart['products'] as $product){
+                $productDetails = Product::find($product['id']);
+                $order = ProductOrderHistory::create([
+                    'order_id' => $invoice_id,
+                    'product_id' => $productDetails->id,
+                    'name' => $productDetails->name,
+                    'quantity_type' => $productDetails->quantity,
+                    'quantity' => $product['quantity'],
+                    'manufacture_date' => $productDetails->manufacture_date,
+                    'lot_number' => $productDetails->lot_number,
+                    'image' => $productDetails->image,
+                    'status' => $productDetails->status,
+                    'created_by' => Auth::id(),
+                    'category_id' => $productDetails->category_id,
+                    'price' => $product['price'],
+                    'product_total_amount' => $product['product_total_amount']
+                ]);
+            }
+
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Order On Hold',
+                'orderId' => $this->generateInvoice()
+            ]);
+        
     }
 }
