@@ -27,36 +27,10 @@ $(document).ready(function () {
                     setTimeout(() => {
                         // Use `$(this)` to get the correct DataTable instance
                         $(this).closest('.dataTables_wrapper').find('.dataTables_filter').appendTo($tableSearchContainer);
-    
-                        // Optionally, log to debug
-                        console.log('DataTables filter moved for table:', $table);
                     }, 100); // Adjust the timeout if necessary
                 }
             });
         });
-
-        /* $('.datanew').DataTable({
-            "bFilter": true,
-            "sDom": 'fBtlpi',
-            "ordering": true,
-            "language": {
-                search: ' ',
-                sLengthMenu: '_MENU_',
-                searchPlaceholder: "Search",
-                info: "_START_ - _END_ of _TOTAL_ items",
-                paginate: {
-                    next: ' <i class="fa fa-angle-right"></i>',
-                    previous: '<i class="fa fa-angle-left"></i>'
-                }
-            },
-            initComplete: (settings, json) => {
-                // Move the DataTable filter to the desired location
-                $('.dataTables_filter').appendTo('#tableSearch');
-                
-                // Optionally, log to debug
-                console.log('DataTables filter moved:', $('.dataTables_filter'));
-            }
-        }); */
     }
 
     function readURL(input) {
