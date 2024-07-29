@@ -1,4 +1,4 @@
-  <div class="modal fade pos-modal" id="recents" tabindex="-1" aria-hidden="true">
+  <div class="modal fade pos-modal" id="recent-transactions" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header p-4">
@@ -31,11 +31,7 @@
                                 aria-labelledby="purchase-tab">
                                 <div class="table-top">
                                     <div class="search-set">
-                                        <div class="search-input">
-                                            <a class="btn btn-searchset d-flex align-items-center h-100"><img
-                                                    src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/search-white.svg"
-                                                    alt="img"></a>
-                                        </div>
+                                        <div class="search-input"></div>
                                     </div>
                                     <div class="wordset">
                                         <ul>
