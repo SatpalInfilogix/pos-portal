@@ -111,6 +111,9 @@ class OrderController extends Controller
                 'message' => 'Order Placed',
                 'orderId' => $this->generateInvoice(),
                 'pdfUrl' => $status['invoicePath'],
+                'totalAmount' => $cart['payable'],
+                'orderDate' => now(),
+                'customerName' => $request->customer_name
             ]);
         }
     }
@@ -256,7 +259,9 @@ class OrderController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Order On Hold',
-                'orderId' => $this->generateInvoice()
+                'orderId' => $this->generateInvoice(),
+                'totalAmount' => $cart['payable'],
+                'orderDate' => now()
             ]);
         
     }
