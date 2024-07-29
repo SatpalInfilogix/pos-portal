@@ -31,7 +31,7 @@
                 <table id="customers-table" class="table customers-table">
                     <thead>
                         <tr>
-                            <th>Sr. No</th>
+                            <th>#</th>
                             <th>Name</th>
                             <th>Phone Number</th>
                             <th class="no-sort">Action</th>

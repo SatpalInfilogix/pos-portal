@@ -29,7 +29,7 @@
                 <table id="sales-table" class="table sales-table">
                     <thead>
                         <tr>
-                            <th>Sr. No</th>
+                            <th>#</th>
                             <th>Order ID</th>
                             <th>Price</th>
                             <th>Customer Name</th>

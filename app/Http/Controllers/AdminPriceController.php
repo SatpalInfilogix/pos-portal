@@ -22,16 +22,16 @@ class AdminPriceController extends Controller
         $maxItemsPerPage = 10;
     
         // Base query
-        $pricesQuery = PriceMaster::select(['id', 'price', 'product_id', 'status'])
-                            ->with('product'); // Ensure 'product' relationship is defined in Price model
+        $pricesQuery = PriceMaster::select(['price_masters.id', 'price_masters.price', 'price_masters.product_id', 'price_masters.status', 'products.product_code', 'products.name as product_name'])
+            ->join('products', 'price_masters.product_id', '=', 'products.id'); // Join the products table
     
         // Search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
-            $pricesQuery->whereHas('product', function($query) use ($searchValue) {
-                $query->where('name', 'like', '%' . $searchValue . '%')
-                      ->orWhere('product_code', 'like', '%' . $searchValue . '%')
-                      ->orWhere('price', 'like', '%' . $searchValue . '%');
+            $pricesQuery->where(function($query) use ($searchValue) {
+                $query->where('products.name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('products.product_code', 'like', '%' . $searchValue . '%')
+                    ->orWhere('price_masters.price', 'like', '%' . $searchValue . '%');
             });
         }
     
@@ -42,9 +42,15 @@ class AdminPriceController extends Controller
             $column = $request->columns[$orderColumnIndex]['data'];
     
             // Sort by valid columns only
-            $validColumns = ['id', 'price', 'status']; // Define valid columns
+            $validColumns = ['id', 'price', 'status', 'product_code', 'product_name'];
             if (in_array($column, $validColumns)) {
-                $productsQuery->orderBy($column, $orderDirection);
+                if ($column === 'product_code') {
+                    $pricesQuery->orderBy('products.product_code', $orderDirection);
+                } elseif ($column === 'product_name') {
+                    $pricesQuery->orderBy('products.name', $orderDirection);
+                } else {
+                    $pricesQuery->orderBy('price_masters.' . $column, $orderDirection);
+                }
             }
         }
     
@@ -54,13 +60,6 @@ class AdminPriceController extends Controller
         $currentPage = (int) ($request->input('start', 0) / $perPage);
         $prices = $pricesQuery->skip($currentPage * $perPage)->take($perPage)->get();
     
-        // Transform data to include product_name and product_code
-        $prices->transform(function ($price) {
-            $price->product_name = $price->product ? $price->product->name : 'N/A';
-            $price->product_code = $price->product ? $price->product->product_code : 'N/A';
-            return $price;
-        });
-    
         // Respond with data
         return response()->json([
             "draw" => intval($request->input('draw')),
@@ -69,6 +68,7 @@ class AdminPriceController extends Controller
             "data" => $prices
         ]);
     }
+    
     
 
     public function autocomplete(Request $request)

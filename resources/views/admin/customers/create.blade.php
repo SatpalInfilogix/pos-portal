@@ -12,7 +12,7 @@
                 <li>
                     <div class="page-btn">
                         <a href="{{ route('customers.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to customer</a>
+                                class="me-2"></i>Back to customers</a>
                     </div>
                 </li>
             </ul>

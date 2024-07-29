@@ -26,15 +26,15 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4>New Price</h4>
-                    <h6>Create new product</h6>
+                    <h4>Edit Price</h4>
+                    <h6>Edit price details</h6>
                 </div>
             </div>
             <ul class="table-top-head">
                 <li>
                     <div class="page-btn">
                         <a href="{{ route('prices.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to Price</a>
+                                class="me-2"></i>Back to Prices</a>
                     </div>
                 </li>
             </ul>
@@ -75,7 +75,7 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="btn-addproduct mb-4">
-                            <button type="submit" class="btn btn-submit">Save Product</button>
+                            <button type="submit" class="btn btn-submit">Save Price</button>
                         </div>
                     </div>
                 </div>

@@ -4,15 +4,15 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4>New Customer</h4>
-                    <h6>Create new customer</h6>
+                    <h4>Edit Customer</h4>
+                    <h6>Edit customer details</h6>
                 </div>
             </div>
             <ul class="table-top-head">
                 <li>
                     <div class="page-btn">
                         <a href="{{ route('customers.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to customer</a>
+                                class="me-2"></i>Back to customers</a>
                     </div>
                 </li>
             </ul>
@@ -87,11 +87,6 @@
                 shipping_state: "required",
                 shipping_country: "required",
                 shipping_pin_Code: "required",
-                // billing_address: "required",
-                // billing_city: "required",
-                // billing_state: "required",
-                // billing_country: "required",
-                // billing_pin_Code: "required",
             },
             messages: {
                 name: "Please enter the name",
