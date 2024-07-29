@@ -667,16 +667,16 @@
                     shipping_address_pin_code: shipping_address_pin_code,
                     billing_address_pin_code: billing_address_pin_code,
                 },
-                success: function(resp) {
-                    if (resp.success) {
+                success: function(response) {
+                    if (response.success) {
                         Swal.fire({
                             title: "Order Placed!",
-                            text: "Your Order Placed " + resp.orderId,
+                            text: "Your Order Placed " + response.orderId,
                             icon: "success",
                             timer: 1000
                         });
-                        $('#invoice-id').text(resp.orderId);
-                        const newWindow = window.open(resp.pdfUrl, '_blank', 'noopener,noreferrer');
+                        $('#invoice-id').text(response.orderId);
+                        const newWindow = window.open(response.pdfUrl, '_blank', 'noopener,noreferrer');
                         if (newWindow) {
                             setTimeout(() => {
                                 window.focus();
@@ -685,6 +685,49 @@
                         $('[name="order_customer_id"]').val('').trigger('chosen:updated');
                         $("#place-order").modal("hide");
                         $('#place-order').find('form').trigger('reset');
+                        emptyCart();
+                        var completedOrder = `<div class="default-cover p-4 search-order-box" data-invoice-id="${ response.orderId }">
+                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #${ response.orderId }</span>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6 record mb-3">
+                                            <table>
+                                                <tr class="mb-3">
+                                                    <td>Cashier</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">admin</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Customer</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">${ response.customerName }</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6 record mb-3">
+                                            <table>
+                                                <tr>
+                                                    <td>Total</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">$${ response.totalAmount }</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">${ response.orderDate }</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <p class="p-4 mb-4">Customer need to recheck the product once</p>
+                                        <div class="btn-row d-flex align-items-center justify-content-between">
+                                            <a href="{{ route('sales.view','') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
+                                            <a href="javascript:void(0);"
+                                                class="btn btn-danger btn-icon flex-fill">Products</a>
+                                            <a href="javascript:void(0);"
+                                                class="btn btn-success btn-icon flex-fill">Print</a>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            $('.completed-orders').prepend(completedOrder);
                     }
                 }
             });
@@ -727,6 +770,49 @@
                             showConfirmButton: false,
                             timer: 1500
                         });
+                        emptyCart();
+                        var holdOrder = `<div class="default-cover p-4 search-order-box" data-invoice-id="${ response.orderId }">
+                                    <span class="badge bg-secondary d-inline-block mb-4">Order ID : #${ response.orderId }</span>
+                                    <div class="row">
+                                        <div class="col-sm-12 col-md-6 record mb-3">
+                                            <table>
+                                                <tr class="mb-3">
+                                                    <td>Cashier</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">admin</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Customer</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">Guest</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <div class="col-sm-12 col-md-6 record mb-3">
+                                            <table>
+                                                <tr>
+                                                    <td>Total</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">$${ response.totalAmount }</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Date</td>
+                                                    <td class="colon">:</td>
+                                                    <td class="text">${ response.orderDate }</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                        <p class="p-4 mb-4">Customer need to recheck the product once</p>
+                                        <div class="btn-row d-flex align-items-center justify-content-between">
+                                            <a href="{{ route('sales.view','') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
+                                            <a href="javascript:void(0);"
+                                                class="btn btn-danger btn-icon flex-fill">Products</a>
+                                            <a href="javascript:void(0);"
+                                                class="btn btn-success btn-icon flex-fill">Print</a>
+                                        </div>
+                                    </div>
+                                </div>`;
+                            $('.hold-orders').prepend(holdOrder);
                     }
                 }
             });    

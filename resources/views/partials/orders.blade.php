@@ -33,7 +33,7 @@
                                     <input type="text" class="form-control" placeholder="Search" name="searchOrder">
                                 </div>
                             </div>
-                            <div class="order-body">
+                            <div class="order-body hold-orders">
                             @forelse ($holdOrders as $onHoldOrder)
                                 <div class="default-cover p-4 search-order-box" data-invoice-id="{{ $onHoldOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $onHoldOrder->OrderID}}</span>
@@ -89,7 +89,7 @@
                                     <input type="text" class="form-control" placeholder="Search" name="searchOrder">
                                 </div>
                             </div>
-                            <div class="order-body">
+                            <div class="order-body unpaid-orders">
                                 @forelse ($unPaidOrders as $unPaidOrder)
                                 <div class="default-cover p-4 search-order-box" data-invoice-id="{{ $unPaidOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $unPaidOrder->OrderID}}</span>
@@ -145,7 +145,7 @@
                                     <input type="text" class="form-control" placeholder="Search" name="searchOrder">
                                 </div>
                             </div>
-                            <div class="order-body">
+                            <div class="order-body completed-orders">
                                 @forelse ($completedOrders as $completedOrder)
                                 <div class="default-cover p-4 search-order-box" data-invoice-id="{{ $completedOrder->OrderID}}">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #{{ $completedOrder->OrderID}}</span>
