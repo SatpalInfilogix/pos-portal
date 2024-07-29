@@ -48,7 +48,7 @@
                                                 <tr>
                                                     <td>Customer</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">{{ $onHoldOrder->CustomerName }}</td>
+                                                    <td class="text">{{ $onHoldOrder->CustomerName ?? 'Guest' }}</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -57,7 +57,7 @@
                                                 <tr>
                                                     <td>Total</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">{{ $onHoldOrder->TotalAmount }}</td>
+                                                    <td class="text">${{ $onHoldOrder->TotalAmount }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Date</td>
@@ -113,7 +113,7 @@
                                                 <tr>
                                                     <td>Total</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">{{ $unPaidOrder->TotalAmount }}</td>
+                                                    <td class="text">${{ $unPaidOrder->TotalAmount }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Date</td>
@@ -169,7 +169,7 @@
                                                 <tr>
                                                     <td>Total</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">{{ $completedOrder->TotalAmount }}</td>
+                                                    <td class="text">${{ $completedOrder->TotalAmount }}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Date</td>

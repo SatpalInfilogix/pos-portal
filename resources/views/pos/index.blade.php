@@ -690,5 +690,26 @@
                 $('div.search-order-box').show();
             }
         });
+
+        $(document).on('click', '#order-on-hold', function(event) {
+            event.preventDefault();
+            $.ajax({
+                url: "{{ route('hold.order') }}",
+                type: 'GET',
+                success : function(response){
+                    if(response.success){
+                        
+                        $("#hold-order").modal("hide");
+                        Swal.fire({
+                            position: "top-end",
+                            icon: "success",
+                            title: `Your Order ${response.orderId} On Hold`,
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
+                }
+            });    
+        });
     </script>
 @endsection
