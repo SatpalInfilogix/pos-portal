@@ -14,13 +14,17 @@ class PosDashboardController extends Controller
 {
     public function index()
     {
-        $categories = Category::where('status', 0)
-                    ->withCount(['products' => function ($query) {
-                    $query->where('status', 0); // Condition for products status
-                    }])->latest()->get();
+        $categories = Category::where('status', 0)->withCount(['products' => function ($query) {
+                        $query->where('status', 0); // Condition for products status
+                        }])->latest()->take(15)->get();
 
-        $totalProducs = $categories->sum('products_count');
-    
+        $productsTotal = Category::where('status', 0)->with('products')->get();
+
+        // Calculate the total number of products
+        $totalProducts = $productsTotal->flatMap(function ($productCount) {
+            return $productCount->products;
+        })->count();
+
         $products = Product::where('status', 0)->latest()->get();
         foreach ($products as $proKey => $product) {
             $category = Category::where('id', $product->category_id)->first();
@@ -54,7 +58,7 @@ class PosDashboardController extends Controller
         $holdOrders = Order::where('OrderStatus','onhold')->orderBy('OrderID', 'DESC')->get();
         $unPaidOrders = Order::where('OrderStatus','unpaid')->orderBy('OrderID', 'DESC')->get();
         
-        return view('pos.index', compact('categories', 'totalProducs', 'products','invoiceId', 'discount', 'customers','completedOrders','holdOrders','unPaidOrders'));
+        return view('pos.index', compact('categories', 'totalProducts', 'products','invoiceId', 'discount', 'customers','completedOrders','holdOrders','unPaidOrders'));
     }
 
 }

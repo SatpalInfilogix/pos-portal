@@ -404,13 +404,13 @@
 
                             </div>
                         </div>
-                        <p class="grand-total"> Grand Total :
+                        {{-- <p class="grand-total"> Grand Total :
                             @php
                                 $cart = session('cart');
                                 $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                             @endphp
                             $ <span class="payable">{{ $payable }}</span>
-                        </p>
+                        </p> --}}
 
                         <div class="modal-footer d-sm-flex justify-content-end">
                             <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
@@ -528,6 +528,7 @@
             if (cartData.count == 0) {
                 $(`.cart-indicator`).addClass('d-none');
                 cartHtml = `<h3 class="font-bold text-center mt-5">Cart is empty</h3>`;
+                $('.discountSelect').val(' ');
             } else {
                 $(`.cart-indicator`).removeClass('d-none');
                 $.each(cartData.products, function(key, product) {
@@ -570,6 +571,9 @@
             $('.payable').html(`$${cartData.payable}`);
             $('.count-products').html(cartData.count);
 
+            let discountAmount = cartData.discount_amount;
+            let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
+            $('.discountAmount').html(formatedDiscountAmount);
             feather.replace();
         }
 
@@ -608,8 +612,11 @@
                 success: function(response) {
                     if (response.success) {
                         updateCartUI(response.cart);
+                        $('.products-'+productId).removeClass('added-to-cart');
+                        if (response.cart.count == 0) {
+                            $('.discountSelect').val(' ')
+                        }
                     }
-
                 },
                 error: function(xhr, status, error) {
                     console.error('Error removing from cart:', error);

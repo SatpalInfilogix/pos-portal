@@ -61,6 +61,9 @@
             text-transform: uppercase;
         }
     </style>
+    @php
+        $cart = session('cart');
+    @endphp
     <div class="content pos-design p-0">
         <div class="d-sm-flex justify-content-between">
             <div class="btn-row d-sm-flex align-items-center">
@@ -89,7 +92,7 @@
                                 <img src="{{ asset('assets/img/category-icon.png') }}" alt="Categories">
                             </a>
                             <h6><a href="javascript:void(0);">All Categories</a></h6>
-                            <span>{{ $totalProducs }} Items</span>
+                            <span>{{ $totalProducts }} Items</span>
                         </li>
                         @foreach ($categories as $category)
                             <li id="{{ $category->name }}">
@@ -119,7 +122,7 @@
 
                                         <div class="col-sm-2 col-md-6 col-lg-3 col-xl-3">
                                             <div id="product-check_{{ $product->id }}" @class([
-                                                'product-info default-cover card',
+                                                'product-info default-cover card', 'products-' . $product->id,
                                                 'added-to-cart' => in_array($product->id, $cartProductIds),
                                             ])
                                                 onclick="addToCartAndToggleTick('{{ $product->id }}')">
@@ -174,8 +177,9 @@
                                     @endif
                                 </span>
                             </h6>
+
                             <a href="javascript:void(0);" @class([
-                                'd-flex align-items-center text-danger cart-indicator',
+                                'd-flex align-items-center text-danger cart-indicator empty-cart',
                                 'd-none' => $isCartEmpty,
                             ])>
                                 <span class="me-1">
@@ -244,7 +248,7 @@
                                             $discountValue = session('cart')['discount_percentage'];
                                         }
                                         ?>
-                                        <input type="number" class="form-control" name="discount" id="discountSelect"
+                                        <input type="number" class="form-control discountSelect" name="discount" id="discountSelect"
                                             min="0" data-max="{{ $discount->discount ?? '' }}"
                                             value="{{ $discountValue }}">
                                         <div class="text-danger" id="discountError"></div>
@@ -262,9 +266,6 @@
                                 </tr>
                                 <tr>
                                     <td class="danger discountPercentage">Total Discount</td>
-                                    @php
-                                        $cart = session('cart');
-                                    @endphp
                                     @if (is_array($cart) && isset($cart['sub_total']))
                                         <td class="danger text-end discountAmount">
                                             ${{ isset($cart['discount']['discount_amount']) ? $cart['discount']['discount_amount'] : '0' }}
@@ -287,36 +288,33 @@
                                     <td>Tax (GCT 15%)</td>
                                     <td class="text-end tax">
                                         @php
-                                            $cart = session('cart');
                                             $tax = isset($cart['tax']) ? $cart['tax'] : 0;
                                         @endphp
-                                        ${{ $tax }}
+                                        ${{ number_format($tax, 2) }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td>Total Payable</td>
                                     <td class="text-end payable">
                                         @php
-                                            $cart = session('cart');
                                             $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                         @endphp
-                                        ${{ $payable }}
+                                        ${{ number_format($payable, 2) }}
                                     </td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                     <div @class(['cart-indicator', 'd-none' => $isCartEmpty])>
-                        <div class="d-grid btn-block">
+                        {{-- <div class="d-grid btn-block">
                             <a class="btn btn-secondary" href="javascript:void(0);">
                                 Grand Total :
                                 @php
-                                    $cart = session('cart');
                                     $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                 @endphp
-                                <span class="payable">${{ $payable }}</span>
+                                <span class="payable">${{ number_format($payable, 2) }}</span>
                             </a>
-                        </div>
+                        </div> --}}
                         <div class="d-grid btn-block">
                             <a class="btn btn-secondary" href="javascript:void(0);" data-bs-toggle="modal"
                                 data-bs-target="#place-order">
@@ -415,12 +413,30 @@
             });
         });
 
+        function emptyCart()
+        {
+            $.ajax({
+                url: "{{ route('clear-cart') }}",
+                method: "POST",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                },
+                success: function(response) {
+                    let cartHtml = ``;
+                    if (response.success) {
+                        $(`.cart-indicator`).addClass('d-none');
+                        cartHtml = `<h3 class="font-bold text-center mt-5">Cart is empty</h3>`;
+                    }
+                    $('.count-products').html(0);
+                    $('.product-list-cart').html(cartHtml);
+                    $('.product-info').removeClass('added-to-cart');
+                    $('.discountSelect').val(' ');
+                }
+            });
+        }
 
-        $(document).on('click', '.close-cart', function() {
-            if ($('body').hasClass('product-list-cart_active')) {
-                $('body').removeClass('product-list-cart_active');
-            }
-            $('.product-list-cart').removeClass('active');
+        $(document).on('click', '.empty-cart', function() {
+            emptyCart();
         });
 
         function updateQuantity(productId, quantity) {
@@ -448,6 +464,10 @@
                             $('.payable').html(response.cart.payable);
                             $('.discount-option').html(response.discountOptions);
                             $('.count-products').html(response.cart.count);
+
+                            let discountAmount = response.cart.discount_amount;
+                            let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
+                            $('.discountAmount').html(formatedDiscountAmount);
                         } else {
                             window.location.reload();
                         }

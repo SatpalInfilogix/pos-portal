@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Category;
 use App\Imports\ProductsImport;
+use Picqer\Barcode\BarcodeGeneratorHTML;
 use Maatwebsite\Excel\Facades\Excel;
 
 class AdminProductController extends Controller
@@ -15,59 +16,69 @@ class AdminProductController extends Controller
     public function index()
     {
         $products = Product::with('category')->latest()->get();
+        // foreach($products as $key=> $product) {
+        //     $genertorHTML = new BarcodeGeneratorHTML();
+        //     $products[$key]['barcode'] = $genertorHTML->getBarcode($product->product_code. ' ' .$product->product_name, $genertorHTML::TYPE_CODE_128,2);
+        // }
 
         return view('admin.products.index', compact('products'));
     }
 
     public function getProducts(Request $request)
     {
+        $generatorHTML = new BarcodeGeneratorHTML();
         $maxItemsPerPage = 10;
-
-        // Base query
-        $productsQuery = Product::select(['id', 'name', 'manufacture_date', 'image', 'status', 'category_id'])
+    
+        $productsQuery = Product::select(['id', 'name', 'manufacture_date', 'image', 'status', 'product_code', 'category_id'])
                                 ->with('category');
-
-        // Search filter
+    
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
             $productsQuery->where('name', 'like', '%' . $searchValue . '%')
-                            ->orWhere('manufacture_date', 'like', '%' . $searchValue . '%');
+                          ->orWhere('manufacture_date', 'like', '%' . $searchValue . '%');
         }
-
-        // Sorting
+    
         if ($request->has('order')) {
             $orderColumnIndex = $request->order[0]['column'];
             $orderDirection = $request->order[0]['dir'];
             $column = $request->columns[$orderColumnIndex]['data'];
-
-            // Sort by valid columns only
-            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status']; // Define valid columns
+    
+            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status'];
             if (in_array($column, $validColumns)) {
                 $productsQuery->orderBy($column, $orderDirection);
             }
         }
-
-        // Pagination
+    
         $totalRecords = $productsQuery->count();
         $perPage = $request->input('length', $maxItemsPerPage);
         $currentPage = (int) ($request->input('start', 0) / $perPage);
         $products = $productsQuery->skip($currentPage * $perPage)->take($perPage)->get();
-
-        // Transform data to include category_name
+        // foreach ($products as $product) {
+        //     // Generate barcode with product_name
+        //     $barcodeData = $product->product_code . ' ' . $product->name;
+        //     $barcodeHTML = $generatorHTML->getBarcode(
+        //         $barcodeData, $generatorHTML::TYPE_CODE_128, 2, 60
+        //     );
+    
+        //     // Combine product name and barcode HTML
+        //     $product->barcode = '<div style="text-align: center;">' .
+        //                         '<div>' . $barcodeHTML . '</div>' .
+        //                         '<div>P- ' . $product->product_code .' ' .$product->name  . '</div>' .
+        //                     '</div>';
+        // }
+    
         $products->transform(function ($product) {
             $product->category_name = $product->category ? $product->category->name : 'N/A';
             return $product;
         });
-
-        // Respond with data
+    
         return response()->json([
             "draw" => intval($request->input('draw')),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => $totalRecords, // Adjust if filtered records are different
+            "recordsFiltered" => $totalRecords,
             "data" => $products
         ]);
     }
-
 
     public function create()
     {
