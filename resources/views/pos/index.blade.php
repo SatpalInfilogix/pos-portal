@@ -306,7 +306,7 @@
                         </div>
                     </div>
                     <div @class(['cart-indicator', 'd-none' => $isCartEmpty])>
-                        <div class="d-grid btn-block">
+                        {{-- <div class="d-grid btn-block">
                             <a class="btn btn-secondary" href="javascript:void(0);">
                                 Grand Total :
                                 @php
@@ -314,7 +314,7 @@
                                 @endphp
                                 <span class="payable">${{ number_format($payable, 2) }}</span>
                             </a>
-                        </div>
+                        </div> --}}
                         <div class="d-grid btn-block">
                             <a class="btn btn-secondary" href="javascript:void(0);" data-bs-toggle="modal"
                                 data-bs-target="#place-order">

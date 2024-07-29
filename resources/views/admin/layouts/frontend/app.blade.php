@@ -404,13 +404,13 @@
 
                             </div>
                         </div>
-                        <p class="grand-total"> Grand Total :
+                        {{-- <p class="grand-total"> Grand Total :
                             @php
                                 $cart = session('cart');
                                 $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                             @endphp
                             $ <span class="payable">{{ $payable }}</span>
-                        </p>
+                        </p> --}}
 
                         <div class="modal-footer d-sm-flex justify-content-end">
                             <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
