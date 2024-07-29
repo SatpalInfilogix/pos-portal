@@ -29,7 +29,7 @@
                         @csrf
                         <div class="login-userset">
                             <div class="login-logo logo-normal">
-                                <img src="assets/img/logo.png" alt="img">
+                                <img src="{{ asset('assets/img/logo.png') }}" alt="img">
                             </div>
                             <a href="#" class="login-logo logo-white">
                                 <img src="assets/img/logo-white.png" alt>
