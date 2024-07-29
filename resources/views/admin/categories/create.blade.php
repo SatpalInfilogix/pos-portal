@@ -21,7 +21,7 @@
                 <li>
                     <div class="page-btn">
                         <a href="{{ route('categories.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to category</a>
+                                class="me-2"></i>Back to categories</a>
                     </div>
                 </li>
             </ul>

@@ -4,15 +4,15 @@
         <div class="page-header">
             <div class="add-item d-flex">
                 <div class="page-title">
-                    <h4>New Discount</h4>
-                    <h6>Create new discount</h6>
+                    <h4>Edit Discount</h4>
+                    <h6>Edit discount details</h6>
                 </div>
             </div>
             <ul class="table-top-head">
                 <li>
                     <div class="page-btn">
                         <a href="{{ route('discounts.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to Discount</a>
+                                class="me-2"></i>Back to Discounts</a>
                     </div>
                 </li>
             </ul>

@@ -21,7 +21,7 @@
                 <li>
                     <div class="page-btn">
                         <a href="{{ route('products.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to Product</a>
+                                class="me-2"></i>Back to Products</a>
                     </div>
                 </li>
             </ul>

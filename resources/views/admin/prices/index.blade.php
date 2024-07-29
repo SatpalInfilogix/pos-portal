@@ -31,7 +31,7 @@
                     <table id="prices-table" class="table prices-table">
                         <thead>
                             <tr>
-                                <th>Sr. No</th>
+                                <th>#</th>
                                 <th>Product Code</th>
                                 <th>Product</th>
                                 <th>Price</th>

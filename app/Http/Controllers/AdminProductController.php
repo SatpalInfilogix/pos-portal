@@ -29,13 +29,17 @@ class AdminProductController extends Controller
         $generatorHTML = new BarcodeGeneratorHTML();
         $maxItemsPerPage = 10;
     
-        $productsQuery = Product::select(['id', 'name', 'manufacture_date', 'image', 'status', 'product_code', 'category_id'])
-                                ->with('category');
-    
+        $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'categories.name as category_name'])
+                                ->join('categories', 'products.category_id', '=', 'categories.id'); // Join categories table
+
+        // Search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
-            $productsQuery->where('name', 'like', '%' . $searchValue . '%')
-                          ->orWhere('manufacture_date', 'like', '%' . $searchValue . '%');
+            $productsQuery->where(function ($query) use ($searchValue) {
+                $query->where('products.name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
+                    ->orWhere('categories.name', 'like', '%' . $searchValue . '%');
+            });
         }
     
         if ($request->has('order')) {
@@ -43,9 +47,13 @@ class AdminProductController extends Controller
             $orderDirection = $request->order[0]['dir'];
             $column = $request->columns[$orderColumnIndex]['data'];
     
-            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status'];
+            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status', 'category_name'];
             if (in_array($column, $validColumns)) {
-                $productsQuery->orderBy($column, $orderDirection);
+                if ($column === 'category_name') {
+                    $productsQuery->orderBy('categories.name', $orderDirection);
+                } else {
+                    $productsQuery->orderBy('products.' . $column, $orderDirection);
+                }
             }
         }
     
@@ -66,11 +74,6 @@ class AdminProductController extends Controller
         //                         '<div>P- ' . $product->product_code .' ' .$product->name  . '</div>' .
         //                     '</div>';
         // }
-    
-        $products->transform(function ($product) {
-            $product->category_name = $product->category ? $product->category->name : 'N/A';
-            return $product;
-        });
     
         return response()->json([
             "draw" => intval($request->input('draw')),

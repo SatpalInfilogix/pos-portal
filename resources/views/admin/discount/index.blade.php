@@ -12,7 +12,7 @@
             
             <div class="page-btn">
                 <a href="{{ route('discounts.create') }}" class="btn btn-added"><i data-feather="plus-circle"
-                        class="me-2"></i>Added Discount</a>
+                        class="me-2"></i>Add Discount</a>
             </div>
         </div>
         @if(session('success'))
