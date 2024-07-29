@@ -524,90 +524,19 @@
                 $('#new-option-input').val('');
                 $('#place-order').find('form').trigger('reset');
             } else {
-                alert('Please enter a valid option.');
+                //alert('Please enter a valid option.');
             }
         });
 
-        $(document).on('click', '.chosen-results .active-result', function() {
-            var contact_number = $('[name="order_customer_id"]').find(':selected').data('customer-contact');
-            var alternate_number = $('[name="order_customer_id"]').find(':selected').data('customer-alternate');
-            var shipping_address = $('[name="order_customer_id"]').find(':selected').data('customer-shipping');
-            var billing_address = $('[name="order_customer_id"]').find(':selected').data('customer-billing');
-            $('[name="contact_number"]').val(contact_number);
-            $('[name="alternate_number"]').val(alternate_number);
-            $('[name="shipping_address"]').val(shipping_address);
-            $('[name="billing_address"]').val(billing_address);
-        });
-
-        $(document).on('submit', 'form#place-order', function(event) {
-            event.preventDefault();
-            var payment_method = $('#payment-method').val();
-            if (payment_method == '') {
-                alert('Please Select Payment Method');
-                return false;
-            }
-            let customer_name = $('[name="order_customer_id"]').find(':selected').val();
-            let vehicle_number = $('[name="vehicle_number"]').val();
-            let contact_number = $('[name="contact_number"]').val();
-            let alternate_number = $('[name="alternate_number"]').val();
-            let shipping_address = $('[name="shipping_address"]').val();
-            let billing_address = $('[name="billing_address"]').val();
-            let shipping_address_pin_code = $('[name="shipping_address_pin_code"]').val();
-            let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
-            let tender_amount = $('[name="tender_amount"]').val();
-            let change_amount = $('[name="change_amount"]').val();
-            $.ajax({
-                url: "{{ url('admin/pos-sale-submission') }}",
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    customer_name: customer_name,
-                    vehicle_number: vehicle_number,
-                    contact_number: contact_number,
-                    alternate_number: alternate_number,
-                    shipping_address: shipping_address,
-                    billing_address: billing_address,
-                    payment_method: payment_method,
-                    tender_amount: tender_amount,
-                    change_amount: change_amount,
-                    shipping_address_pin_code: shipping_address_pin_code,
-                    billing_address_pin_code: billing_address_pin_code,
-                },
-                success: function(resp) {
-
-                    if (resp.success) {
-                        Swal.fire({
-                            title: "Order Placed!",
-                            text: "Your Order Placed " + resp.orderId,
-                            icon: "success",
-                            timer: 1000
-                        });
-                        $('#invoice-id').text(resp.orderId);
-                        const newWindow = window.open(resp.pdfUrl, '_blank', 'noopener,noreferrer');
-                        if (newWindow) {
-                            setTimeout(() => {
-                                window.focus();
-                            }, 100);
-                        }
-                        $('[name="order_customer_id"]').val('').trigger('chosen:updated');
-                        $("#place-order").modal("hide");
-                        $('#place-order').find('form').trigger('reset');
-                    }
-                }
-            });
-        });
         $(document).on('keyup', '[name="tender_amount"]', function() {
             var tender_amount = $(this).val();
-            var payable = parseInt($('span.payable:first').text());
-
-            console.log(tender_amount, payable)
+            var payable = parseInt($('span.payable:first').text().replace("$", ""));
 
             if (tender_amount > payable) {
                 var total_change = tender_amount - payable;
-                console.log('amt', total_change)
-                $('[name="change_amount"]').val(total_change);
+                $('[name="order_change_amount"]').val(total_change);
             } else {
-                $('[name="change_amount"]').val(0);
+                $('[name="order_change_amount"]').val(0);
             }
         });
 
@@ -667,7 +596,7 @@
                 $('#new-option-input').val('');
                 $('#place-order').find('form').trigger('reset');
             } else {
-                alert('Please enter a valid option.');
+                //alert('Please enter a valid option.');
             }
         });
 
@@ -742,6 +671,7 @@
                 }
             });
         });
+        
         $(document).on('keyup', '[name="tender_amount"]', function() {
             var tender_amount = $(this).val();
             var payable = parseInt($('span.payable:first').text());

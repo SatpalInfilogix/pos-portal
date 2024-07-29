@@ -14,10 +14,6 @@
                 <a href="{{ route('discounts.create') }}" class="btn btn-added"><i data-feather="plus-circle"
                         class="me-2"></i>Added Discount</a>
             </div>
-            <!-- <div class="page-btn import">
-                <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
-                        data-feather="download" class="me-2"></i>Import Product</a>
-            </div> -->
         </div>
         @if(session('success'))
             <div class="alert alert-success">
@@ -31,33 +27,18 @@
                     <table class="table dashboard-expired-products">
                         <thead>
                             <tr>
-                                <th>Sr. No</th>
-                                <th>Roles</th>
+                                <th>#</th>
+                                <th>Role</th>
                                 <th>Discount</th>
-                                <!-- <th class="no-sort">Action</th> -->
                             </tr>
                         </thead>
                         <tbody>
                             @foreach($discounts as $key => $discount)
-                                <tr>
-                                    <td>{{ ++$key }}</td>
-                                    <td>{{ ucwords($discount->roleName) }} </td>
-                                    <td>{{ $discount->discount ? $discount->discount . '%' : '0%' }}</td>
-                                    <!-- <td class="action-table-data">
-                                        <div class="edit-delete-action">
-                                            <a class="me-2 p-2" href="{{ route('discounts.edit', $discount->id) }}">
-                                                <i data-feather="edit" class="feather-edit"></i>
-                                            </a>
-                                            @if($discount->status == 1)
-                                                <a class="me-2 p-2 delete-product" id="restore-discount" data-id="{{ $discount->id }}" href="#">Restore</a>
-                                                <a class="me-2 p-2 delete-product" id="delete-discount" data-id="{{$discount->id}}" style="display: none;"><i data-feather="trash-2" class="feather-trash-2"></i></a>
-                                            @else 
-                                                <a class="me-2 p-2 delete-product" id="delete-discount" data-id="{{$discount->id}}" href="#"><i data-feather="trash-2" class="feather-trash-2"></i></a>
-                                                <a class="me-2 p-2 delete-product" id="restore-discount" data-id="{{ $discount->id }}" style="display: none;">Restore</a>
-                                            @endif
-                                        </div>
-                                    </td> -->
-                                </tr>
+                            <tr>
+                                <td>{{ ++$key }}</td>
+                                <td>{{ ucwords($discount->roleName) }} </td>
+                                <td>{{ $discount->discount ? $discount->discount . '%' : '0%' }}</td>
+                            </tr>
                             @endforeach
                         </tbody>
                     </table>

@@ -111,7 +111,7 @@ $customers = DB::table('customers')->get();
                                 placeholder="Tender Amount">
                         </div>
                         <div class="col-md-6 col-lg-4 item">
-                            <input type="number" name="change_amount" class="form-control"
+                            <input type="number" name="order_change_amount" class="form-control"
                                 placeholder="Change Amount">
                         </div>
                         <div class="col-md-6 col-lg-4 item">
@@ -123,7 +123,7 @@ $customers = DB::table('customers')->get();
                             $cart = session('cart');
                             $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                         @endphp
-                        $ <span class="payable">{{ $payable }}</span>
+                        <span class="payable">${{ $payable }}</span>
                     </p>
 
                     <div class="modal-footer d-sm-flex justify-content-end">
