@@ -58,11 +58,11 @@
                             <div class="row">
                                 <div class="col-md-6 add-product">
                                     <div class="input-blocks add-product list">
-                                        <label class="form-label">Quantity</label>
+                                        <label class="form-label">Units</label>
                                         <input type="text" id="quantity" class="form-control">
-                                        <button type="button" id="add-quantity" class="btn btn-primaryadd">Add Quantity</button>
+                                        <button type="button" id="add-units" class="btn btn-primaryadd">Add Units</button>
                                     </div>
-                                    <div id="quantity-list" class="mt-3 d-flex flex-wrap">
+                                    <div id="unit-list" class="mt-3 d-flex flex-wrap">
                                         <!-- Display entered quantities here -->
                                     </div>
                                 </div>
@@ -112,35 +112,35 @@
         // Array to store entered quantities
         var quantities = []; // Initialize quantities as an empty array
 
-        // Add Quantity button click event
-        $('#add-quantity').click(function () {
+        // Add Units button click event
+        $('#add-units').click(function () {
             var quantityValue = $('#quantity').val().trim();
             if (quantityValue !== '') {
                 quantities.push(quantityValue); // Add to quantities array
                 updateQuantityList(); // Update the displayed quantities
                 $('#quantity').val(''); // Clear the input field
             } else {
-                alert('Quantity cannot be empty');
+                alert('Units cannot be empty');
             }
         });
 
         // Function to update displayed quantities
         function updateQuantityList() {
-            $('#quantity-list').empty(); // Clear previous entries
+            $('#unit-list').empty(); // Clear previous entries
             quantities.forEach(function (quantity, index) {
                 var listItem = $('<div class="card added-quantity me-2 mb-2">' +
                                     '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
                                         '<span>' + quantity + '</span>' +
                                         '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
-                                        '<button type="button" class="btn btn-sm btn-danger remove-quantity" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
+                                        '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
                                     '</div>' +
                                 '</div>');
-                                    $('#quantity-list').append(listItem); // Append each quantity as a new item
+                                    $('#unit-list').append(listItem); // Append each quantity as a new item
             });
         }
 
         // Remove Quantity button click event (for dynamically added elements)
-        $('#quantity-list').on('click', '.remove-quantity', function () {
+        $('#unit-list').on('click', '.remove-units', function () {
             var index = $(this).data('index');
             quantities.splice(index, 1); // Remove from array
             updateQuantityList(); // Update displayed quantities

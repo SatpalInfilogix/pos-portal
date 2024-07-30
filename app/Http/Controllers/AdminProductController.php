@@ -112,7 +112,7 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'quantity'          => json_encode($request->quantities),
+            'units'              => json_encode($request->quantities),
             'manufacture_date'  => $request->manufacture_date,
             'lot_number'        => $uniqueCode,
             'created_by'        => Auth::id(),
@@ -151,7 +151,7 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'quantity'          => json_encode($request->quantities),
+            'units'              => json_encode($request->quantities),
             'manufacture_date'  => $request->manufacture_date,
         ]);
         

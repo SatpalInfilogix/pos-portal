@@ -40,10 +40,10 @@ class ProductsImport implements ToModel, WithHeadingRow
             return null;
         }
 
-        $product_quantity = null;
+        $product_units = null;
         if(isset($row['quantity'])){
-            $product_quantity = explode(',', $row['quantity']);
-            $product_quantity = json_encode($product_quantity);
+            $product_units = explode(',', $row['quantity']);
+            $product_units = json_encode($product_units);
         }
         
         if(!empty($row['product_code'])){
@@ -64,7 +64,7 @@ class ProductsImport implements ToModel, WithHeadingRow
         $product = Product::updateOrCreate(
             ['name' => $row['name']],
             [
-                'quantity' => $product_quantity,
+                'units' => $product_units,
                 'product_code' => $product_code,
                 'manufacture_date' => $row['manufacture_date'],
                 'category_id' => $category->id,

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('product_code');
-            $table->json('quantity')->nullable();
+            $table->json('units')->nullable();
             $table->date('manufacture_date')->nullable();
             $table->string('lot_number')->nullable();
             $table->string('image')->nullable();

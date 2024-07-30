@@ -9,6 +9,10 @@
         padding: 0px 0px 0px 0px;
         font-size: 9px;
     }
+    div#imagePreview
+    {
+        width: 144px;
+    }
 </style>
 <div class="content">
     <div class="page-header">
@@ -60,18 +64,18 @@
                         <div class="row mb-3">
                             <div class="col-md-6 add-product">
                                 <div class="input-blocks add-product list">
-                                    <label class="form-label">Quantity</label>
+                                    <label class="form-label">Units</label>
                                     <input type="text" id="quantity" class="form-control">
-                                    <button type="button" id="add-quantity" class="btn btn-primaryadd">Add Quantity</button>
+                                    <button type="button" id="add-units" class="btn btn-primaryadd">Add Units</button>
                                 </div>
-                                <div id="quantity-list" class="mt-3 d-flex flex-wrap">
+                                <div id="unit-list" class="mt-3 d-flex flex-wrap">
                                     <!-- Display saved quantities from database -->
-                                    @foreach(json_decode($product->quantity) as $index => $quantity)
+                                    @foreach(json_decode($product->units) as $index => $unit)
                                     <div class="card added-quantity me-2 mb-2">
                                         <div class="card-body card-size d-flex justify-content-between align-items-center">
-                                            <span>{{ $quantity }}</span>
-                                            <input type="hidden" name="quantities[]" value="{{ $quantity }}">
-                                            <button type="button" class="btn btn-sm btn-danger remove-quantity" data-index="{{ $index }}"><span class="badge rounded-pill">x</span></button>
+                                            <span>{{ $unit }}</span>
+                                            <input type="hidden" name="quantities[]" value="{{ $unit }}">
+                                            <button type="button" class="btn btn-sm btn-danger remove-units" data-index="{{ $index }}"><span class="badge rounded-pill">x</span></button>
                                         </div>
                                     </div>
                                     @endforeach
@@ -132,22 +136,22 @@
         var quantities = [];
 
         // Add saved quantities to array
-        @foreach(json_decode($product->quantity) as $quantity)
-            quantities.push('{{ $quantity }}');
+        @foreach(json_decode($product->units) as $unit)
+            quantities.push('{{ $unit }}');
         @endforeach
 
         // Function to initialize displayed quantities
         function initializeQuantityList() {
-            $('#quantity-list').empty(); // Clear previous entries
+            $('#unit-list').empty(); // Clear previous entries
             quantities.forEach(function (quantity, index) {
                 var listItem = $('<div class="card added-quantity me-2 mb-2">' +
                                     '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
                                         '<span>' + quantity + '</span>' +
                                         '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
-                                        '<button type="button" class="btn btn-sm btn-danger remove-quantity" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
+                                        '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
                                     '</div>' +
                                 '</div>');
-                $('#quantity-list').append(listItem);
+                $('#unit-list').append(listItem);
             });
         }
 
@@ -155,7 +159,7 @@
         initializeQuantityList();
 
         // Add Quantity button click event
-        $('#add-quantity').click(function () {
+        $('#add-units').click(function () {
             var quantityValue = $('#quantity').val().trim();
             if (quantityValue !== '') {
                 // Add quantity to array
@@ -168,7 +172,7 @@
         });
 
         // Remove Quantity button click event (for dynamically added elements)
-        $('#quantity-list').on('click', '.remove-quantity', function () {
+        $('#unit-list').on('click', '.remove-units', function () {
             var index = $(this).data('index');
             quantities.splice(index, 1); // Remove from array
             updateQuantityList(); // Update displayed quantities
@@ -176,16 +180,16 @@
 
         // Function to update displayed quantities
         function updateQuantityList() {
-            $('#quantity-list').empty(); // Clear previous entries
+            $('#unit-list').empty(); // Clear previous entries
             quantities.forEach(function (quantity, index) {
                 var listItem = $('<div class="card added-quantity me-2 mb-2">' +
                                     '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
                                         '<span>' + quantity + '</span>' +
                                         '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
-                                        '<button type="button" class="btn btn-sm btn-danger remove-quantity" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
+                                        '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
                                     '</div>' +
                                 '</div>');
-                $('#quantity-list').append(listItem);
+                $('#unit-list').append(listItem);
             });
         }
 
