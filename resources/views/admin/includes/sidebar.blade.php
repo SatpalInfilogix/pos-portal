@@ -104,10 +104,10 @@
                         @canany(['view inventory transfers'])
                             <li @class([
                                 'active' => Request::is(
-                                    'admin/inventory transfers',
-                                    'admin/inventory transfers/*'),
+                                    'admin/inventory-transfer',
+                                    'admin/inventory-transfer/*'),
                             ])>
-                                <a href="#"><i data-feather="tag"></i>
+                                <a href="{{ route('inventory-transfer') }}"><i data-feather="tag"></i>
                                     <span>Inventory Transfer</span>
                                 </a>
                             </li>
