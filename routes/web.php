@@ -21,6 +21,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\PosGatePassController;
 use App\Http\Controllers\AdminSalesController;
+use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\PosCustomerController;
 /* End Backend Controller Import */
 
@@ -55,13 +56,14 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             '/admin-dashboard/profile' => DashboardSettingController::class,
             'profile'     => DashboardSettingController::class,
             'roles-and-permissions' => AdminRoleAndPermissionController::class,
+            '/inventory-transfer' => InventoryTransferController::class
+
         ]);
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
         Route::get('/sales/{id}',[AdminSalesController::class,'show'])->name('sales.view');
         Route::get('/return-stocks',[InventoryReturnController::class,'returnStockList'])->name('return_stocks.index');
         Route::get('/return-stocks/{id}',[InventoryReturnController::class,'show'])->name('view_return_stocks.index');
-        Route::view('/inventory-transfer','admin.stocks.admin-inventory-transfer')->name('inventory-transfer');
 
         /********************** Sales Routes Ends Here  **********************/
          

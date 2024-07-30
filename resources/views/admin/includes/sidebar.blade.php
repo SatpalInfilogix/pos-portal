@@ -107,7 +107,7 @@
                                     'admin/inventory-transfer',
                                     'admin/inventory-transfer/*'),
                             ])>
-                                <a href="{{ route('inventory-transfer') }}"><i data-feather="tag"></i>
+                                <a href="{{ route('inventory-transfer.index') }}"><i data-feather="tag"></i>
                                     <span>Inventory Transfer</span>
                                 </a>
                             </li>

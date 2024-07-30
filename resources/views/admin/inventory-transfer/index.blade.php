@@ -10,16 +10,12 @@
                 </div>
             </div>
 
-            <!-- div class="page-btn">
-                <a href="{{ route('users.create') }}" class="btn btn-added">
-                    <i data-feather="plus-circle" class="me-2"></i>
-                    Add New User
+            <div class="page-btn">
+                <a href="{{ route('inventory-transfer.create') }}" class="btn btn-added">
+                    <i data-feather="truck" class="me-2"></i>
+                    Send new items
                 </a>
             </div>
-            <<div class="page-btn import">
-                                                        <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
-                                                                data-feather="download" class="me-2"></i>Import Product</a>
-                                                    </div> -->
         </div>
         @if (session('success'))
             <div class="alert alert-success">
