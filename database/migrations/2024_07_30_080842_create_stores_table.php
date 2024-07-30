@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('contact_number');
             $table->string('location');
+            $table->boolean('is_deleted')->default(0); 
             $table->timestamps();
         });
     }

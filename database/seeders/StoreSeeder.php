@@ -17,6 +17,7 @@ class StoreSeeder extends Seeder
             "email" => "store1@gmail.com",
             "contact_number" => "9876543210",
             "location" => "Veerji Tower, Phase 8B Industrial Area, 140308",
+            "is_deleted" => 0,
         ]);
 
         Store::create([
@@ -24,6 +25,7 @@ class StoreSeeder extends Seeder
             "email" => "store2@gmail.com",
             "contact_number" => "123465790",
             "location" => "Mohali Tower, Phase 8B Industrial Area, 140308",
+            "is_deleted" => 0
         ]);
     }
 }

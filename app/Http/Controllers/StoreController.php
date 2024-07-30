@@ -12,7 +12,7 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $stores = Store::all();
+        $stores = Store::where('is_deleted',0)->get();
         return view('admin.stores.index',compact('stores'));
     }
 
@@ -76,6 +76,10 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $store = Store::where('id','=',$id)->update([
+            "is_deleted" => 1
+        ]);
+        
+        return response()->json(['success'=>true]);
     }
 }
