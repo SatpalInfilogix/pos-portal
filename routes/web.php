@@ -22,6 +22,7 @@ use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\PosGatePassController;
 use App\Http\Controllers\AdminSalesController;
 use App\Http\Controllers\PosCustomerController;
+use App\Http\Controllers\StoreController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
@@ -55,6 +56,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             '/admin-dashboard/profile' => DashboardSettingController::class,
             'profile'     => DashboardSettingController::class,
             'roles-and-permissions' => AdminRoleAndPermissionController::class,
+            'stores' => StoreController::class,
         ]);
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
