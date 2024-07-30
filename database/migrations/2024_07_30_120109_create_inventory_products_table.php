@@ -24,7 +24,6 @@ return new class extends Migration
             $table->foreign('store_id')->references('id')->on('stores');
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('sent_by')->references('id')->on('users');
-            $table->timestamps();
         });
     }
 
