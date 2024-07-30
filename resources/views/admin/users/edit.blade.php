@@ -51,7 +51,7 @@
                                     <select name="role" id="role" class="form-control" disabled>
                                         <option value="" selected disabled>Select Role</option>
                                         @foreach($roles as $key => $role)
-                                            <option value="{{$role->name}}" @selected( $user->roles->pluck('name')[0] == $role->name)>{{ $role->name }}</option>
+                                            <option value="{{$role->id}}" @selected( $user->roles->pluck('name')[0] == $role->name)>{{ $role->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -59,8 +59,8 @@
                                     <label class="form-label">Store</label>
                                     <select name="store_id" id="store_id" class="form-control">
                                         <option value="" selected disabled>Select Store</option>
-                                        @foreach ($roles as $key => $role)
-                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                        @foreach ($stores as $key => $store)
+                                            <option value="{{ $store->id }}" @selected( $user->store_id == $store->id)>{{ $store->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

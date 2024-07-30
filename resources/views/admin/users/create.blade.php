@@ -60,8 +60,8 @@
                                     <label class="form-label">Store</label>
                                     <select name="store_id" id="store_id" class="form-control">
                                         <option value="" selected disabled>Select Store</option>
-                                        @foreach ($roles as $key => $role)
-                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                        @foreach ($stores as $key => $store)
+                                            <option value="{{ $store->id }}">{{ $store->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -4,19 +4,20 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Customer;
+use App\Models\Store;
 use Illuminate\Support\Facades\Auth;
 class AdminCustomerController extends Controller
 {
     public function index()
     {
         $customers = Customer::latest()->get();
-
         return view('admin.customers.index', compact('customers'));
     }
 
     public function create()
     {
-        return view('admin.customers.create');
+        $stores = Store::where('is_deleted',0)->get();
+        return view('admin.customers.create',compact('stores'));
     }
 
     public function store(Request $request)
@@ -34,6 +35,7 @@ class AdminCustomerController extends Controller
         Customer::create([
             'customer_name'     => $request->name,
             'contact_number'    => $request->phone_number,
+            'customer_email'    => $request->email,
             'alternate_number'  => $request->alternate_number,
             'shipping_address'  => $request->shipping_address,
             'billing_address'   => $request->billing_address ?? $request->shipping_address,
@@ -50,7 +52,7 @@ class AdminCustomerController extends Controller
         $maxItemsPerPage = 10;
 
         // Base query
-        $customersQuery = Customer::select(['id', 'customer_name', 'contact_number', 'status']);
+        $customersQuery = Customer::select(['id', 'customer_name', 'contact_number']);
 
         // Search filter
         if ($request->has('search') && !empty($request->search['value'])) {
@@ -66,7 +68,7 @@ class AdminCustomerController extends Controller
             $column = $request->columns[$orderColumnIndex]['data'];
 
             // Sort by valid columns only
-            $validColumns = ['id', 'customer_name', 'contact_number', 'status']; // Define valid columns
+            $validColumns = ['id', 'customer_name', 'contact_number']; // Define valid columns
             if (in_array($column, $validColumns)) {
                 $customersQuery->orderBy($column, $orderDirection);
             }
@@ -100,6 +102,7 @@ class AdminCustomerController extends Controller
         $customer = Customer::where('id', $id)->first();
         $customer->update([
             'customer_name'     => $request->name,
+            'customer_email'     => $request->email,
             'contact_number'    => $request->phone_number,
             'alternate_number'  => $request->alternate_number,
             'shipping_address'  => $request->shipping_address,
