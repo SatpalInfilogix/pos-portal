@@ -191,6 +191,53 @@ class InventoryReturnController extends Controller
         return view('admin.stocks.index')->with([
             "returnStocks" => $returnStocks
         ]);
+        
+    }
+
+    public function getReturnStockInventory(Request $request){
+        $maxItemsPerPage = 10;
+
+        $returnsQuery = InventoryReturnOrder::selectRaw('
+            return_invoice_id,
+            MAX(id) as id,
+            MAX(order_id) as order_id,
+            MAX(customer_id) as customer_id,
+            MAX(vehicle_number) as vehicle_number,
+            MAX(contact_number) as contact_number,
+            MAX(created_at) as created_at,
+            MAX(from_location) as from_location,
+            MAX(to_location) as to_location
+        ')
+        ->groupBy('return_invoice_id');
+
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $returnsQuery->where(function ($query) use ($searchValue) {
+                $query->where('return_invoice_id', 'like', '%' . $searchValue . '%')
+                    ->orWhere('order_id', 'like', '%' . $searchValue . '%')
+                    ->orWhere('contact_number', 'like', '%' . $searchValue . '%')
+                    ->orWhere('vehicle_number', 'like', '%' . $searchValue . '%');
+            });
+        }
+
+        if ($request->has('order')) {
+            $orderColumn = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumn]['data'];
+            $returnsQuery->orderBy($column, $orderDirection);
+        }
+
+        $totalRecords = $returnsQuery->count();
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $currentPage = $request->input('start', 0) / $perPage;
+        $returnTransfers = $returnsQuery->skip($currentPage * $perPage)->take($perPage)->get();
+
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $returnTransfers
+        ]);
     }
 
     public function availableProductQuantity(Request $request)

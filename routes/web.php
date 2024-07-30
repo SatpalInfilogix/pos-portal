@@ -21,7 +21,9 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\PosGatePassController;
 use App\Http\Controllers\AdminSalesController;
+use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\PosCustomerController;
+use App\Http\Controllers\StoreController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
@@ -55,12 +57,15 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             '/admin-dashboard/profile' => DashboardSettingController::class,
             'profile'     => DashboardSettingController::class,
             'roles-and-permissions' => AdminRoleAndPermissionController::class,
+            'inventory-transfer' => InventoryTransferController::class,
+            'stores' => StoreController::class
         ]);
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
         Route::get('/sales/{id}',[AdminSalesController::class,'show'])->name('sales.view');
         Route::get('/return-stocks',[InventoryReturnController::class,'returnStockList'])->name('return_stocks.index');
         Route::get('/return-stocks/{id}',[InventoryReturnController::class,'show'])->name('view_return_stocks.index');
+
         /********************** Sales Routes Ends Here  **********************/
          
          Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
@@ -155,6 +160,7 @@ Route::post('/get-products', [AdminProductController::class, 'getProducts'])->na
 Route::post('/get-prices', [AdminPriceController::class, 'getPrices'])->name('get-prices');
 Route::post('/get-customers', [AdminCustomerController::class, 'getCustomers'])->name('get-customers');
 Route::post('/get-sales', [AdminSalesController::class, 'getSalesOrder'])->name('get-sales');
+Route::post('/get-return-inventory-stock', [InventoryReturnController::class, 'getReturnStockInventory'])->name('get-return-stock-inventory');
 /************************* End DataTables Routes ************************/
 
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');

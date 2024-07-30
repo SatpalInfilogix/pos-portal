@@ -12,7 +12,7 @@
                     <div class="page-btn">
                         <a href="{{ route('users.index') }}" class="btn btn-secondary">
                             <i data-feather="arrow-left" class="me-2"></i>
-                            Back to user
+                            Back to users
                         </a>
                     </div>
                 </li>
@@ -46,12 +46,21 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3">
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Role</label>
                                     <select name="role" id="role" class="form-control" disabled>
                                         <option value="" selected disabled>Select Role</option>
                                         @foreach($roles as $key => $role)
                                             <option value="{{$role->name}}" @selected( $user->roles->pluck('name')[0] == $role->name)>{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Store</label>
+                                    <select name="store_id" id="store_id" class="form-control">
+                                        <option value="" selected disabled>Select Store</option>
+                                        @foreach ($roles as $key => $role)
+                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
