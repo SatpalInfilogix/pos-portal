@@ -25,6 +25,16 @@
                         <h6 class="submenu-hdr">Inventory</h6>
                     @endcanany
                     <ul>
+                        <li @class([
+                            'active' => Request::is(
+                                'admin/stores',
+                                'admin/stores/create',
+                                'admin/stores/*/edit'),
+                        ])>
+                            <a href="{{ route('stores.index') }}"><i data-feather="shopping-bag"></i>
+                                <span>Stores</span>
+                            </a>
+                        </li>
                         @canany(['view users'])
                             <li @class(['active' => Request::is('admin/users', 'admin/users/*')])>
                                 <a href="{{ route('users.index') }}">
