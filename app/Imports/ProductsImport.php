@@ -41,8 +41,8 @@ class ProductsImport implements ToModel, WithHeadingRow
         }
 
         $product_units = null;
-        if(isset($row['quantity'])){
-            $product_units = explode(',', $row['quantity']);
+        if(isset($row['unit'])){
+            $product_units = explode(',', $row['unit']);
             $product_units = json_encode($product_units);
         }
         
