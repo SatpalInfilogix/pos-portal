@@ -12,7 +12,7 @@
                     <div class="page-btn">
                         <a href="{{ route('users.index') }}" class="btn btn-secondary">
                             <i data-feather="arrow-left" class="me-2"></i>
-                            Back to user
+                            Back to users
                         </a>
                     </div>
                 </li>
