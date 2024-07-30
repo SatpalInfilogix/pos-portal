@@ -83,6 +83,17 @@
                                 </a>
                             </li>
                         @endcanany
+                        @canany(['view inventory transfers'])
+                            <li @class([
+                                'active' => Request::is(
+                                    'admin/inventory-transfer',
+                                    'admin/inventory-transfer/*'),
+                            ])>
+                                <a href="{{ route('inventory-transfer.index') }}"><i data-feather="tag"></i>
+                                    <span>Inventory Transfer</span>
+                                </a>
+                            </li>
+                        @endcanany
                         @canany(['view sales'])
                             <li @class(['active' => Request::is('admin/sales', 'admin/sales/*')])>
                                 <a href="{{ route('sales.index') }}">
@@ -110,17 +121,6 @@
                                 <a href="{{ route('customers.index') }}">
                                     <i data-feather="codepen"></i>
                                     <span>Customer Master</span>
-                                </a>
-                            </li>
-                        @endcanany
-                        @canany(['view inventory transfers'])
-                            <li @class([
-                                'active' => Request::is(
-                                    'admin/inventory-transfer',
-                                    'admin/inventory-transfer/*'),
-                            ])>
-                                <a href="{{ route('inventory-transfer.index') }}"><i data-feather="tag"></i>
-                                    <span>Inventory Transfer</span>
                                 </a>
                             </li>
                         @endcanany

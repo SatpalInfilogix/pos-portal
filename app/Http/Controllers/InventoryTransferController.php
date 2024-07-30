@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\InventoryTransfer;
+use App\Models\Store;
 use Illuminate\Http\Request;
 
 class InventoryTransferController extends Controller
@@ -20,7 +21,8 @@ class InventoryTransferController extends Controller
      */
     public function create()
     {
-        return view('admin.inventory-transfer.create');
+        $stores = Store::latest()->get();
+        return view('admin.inventory-transfer.create', compact('stores'));
     }
 
     /**
@@ -28,7 +30,7 @@ class InventoryTransferController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        print_r($request->all());
     }
 
     /**
