@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
     <title>POS System</title>
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/img/favicon.png') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/bootstrap.min.css') }}">
@@ -380,60 +380,89 @@
             }
         }
 
-
+        function getCSRFToken() {
+            const tokenMeta = document.querySelector('meta[name="csrf-token"]');
+            return tokenMeta ? tokenMeta.getAttribute('content') : '';
+        }
         function updateCartUI(cartData) {
             let cartHtml = ``;
-
             if (cartData.count == 0) {
                 $(`.cart-indicator`).addClass('d-none');
                 cartHtml = `<h3 class="font-bold text-center mt-5">Cart is empty</h3>`;
                 $('.discountSelect').val(' ');
+                $('.product-list-cart').html(cartHtml);
+                $('.count-products').html(0);
             } else {
-                $(`.cart-indicator`).removeClass('d-none');
-                $.each(cartData.products, function(key, product) {
-                    cartHtml += `<div class="product-list d-flex align-items-center justify-content-between" id="product_${product.id}">
-                        <div class="d-flex align-items-center product-info">
-                            <a href="javascript:void(0);" class="img-bg">
-                                <img src="${product.image}" alt="Products">
-                            </a>
-                            <div class="info">
-                                <span>${product.code}</span>
-                                <h6><a href="javascript:void(0);">${product.name}</a></h6>
-                                <p>$${product.price}</p>
+                const productsArray = Object.values(cartData.products);
+                const productIds = productsArray.map(product => product.id);
+                const csrfToken = getCSRFToken();
+
+                fetch('/product-quantity', { // Replace with your API endpoint
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken // Include CSRF token
+                    },
+                    body: JSON.stringify({ product_ids: productIds }) // Send product IDs as JSON
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('API Response:', data.productQuantity   );
+
+                    const productQuantityLookup = data.productQuantity.reduce((acc, item) => {
+                        acc[item.product_id] = item.product_quantity;
+                        return acc;
+                    }, {});
+
+                    $(`.cart-indicator`).removeClass('d-none');
+                    $.each(cartData.products, function(key, product) {
+                        const productQuantity = productQuantityLookup[product.id] || product.quantity;
+                        cartHtml += `<div class="product-list d-flex align-items-center justify-content-between" id="product_${product.id}">
+                            <div class="d-flex align-items-center product-info">
+                                <a href="javascript:void(0);" class="img-bg">
+                                    <img src="${product.image}" alt="Products">
+                                </a>
+                                <div class="info">
+                                    <span>${product.code}</span>
+                                    <h6><a href="javascript:void(0);">${product.name}</a></h6>
+                                    <p>$${product.price}</p>
+                                </div>
                             </div>
-                        </div>
-                        <div class="qty-item text-center">
-                            <a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease" data-bs-toggle="tooltip" data-id="${product.id}" data-bs-placement="top" title="decrease">
-                                <i data-feather="minus-circle" class="feather-14"></i>
-                            </a>
-                            <input type="text" class="form-control text-center quantity__number" name="qty" value="${product.quantity}">
-                            <a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase" data-bs-toggle="tooltip" data-id="${product.id}" data-bs-placement="top" title="increase">
-                                <i data-feather="plus-circle" class="feather-14"></i>
-                            </a>
-                        </div>
-                        <div class="d-flex align-items-center action">
-                            <a class="btn-icon delete-icon confirm-text" onclick="removeFromCart(${product.id})">
-                                <i data-feather="trash-2" class="feather-14"></i>
-                            </a>
-                        </div>
-                    </div>`;
+                            <div class="qty-item text-center">
+                                <a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease" data-bs-toggle="tooltip" data-id="${product.id}" data-bs-placement="top" title="decrease">
+                                    <i data-feather="minus-circle" class="feather-14"></i>
+                                </a>
+                                <input type="text" class="form-control text-center quantity__number" name="qty" value="${product.quantity}" readonly>
+                                <a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase increase_${product.id}" data-bs-toggle="tooltip" data-id="${product.id}" data-quantity= "${productQuantity}" data-bs-placement="top" title="increase">
+                                    <i data-feather="plus-circle" class="feather-14"></i>
+                                </a>
+                            </div>
+                            <div class="d-flex align-items-center action">
+                                <a class="btn-icon delete-icon confirm-text" onclick="removeFromCart(${product.id})">
+                                    <i data-feather="trash-2" class="feather-14"></i>
+                                </a>
+                            </div>
+                        </div>`;
+
+                        $('.product-list-cart').html(cartHtml);
+                        let cart = cartData.formatted_sub_total;
+                        let amount = '<b>' + cart + '</b>';
+                        $('.totalAmount').html(amount);
+                        $('.grandTotal').html(cartData.formatted_grand_total);
+                        $('.tax').html(`$${cartData.tax}`);
+                        $('.payable').html(`$${cartData.payable}`);
+                        $('.count-products').html(cartData.count);
+            
+                        let discountAmount = cartData.discount_amount;
+                        let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
+                        $('.discountAmount').html(formatedDiscountAmount);
+                        feather.replace();
+                    });
+
                 });
             }
 
-            $('.product-list-cart').html(cartHtml);
-
-            let cart = cartData.formatted_sub_total;
-            let amount = '<b>' + cart + '</b>';
-            $('.totalAmount').html(amount);
-            $('.grandTotal').html(cartData.formatted_grand_total);
-            $('.tax').html(`$${cartData.tax}`);
-            $('.payable').html(`$${cartData.payable}`);
-            $('.count-products').html(cartData.count);
-
-            let discountAmount = cartData.discount_amount;
-            let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
-            $('.discountAmount').html(formatedDiscountAmount);
-            feather.replace();
         }
 
         function addToCart(productId) {

@@ -240,4 +240,22 @@ class InventoryReturnController extends Controller
         ]);
     }
 
+    public function availableProductQuantity(Request $request)
+    {
+        $availableProductQuantity = [];
+        foreach($request->product_ids as $key =>  $product_id){
+            $product = PriceMaster::where('product_id', $product_id)->first();
+            $availableProductQuantity[$key]['product_id'] = $product_id;
+            $availableProductQuantity[$key]['product_quantity'] = 0;
+            if($product) {
+                $availableProductQuantity[$key]['product_quantity'] = $product->quantity;
+            }
+        }
+
+        return response()->json([
+            'success'         => true,
+            'productQuantity' => $availableProductQuantity
+        ]);
+    }
+
 }

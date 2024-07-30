@@ -168,3 +168,5 @@ Route::post('/products/check-product-code', [AdminProductController::class, 'che
 
 /* Login And Registration Routes Ends Here */
 Route::get('/generate-pdf', [PDFController::class, 'download'])->name('download');
+
+Route::post('/product-quantity',[InventoryReturnController::class, 'availableProductQuantity']);
