@@ -206,104 +206,104 @@ class PosCartController extends Controller
 
     public function update(Request $request)
     {
-        if ($request->product_id && $request->qty) {
-            $cart = session()->get('cart');
-            // Check if the product already exists in the cart
-            $productExists = false;
-            foreach ($cart['products'] ?? [] as $key => $product) {
-                $cart['products'][$key]['product_total_amount'] = $product['quantity'] * $product['price'];
-                if ($product['id'] == $request->product_id) {
-                    $cart['products'][$key]['quantity'] = $request->qty;
-                    $cart['products'][$key]['product_total_amount'] = $request->qty * $product['price'];
-                    $productExists = true;
-                    break;
+        $productQuantity = PriceMaster::where('product_id', $request->product_id)->value('quantity');
+        if($request->qty <= $productQuantity) {
+            if ($request->product_id && $request->qty) {
+                $cart = session()->get('cart');
+                // Check if the product already exists in the cart
+                $productExists = false;
+                foreach ($cart['products'] ?? [] as $key => $product) {
+                    $cart['products'][$key]['product_total_amount'] = $product['quantity'] * $product['price'];
+                    if ($product['id'] == $request->product_id) {
+                        $cart['products'][$key]['quantity'] = $request->qty;
+                        $cart['products'][$key]['product_total_amount'] = $request->qty * $product['price'];
+                        $productExists = true;
+                        break;
+                    }
                 }
-            }
 
-            if (!$productExists) {
+                if (!$productExists) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Product not found in the cart.'
+                    ]);
+                }
+
+                // Recalculate cart totals
+                $cart_quantity = 0;
+                $sub_total = 0;
+                foreach ($cart['products'] as $product) {
+                    $cart_quantity += $product['quantity'];
+                    $sub_total += $product['quantity'] * $product['price'];
+                }
+
+                // Update cart totals
+                $cart['quantity'] = $cart_quantity;
+                $cart['sub_total'] = $sub_total;
+                $cart['formatted_sub_total'] = '$'.(number_format($sub_total ,2));
+
+
+                $applied_coupons = $cart['discount'] ?? [];
+                $cart['discount'] = $applied_coupons;
+                if($cart['discount']) {
+                    $discountPercentage =  $cart['discount_percentage'];
+                    unset($cart['discount']);
+                    $discountAmount = ($discountPercentage / 100) * $cart['sub_total'];
+                    $sub_total -= $cart['discount_amount'];
+                    $cart['grand_total'] = $sub_total;
+                    $cart['formatted_grand_total'] = '$'. number_format( $cart['grand_total'] , 2);
+                    $cart['discount_amount'] = $discountAmount;
+                    $cart['discount_percentage'] = $discountPercentage;
+
+                    $cart['discount'] = [
+                        'id'                   => $discount->id ?? 0,
+                        'discount_percentage'  => $discountPercentage,
+                        'discount_amount'      => $discountAmount,
+                    ];
+                    // $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+                    // $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
+
+
+                    // $sub_total -= $cart['discount_amount'];
+                    // $cart['grand_total'] =  $sub_total;
+                    // $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
+                    // $cart['discount'] = $cart['discount'];
+                    // $cart['discount_amount'] = $cart['discount_amount'];
+                } else {
+                    $cart['grand_total'] = $sub_total;
+                    $cart['formatted_grand_total'] = '$'.(number_format($sub_total ,2));
+                    $cart['discount'] = 0;
+                    $cart['discount_amount'] = 0;
+                }
+
+                $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+                $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
+
+                $cart['count']  = count($cart['products']);
+                session()->put('cart', $cart);
+                if (Auth::check()) {
+                    $user_id = Auth::id();
+                    Cart::updateOrCreate(
+                        ['user_id' => $user_id],
+                        ['cart' => json_encode($cart)]
+                    );
+                }
+                
+                return response()->json([
+                    'success' => true,
+                    'cart' => $cart,
+                    'message' => 'Cart quantity updated successfully.'
+                ]);
+            } else {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Product not found in the cart.'
+                    'message' => 'Product ID and quantity are required.'
                 ]);
             }
-
-            // Recalculate cart totals
-            $cart_quantity = 0;
-            $sub_total = 0;
-            foreach ($cart['products'] as $product) {
-                $cart_quantity += $product['quantity'];
-                $sub_total += $product['quantity'] * $product['price'];
-            }
-
-            // Update cart totals
-            $cart['quantity'] = $cart_quantity;
-            $cart['sub_total'] = $sub_total;
-            $cart['formatted_sub_total'] = '$'.(number_format($sub_total ,2));
-
-
-            $applied_coupons = $cart['discount'] ?? [];
-            $cart['discount'] = $applied_coupons;
-            if($cart['discount']) {
-                $discountPercentage =  $cart['discount_percentage'];
-                unset($cart['discount']);
-                $discountAmount = ($discountPercentage / 100) * $cart['sub_total'];
-                $sub_total -= $cart['discount_amount'];
-                $cart['grand_total'] = $sub_total;
-                $cart['formatted_grand_total'] = '$'. number_format( $cart['grand_total'] , 2);
-                $cart['discount_amount'] = $discountAmount;
-                $cart['discount_percentage'] = $discountPercentage;
-
-                $cart['discount'] = [
-                    'id'                   => $discount->id ?? 0,
-                    'discount_percentage'  => $discountPercentage,
-                    'discount_amount'      => $discountAmount,
-                ];
-                // $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
-                // $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
-
-
-                // $sub_total -= $cart['discount_amount'];
-                // $cart['grand_total'] =  $sub_total;
-                // $cart['formatted_grand_total'] = '$'. Number_Format( $cart['grand_total'] , 2);
-                // $cart['discount'] = $cart['discount'];
-                // $cart['discount_amount'] = $cart['discount_amount'];
-            } else {
-                $cart['grand_total'] = $sub_total;
-                $cart['formatted_grand_total'] = '$'.(number_format($sub_total ,2));
-                $cart['discount'] = 0;
-                $cart['discount_amount'] = 0;
-            }
-
-            $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
-            $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
-
-            $cart['count']  = count($cart['products']);
-            session()->put('cart', $cart);
-            if (Auth::check()) {
-                $user_id = Auth::id();
-                Cart::updateOrCreate(
-                    ['user_id' => $user_id],
-                    ['cart' => json_encode($cart)]
-                );
-            }
-    
-            // $discounts = Discount::where('quantity', '<=', $cart_quantity)->get();
-            // $discountOptions = '<option selected disabled>Select Discount</option>';
-            // if ($discounts->count() > 0) {
-            //     foreach ($discounts as $discount) {
-            //         $discountOptions .= '<option value="' . $discount->discount . '">' . $discount->discount . '%</option>';
-            //     }
-            // }
-            return response()->json([
-                'success' => true,
-                'cart' => $cart,
-                // 'discountOptions' => $discountOptions,
-                'message' => 'Cart quantity updated successfully.'
-            ]);
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'Product ID and quantity are required.'
+                'message' => 'Product quantity is less then '.$request->qty.'.'
             ]);
         }
     }

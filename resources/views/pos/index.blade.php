@@ -57,6 +57,12 @@
             filter: invert(75%) sepia(66%) saturate(1955%) hue-rotate(327deg) brightness(103%) contrast(102%) !important;
         }
 
+        .disabled-link {
+            pointer-events: none;
+            color: grey; /* Optional: visually indicate it's disabled */
+            cursor: not-allowed; /* Optional: change the cursor to a "not-allowed" icon */
+        }
+
         [name="vehicle_number"] {
             text-transform: uppercase;
         }
@@ -137,7 +143,7 @@
                                                         href="javascript:void(0);">{{ $product->name }}</a>
                                                 </h6>
                                                 <div class="d-flex align-items-center justify-content-between price">
-                                                    <span>30 Pcs</span>
+                                                    <span>{{$product->quantity }} Pcs</span>
                                                     <p>${{ number_format(optional($product)->price, 2) }}</p>
                                                 </div>
                                                 <div class="input-group mt-2">
@@ -206,21 +212,17 @@
                                                 </div>
                                             </div>
                                             <div class="qty-item text-center">
-                                                <a href="javascript:void(0);"
-                                                    class="dec d-flex justify-content-center align-items-center decrease decrease-button"
-                                                    data-bs-toggle="tooltip" data-id = "{{ $product['id'] }}"
-                                                    data-bs-placement="top" title="minus">
+                                                <a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease decrease-button"
+                                                    data-bs-toggle="tooltip" data-id="{{ $product['id'] }}" data-bs-placement="top" title="minus">
                                                     <i data-feather="minus-circle" class="feather-14"></i>
                                                 </a>
-                                                <input type="text" class="form-control text-center quantity__number"
-                                                    name="qty" value="{{ $product['quantity'] }}">
-                                                <a href="javascript:void(0);"
-                                                    class="inc d-flex justify-content-center align-items-center increase"
-                                                    data-bs-toggle="tooltip" data-id = "{{ $product['id'] }}"
-                                                    data-bs-placement="top" title="plus">
+                                                <input type="text" class="form-control text-center quantity__number" name="qty" value="{{ $product['quantity'] }}" readonly>
+                                                <a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase increase_{{ $product['id'] }} {{ $product['quantity'] >= getProductQuantity($product['id']) ? 'disabled-link' : '' }}"
+                                                    data-bs-toggle="tooltip" data-id="{{ $product['id'] }}" data-quantity="{{ getProductQuantity($product['id']) }}" data-bs-placement="top"  title="plus">
                                                     <i data-feather="plus-circle" class="feather-14"></i>
                                                 </a>
                                             </div>
+
                                             <div class="d-flex align-items-center action">
                                                 <a class="btn-icon delete-icon"
                                                     onclick="removeFromCart('{{ $product['id'] }}')">
@@ -357,13 +359,10 @@
     @include('partials.recent-transactions')
     @include('partials.orders')
 
-
     <script>
          $(document).ready(function() {
-        // Handle category click
             $('.pos-category li').click(function() {
                 var categoryId = $(this).data('category-id');
-                console.log(categoryId);
                 $.ajax({
                     url: "{{ route('pos-dashboard') }}", // Update this with your route
                     method: "GET",
@@ -382,8 +381,7 @@
                     }
                 });
             });
-        });
-        $(document).ready(function() {
+
             $('#discountSelect').on('input', function() {
                 var discountValue = $(this).val();
                 var maxDiscount = parseFloat($(this).data('max'));
@@ -402,6 +400,7 @@
                 }
             });
         });
+
         $(function() {
             $('#discountSelect').on('keyup', function() {
                 var discountValue = $(this).val();
@@ -493,7 +492,7 @@
                             let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
                             $('.discountAmount').html(formatedDiscountAmount);
                         } else {
-                            window.location.reload();
+                            removeFromCart(productId);
                         }
                     }
                 }
@@ -501,17 +500,34 @@
         }
 
         $(document).on('click', '.increase', function() {
+            console.log()
+            var productQuantity = $(this).attr("data-quantity");
             var productId = $(this).attr("data-id");
             var quantityInput = $(this).parent().find('.quantity__number');
+            console.log(quantityInput); 
             var currentValue = parseInt(quantityInput.val());
-            var qty = currentValue;
+            if (currentValue <= productQuantity) {
+                $(`.increase_${productId}`).removeClass('disabled-link');
+                console.log(currentValue);
+                console.log(productQuantity);
 
-            if ($('body').hasClass('updated-cart')) {
-                qty = currentValue + 1;
+                var qty = currentValue;
+                if ($('body').hasClass('updated-cart')) {
+                    qty = currentValue + 1;
+                }
+
+                $(this).parent().find('.quantity__number').val(qty);
+                updateQuantity(productId, qty);
+                if (currentValue >= productQuantity) {
+                    console.log('asd');
+                    $(`.increase_${productId}`).addClass('disabled-link');
+                    quantityInput.val(productQuantity);
+                }
+            } else {
+                console.log('Maximum quantity reached.');
+                $('.quantity__number').val(productQuantity);
+                $(`.increase_${productId}`).addClass('disabled-link');
             }
-
-            $(this).parent().find('.quantity__number').val(qty);
-            updateQuantity(productId, qty);
         });
 
         $(document).on('click', '.decrease', function() {
@@ -519,6 +535,7 @@
             var quantityInput = $(this).parent().find('.quantity__number');
             var currentValue = parseInt(quantityInput.val());
             var qty = currentValue;
+            console.log(quantityInput);
 
             if ($('body').hasClass('updated-cart')) {
                 qty = currentValue - 1;
@@ -526,6 +543,8 @@
 
             $(this).parent().find('.quantity__number').val(qty);
             updateQuantity(productId, qty);
+            quantityInput.val(qty);
+            $(`.increase_${productId}`).removeClass('disabled-link');
         });
 
         // Select payment method
@@ -580,24 +599,6 @@
             } else {
                 $('[name="order_change_amount"]').val(0);
             }
-        });
-
-
-        $(document).on('click', '.increase', function() {
-            var productId = $(this).attr("data-id");
-            var quantityInput = $(this).parent().find('.quantity__number');
-            var currentValue = parseInt(quantityInput.val());
-            var qty = currentValue;
-            updateQuantity(productId, qty);
-        });
-
-        $(document).on('click', '.decrease', function() {
-            var productId = $(this).attr("data-id");
-            console.log(productId);
-            var quantityInput = $(this).parent().find('.quantity__number');
-            var currentValue = parseInt(quantityInput.val());
-            var qty = currentValue;
-            updateQuantity(productId, qty);
         });
 
         // Select payment method

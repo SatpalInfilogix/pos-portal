@@ -37,6 +37,7 @@ class PosDashboardController extends Controller
             $price = PriceMaster::where('product_id', $product->id)->where('status', 0)->first();
             $products[$proKey]['categoryName'] = $category->name ?? '';
             $products[$proKey]['price'] = optional($price)->price;
+            $products[$proKey]['quantity'] = $price->quantity ?? 0;
         }
 
         $latestOrder = Order::orderBy('id', 'desc')->first();
