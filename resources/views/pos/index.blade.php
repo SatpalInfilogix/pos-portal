@@ -351,12 +351,14 @@
 
     
     @include('partials.place-order')
-    @include('partials.order-inventory-return')
+
     @include('partials.hold-order')
 
     @include('partials.recent-transactions')
     @include('partials.orders')
 
+    @include('partials.inventory-return')
+    @include('partials.gate-pass')
 
     <script>
          $(document).ready(function() {

@@ -61,6 +61,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::get('/sales/{id}',[AdminSalesController::class,'show'])->name('sales.view');
         Route::get('/return-stocks',[InventoryReturnController::class,'returnStockList'])->name('return_stocks.index');
         Route::get('/return-stocks/{id}',[InventoryReturnController::class,'show'])->name('view_return_stocks.index');
+        Route::view('/inventory-transfer','admin.stocks.admin-inventory-transfer')->name('inventory-transfer');
+
         /********************** Sales Routes Ends Here  **********************/
          
          Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
@@ -155,6 +157,7 @@ Route::post('/get-products', [AdminProductController::class, 'getProducts'])->na
 Route::post('/get-prices', [AdminPriceController::class, 'getPrices'])->name('get-prices');
 Route::post('/get-customers', [AdminCustomerController::class, 'getCustomers'])->name('get-customers');
 Route::post('/get-sales', [AdminSalesController::class, 'getSalesOrder'])->name('get-sales');
+Route::post('/get-return-inventory-stock', [InventoryReturnController::class, 'getReturnStockInventory'])->name('get-return-stock-inventory');
 /************************* End DataTables Routes ************************/
 
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');
