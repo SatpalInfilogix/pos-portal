@@ -25,24 +25,6 @@
                         <h6 class="submenu-hdr">Inventory</h6>
                     @endcanany
                     <ul>
-                        <li @class([
-                            'active' => Request::is(
-                                'admin/stores',
-                                'admin/stores/create',
-                                'admin/stores/*/edit'),
-                        ])>
-                            <a href="{{ route('stores.index') }}"><i data-feather="shopping-bag"></i>
-                                <span>Stores</span>
-                            </a>
-                        </li>
-                        @canany(['view users'])
-                            <li @class(['active' => Request::is('admin/users', 'admin/users/*')])>
-                                <a href="{{ route('users.index') }}">
-                                    <i data-feather="user"></i>
-                                    <span>Users</span>
-                                </a>
-                            </li>
-                        @endcanany
                         @canany(['view categories'])
                             <li @class([
                                 'active' => Request::is('admin/categories', 'admin/categories/*'),
@@ -78,6 +60,26 @@
                                 <a href="{{ route('discounts.index') }}">
                                     <i data-feather="codesandbox"></i>
                                     <span>Discount Master</span>
+                                </a>
+                            </li>
+                        @endcanany
+                        @canany(['view stores'])
+                        <li @class([
+                            'active' => Request::is(
+                                'admin/stores',
+                                'admin/stores/create',
+                                'admin/stores/*/edit'),
+                        ])>
+                            <a href="{{ route('stores.index') }}"><i data-feather="shopping-bag"></i>
+                                <span>Stores</span>
+                            </a>
+                        </li>
+                        @endcanany
+                        @canany(['view users'])
+                            <li @class(['active' => Request::is('admin/users', 'admin/users/*')])>
+                                <a href="{{ route('users.index') }}">
+                                    <i data-feather="user"></i>
+                                    <span>Users</span>
                                 </a>
                             </li>
                         @endcanany

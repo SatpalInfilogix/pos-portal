@@ -24,12 +24,8 @@ class UserSeeder extends Seeder
             'email' => 'superadmin@gmail.com',
             'password' => Hash::make('Admin@12345'),
             'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'remember_token' => Str::random(10)
         ]);
-
-        // Assign 'super admin' role to the super admin user
         $superAdminRole = Role::where('name', 'Super Admin')->first();
         $superAdmin->assignRole($superAdminRole);
 
@@ -40,12 +36,8 @@ class UserSeeder extends Seeder
             'email' => 'admin@gmail.com',
             'password' => Hash::make('Admin@12345'),
             'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'remember_token' => Str::random(10)
         ]);
-        
-        // Assign 'admin' role to the admin user
         $adminRole = Role::where('name', 'Admin')->first();
         $admin->assignRole($adminRole);
 
@@ -57,15 +49,12 @@ class UserSeeder extends Seeder
             'password' => Hash::make('Manager@12345'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'store_id' => 1
         ]);
-        
-        // Assign 'manager' role to the manager user
         $managerRole = Role::where('name', 'Manager')->first();
         $manager->assignRole($managerRole);
 
-        // Create salesperson user
+        // Create salesperson user for store 1
         $salesperson = User::create([
             'first_name' => 'Sales',
             'last_name' => 'Person',
@@ -73,14 +62,21 @@ class UserSeeder extends Seeder
             'password' => Hash::make('Salesperson@12345'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'store_id' => 1
         ]);
-        
-        // Assign 'salesperson' role to the salesperson user
-        $salespersonRole = Role::where('name', 'Sales Person')->first();
-        $salesperson->assignRole($salespersonRole);
+        $salesPersonRole = Role::where('name', 'Sales Person')->first();
+        $salesperson->assignRole($salesPersonRole);
 
-        $this->command->info('Users created with roles and permissions!');
+        // Create salesperson user for store 2
+        $salesperson = User::create([
+            'first_name' => '2nd Sales',
+            'last_name' => 'Person',
+            'email' => 'salesperson2@gmail.com',
+            'password' => Hash::make('Salesperson@12345'),
+            'email_verified_at' => now(),
+            'remember_token' => Str::random(10),
+            'store_id' => 2
+        ]);
+        $salesperson->assignRole($salesPersonRole);
     }
 }

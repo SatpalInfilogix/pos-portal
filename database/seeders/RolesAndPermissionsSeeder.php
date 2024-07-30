@@ -19,6 +19,11 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'backend']);
         Permission::create(['name' => 'pos']);
 
+        Permission::create(['name' => 'view stores']);
+        Permission::create(['name' => 'create stores']);
+        Permission::create(['name' => 'edit stores']);
+        Permission::create(['name' => 'delete stores']);
+
         Permission::create(['name' => 'view users']);
         Permission::create(['name' => 'create users']);
         Permission::create(['name' => 'edit users']);

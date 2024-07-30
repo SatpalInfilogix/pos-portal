@@ -20,7 +20,7 @@
             </ul>
         </div>
 
-        <form action="{{ route('users.store') }}" method="post" enctype="multipart/form-data" id='user-form'>
+        <form action="{{ route('inventory-transfer.store') }}" method="post">
             @csrf
             <div class="card">
                 <div class="card-body pb-0">
@@ -46,45 +46,11 @@
                     </div>
                     <div class="col-lg-12">
                         <div class="btn-addproduct mb-4">
-                            <button type="submit" class="btn btn-submit">Save User</button>
+                            <button type="submit" class="btn btn-submit">Send Items</button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-@endsection
-@section('script')
-    <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-    <script>
-        $(document).ready(function() {
-            $("#user-form").validate({
-                rules: {
-                    first_name: "required",
-                    last_name: "required",
-                    email: "required",
-                    phone_number: "required",
-                    role: "required"
-                },
-                messages: {
-                    first_name: "Please enter the first name",
-                    last_name: "Please enter the last name",
-                    email: "Please enter the email",
-                    phone_number: "Please enter phone number",
-                    role: "Please select role"
-                },
-                errorClass: "invalid-feedback",
-                errorElement: "span",
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass("is-invalid");
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass("is-invalid");
-                },
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            });
-        });
-    </script>
 @endsection

@@ -29,12 +29,13 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
-        $store = Store::Create([
+        Store::Create([
             "name" => $request->name,
             "email" => $request->email,
             "contact_number" => $request->contact_number,
             "location" => $request->location,
         ]);
+        
         return redirect()->route('stores.index')->with('success','Store Created Successfully');
     }
 

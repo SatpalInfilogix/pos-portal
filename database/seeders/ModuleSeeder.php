@@ -30,6 +30,10 @@ class ModuleSeeder extends Seeder
             'slug' => 'discounts'
         ]);
         Module::create([
+            'name' => 'Stores',
+            'slug' => 'stores'
+        ]);
+        Module::create([
             'name' => 'Users',
             'slug' => 'users'
         ]);
