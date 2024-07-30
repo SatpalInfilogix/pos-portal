@@ -24,41 +24,41 @@
                 <div class="card-body add-product pb-0">
                     <div class="accordion-card-one accordion" id="accordionExample">
                         <div class="accordion-item">
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                            <div class="row mb-3">
+                                <div class="add-product">
                                     <label class="form-label">Name</label>
                                     <input type="text" name="name" class="form-control">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6 add-product">
-                                    <label class="form-label">Phone Numbere</label>
+                                    <label class="form-label">Phone Number</label>
                                     <input type="text" name="phone_number" class="form-control">
                                 </div>
                                 <div class="col-md-6 add-product">
-                                    <label class="form-label">Alternate Phone Number</label>
-                                    <input type="text" name="alternate_number" class="form-control">
+                                    <label class="form-label">Email (Optional)</label>
+                                    <input type="text" name="email" class="form-control">
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <div class="col-md-6 add-product">
+                                {{-- <div class="col-md-6 add-product">
                                     <label class="form-label"><b>Shipping Address</b></label>
                                     <textarea rows="4" name="shipping_address" class="form-control"></textarea>
-                                </div>
+                                </div> --}}
                                 <div class="col-md-6 add-product">
                                     <label class="form-label"><b>Billing Address</b></label>
                                     <textarea rows="4" name="billing_address" class="form-control"></textarea>
                                 </div>
-                            </div>
-                            <div class="row mb-3">
                                 <div class="col-md-6 add-product">
-                                    <label class="form-label">Shipping Pincode</label>
-                                    <input type="text" name="shipping_address_pin_code" class="form-control">
-                                </div>
-                                <div class="col-md-6 add-product">
-                                    <label class="form-label">Billing Pincode</label>
+                                    <label class="form-label">Pincode</label>
                                     <input type="text" name="billing_address_pin_code" class="form-control">
                                 </div>
+                            </div>
+                            <div class="row mb-3">
+                                {{-- <div class="col-md-6 add-product">
+                                    <label class="form-label">Shipping Pincode</label>
+                                    <input type="text" name="shipping_address_pin_code" class="form-control">
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -80,12 +80,8 @@
             rules: {
                 name: "required",
                 phone_number: "required",
-                alternate_number: "required",
-                shipping_address: "required",
-                shipping_city: "required",
-                shipping_state: "required",
-                shipping_country: "required",
-                shipping_pin_Code: "required",
+                billing_address: "required",
+                billing_address_pin_code: "required",
                 // billing_address: "required",
                 // billing_city: "required",
                 // billing_state: "required",
@@ -95,12 +91,8 @@
             messages: {
                 name: "Please enter the name",
                 phone_number: "Please enter the phone number",
-                alternate_number: "Please enter the alternate number",
-                shipping_address: "Please enter the address",
-                shipping_city: "please enter the city",
-                shipping_state: "Please eneter the state",
-                shipping_country: "Please eneter the country",
-                shipping_pin_Code: "Please enter the pin code",
+                billing_address: "Please enter the address",
+                billing_address_pin_code: "Please enter the pin code",
             },
             errorClass: "invalid-feedback",
             errorElement: "span",

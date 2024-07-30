@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+use App\Models\Store;
 
 class AdminUserController extends Controller
 {
@@ -27,10 +28,11 @@ class AdminUserController extends Controller
     public function index()
     {
         $customerRole = Role::first();
-
+       
         $users = User::whereDoesntHave('roles', function ($query) use ($customerRole) {
             $query->where('role_id', $customerRole->id);
         })->latest()->get();
+        
 
         return view('admin.users.index', compact('users'));
     }
@@ -82,8 +84,9 @@ class AdminUserController extends Controller
     public function create()
     {
         $roles = Role::latest()->get();
+        $stores = Store::where('is_deleted',0)->get();
 
-        return view('admin.users.create', compact('roles'));
+        return view('admin.users.create', compact('roles','stores'));
     }
 
     public function store(Request $request)
@@ -93,6 +96,7 @@ class AdminUserController extends Controller
             'last_name'     => $request->last_name,
             'email'         => $request->email,
             'phone_number'  => $request->phone_number,
+            'store_id'      => $request->store_id,
             'password'      => Hash::make('Admin@12345'),
         ])->assignRole($request->role);
 
@@ -104,8 +108,8 @@ class AdminUserController extends Controller
     {
         $roles = Role::latest()->get();
         $user = User::where('id', $id)->first();
-
-        return view('admin.users.edit', compact('user', 'roles'));
+        $stores = Store::where('is_deleted',0)->get();
+        return view('admin.users.edit', compact('user', 'roles','stores'));
     }
 
     public function update(Request $request, $id)
@@ -115,6 +119,7 @@ class AdminUserController extends Controller
             'first_name'         => $request->first_name,
             'last_name'          => $request->last_name,
             'phone_number'       => $request->phone_number,
+            'store_id'           => $request->store_id
         ]);
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
