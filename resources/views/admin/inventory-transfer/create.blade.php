@@ -20,7 +20,7 @@
             </ul>
         </div>
 
-        <form action="{{ route('inventory-transfer.store') }}" method="post">
+        <form action="{{ route('inventory-transfer.store') }}" id="inventory-transfer-form" method="post">
             @csrf
             <div class="card">
                 <div class="card-body pb-0">
@@ -84,7 +84,7 @@
                         orderable: false,
                         searchable: false,
                         render: function(data, type, row) {
-                            return `<input type="checkbox" name="products[]" value="${row.id}">`;
+                            return `<input type="checkbox" class="product-item" data-id="${row.id}">`;
                         }
                     },
                     {
@@ -106,7 +106,7 @@
                         data: null,
                         className: 'quantity-column',
                         render: function(data, type, row) {
-                            return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" style="width: 100px;">`;
+                            return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 1}" style="width: 100px;">`;
                         }
                     }
                 ],
@@ -127,11 +127,60 @@
                 ]
             });
 
-            $(document).on('change', '[name="products[]"]', function() {
-                var checked = $(this).is(':checked');
+            let products = [];
+
+            // Function to find and remove product by ID from the array
+            function removeProductById(id) {
+                products = products.filter(product => product.id !== id);
+            }
+
+            // Function to add or update product in the array
+            function addOrUpdateProduct(id, quantity) {
+                var existingProduct = products.find(product => product.id === id);
+                if (existingProduct) {
+                    // Update existing product
+                    existingProduct.quantity = quantity;
+                } else {
+                    // Add new product
+                    products.push({
+                        id: id,
+                        quantity: quantity
+                    });
+                }
+            }
+
+            $(document).on('change', '.product-item', function() {
                 var id = $(this).data('id');
-                console.log('Checkbox with ID ' + id + ' is ' + (checked ? 'checked' : 'unchecked'));
-                // Handle your checkbox state change here
+                var quantity = $(this).closest('tr').find('.quantity-input').val();
+
+                if ($(this).is(':checked')) {
+                    addOrUpdateProduct(id, quantity);
+                } else {
+                    removeProductById(id);
+                }
+            });
+
+            $(document).on('change keyup', '.quantity-input', function() {
+                var id = $(this).data('id');
+                var quantity = $(this).val();
+
+                if ($(this).closest('tr').find('.product-item').is(':checked')) {
+                    addOrUpdateProduct(id, quantity);
+                }
+            });
+
+            $('#inventory-transfer-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                // Add products data to form
+                $('<input>').attr({
+                    type: 'hidden',
+                    name: 'products_data',
+                    value: JSON.stringify(products)
+                }).appendTo('#inventory-transfer-form');
+
+                // Submit the form
+                this.submit();
             });
         });
     </script>
