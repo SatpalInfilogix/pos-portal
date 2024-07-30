@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('inventory', function (Blueprint $table) {
             $table->id();
-            $table->string('store_id')->nullable();
-            $table->string('product_id')->nullable();
-            $table->string('quantity')->nullable();
-            $table->string('created_by')->nullable();
+            $table->unsignedBigInteger('store_id');
+            $table->string('vehicle_number')->nullable();
+            $table->unsignedBigInteger('sent_by');
             $table->timestamps();
+
+            $table->foreign('store_id')->references('id')->on('stores');
+            $table->foreign('sent_by')->references('id')->on('users');
         });
     }
 
