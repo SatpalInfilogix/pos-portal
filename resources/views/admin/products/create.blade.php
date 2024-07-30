@@ -59,11 +59,11 @@
                                 <div class="col-md-6 add-product">
                                     <div class="input-blocks add-product list">
                                         <label class="form-label">Units</label>
-                                        <input type="text" id="quantity" class="form-control">
+                                        <input type="text" id="unit" class="form-control">
                                         <button type="button" id="add-units" class="btn btn-primaryadd">Add Units</button>
                                     </div>
                                     <div id="unit-list" class="mt-3 d-flex flex-wrap">
-                                        <!-- Display entered quantities here -->
+                                        <!-- Display entered units here -->
                                     </div>
                                 </div>
                                 <div class="col-md-6 add-product">
@@ -109,41 +109,41 @@
             }
         });
 
-        // Array to store entered quantities
-        var quantities = []; // Initialize quantities as an empty array
+        // Array to store entered units
+        var units = []; // Initialize units as an empty array
 
         // Add Units button click event
         $('#add-units').click(function () {
-            var quantityValue = $('#quantity').val().trim();
-            if (quantityValue !== '') {
-                quantities.push(quantityValue); // Add to quantities array
-                updateQuantityList(); // Update the displayed quantities
-                $('#quantity').val(''); // Clear the input field
+            var unitValue = $('#unit').val().trim();
+            if (unitValue !== '') {
+                units.push(unitValue); // Add to units array
+                updateUnitList(); // Update the displayed units
+                $('#unit').val(''); // Clear the input field
             } else {
                 alert('Units cannot be empty');
             }
         });
 
-        // Function to update displayed quantities
-        function updateQuantityList() {
+        // Function to update displayed units
+        function updateUnitList() {
             $('#unit-list').empty(); // Clear previous entries
-            quantities.forEach(function (quantity, index) {
-                var listItem = $('<div class="card added-quantity me-2 mb-2">' +
+            units.forEach(function (unit, index) {
+                var listItem = $('<div class="card added-unit me-2 mb-2">' +
                                     '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
-                                        '<span>' + quantity + '</span>' +
-                                        '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
+                                        '<span>' + unit + '</span>' +
+                                        '<input type="hidden" name="units[]" value="' + unit + '">' +
                                         '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
                                     '</div>' +
                                 '</div>');
-                                    $('#unit-list').append(listItem); // Append each quantity as a new item
+                                    $('#unit-list').append(listItem); // Append each unit as a new item
             });
         }
 
-        // Remove Quantity button click event (for dynamically added elements)
+        // Remove Unit button click event (for dynamically added elements)
         $('#unit-list').on('click', '.remove-units', function () {
             var index = $(this).data('index');
-            quantities.splice(index, 1); // Remove from array
-            updateQuantityList(); // Update displayed quantities
+            units.splice(index, 1); // Remove from array
+            updateUnitList(); // Update displayed units
         });
 
         // Datepicker initialization
@@ -161,10 +161,6 @@
                 category_id: "required",
                 product_name: "required",
                 product_code: "required",
-                // 'quantities[]': {
-                //     required: true,
-                //     minlength: 1 // Require at least one quantity
-                // },
                 image: "required",
                 manufacture_date: "required",
             },
@@ -172,10 +168,6 @@
                 category_id: "Please enter category",
                 product_name: "Please enter the product name",
                 product_code: "Please enter the product code",
-                // 'quantities[]': {
-                //     required: "Please enter at least one quantity",
-                //     minlength: "Please enter at least one quantity"
-                // },
                 image: "Please select image",
                 manufacture_date: "Please enter the manufacture date",
             },

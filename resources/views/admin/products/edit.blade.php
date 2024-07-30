@@ -65,16 +65,16 @@
                             <div class="col-md-6 add-product">
                                 <div class="input-blocks add-product list">
                                     <label class="form-label">Units</label>
-                                    <input type="text" id="quantity" class="form-control">
+                                    <input type="text" id="unit" class="form-control">
                                     <button type="button" id="add-units" class="btn btn-primaryadd">Add Units</button>
                                 </div>
                                 <div id="unit-list" class="mt-3 d-flex flex-wrap">
-                                    <!-- Display saved quantities from database -->
+                                    <!-- Display saved units from database -->
                                     @foreach(json_decode($product->units) as $index => $unit)
-                                    <div class="card added-quantity me-2 mb-2">
+                                    <div class="card added-units me-2 mb-2">
                                         <div class="card-body card-size d-flex justify-content-between align-items-center">
                                             <span>{{ $unit }}</span>
-                                            <input type="hidden" name="quantities[]" value="{{ $unit }}">
+                                            <input type="hidden" name="units[]" value="{{ $unit }}">
                                             <button type="button" class="btn btn-sm btn-danger remove-units" data-index="{{ $index }}"><span class="badge rounded-pill">x</span></button>
                                         </div>
                                     </div>
@@ -132,22 +132,22 @@
             }
         });
 
-        // Array to store entered quantities
-        var quantities = [];
+        // Array to store entered units
+        var units = [];
 
-        // Add saved quantities to array
+        // Add saved units to array
         @foreach(json_decode($product->units) as $unit)
-            quantities.push('{{ $unit }}');
+        units.push('{{ $unit }}');
         @endforeach
 
-        // Function to initialize displayed quantities
-        function initializeQuantityList() {
+        // Function to initialize displayed units
+        function initializeUnitList() {
             $('#unit-list').empty(); // Clear previous entries
-            quantities.forEach(function (quantity, index) {
-                var listItem = $('<div class="card added-quantity me-2 mb-2">' +
+            units.forEach(function (unit, index) {
+                var listItem = $('<div class="card added-units me-2 mb-2">' +
                                     '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
-                                        '<span>' + quantity + '</span>' +
-                                        '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
+                                        '<span>' + unit + '</span>' +
+                                        '<input type="hidden" name="units[]" value="' + unit + '">' +
                                         '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
                                     '</div>' +
                                 '</div>');
@@ -155,37 +155,37 @@
             });
         }
 
-        // Initialize displayed quantities on page load
-        initializeQuantityList();
+        // Initialize displayed units on page load
+        initializeUnitList();
 
-        // Add Quantity button click event
+        // Add Unit button click event
         $('#add-units').click(function () {
-            var quantityValue = $('#quantity').val().trim();
-            if (quantityValue !== '') {
-                // Add quantity to array
-                quantities.push(quantityValue);
-                // Update displayed quantities
-                updateQuantityList();
+            var unitValue = $('#unit').val().trim();
+            if (unitValue !== '') {
+                // Add Unit to array
+                units.push(unitValue);
+                // Update displayed Units
+                updateUnitList();
                 // Clear input
-                $('#quantity').val('');
+                $('#unit').val('');
             }
         });
 
-        // Remove Quantity button click event (for dynamically added elements)
+        // Remove Unit button click event (for dynamically added elements)
         $('#unit-list').on('click', '.remove-units', function () {
             var index = $(this).data('index');
-            quantities.splice(index, 1); // Remove from array
-            updateQuantityList(); // Update displayed quantities
+            units.splice(index, 1); // Remove from array
+            updateUnitList(); // Update displayed units
         });
 
-        // Function to update displayed quantities
-        function updateQuantityList() {
+        // Function to update displayed units
+        function updateUnitList() {
             $('#unit-list').empty(); // Clear previous entries
-            quantities.forEach(function (quantity, index) {
-                var listItem = $('<div class="card added-quantity me-2 mb-2">' +
+            units.forEach(function (unit, index) {
+                var listItem = $('<div class="card added-units me-2 mb-2">' +
                                     '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
-                                        '<span>' + quantity + '</span>' +
-                                        '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
+                                        '<span>' + unit + '</span>' +
+                                        '<input type="hidden" name="units[]" value="' + unit + '">' +
                                         '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
                                     '</div>' +
                                 '</div>');

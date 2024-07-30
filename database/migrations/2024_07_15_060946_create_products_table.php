@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('product_code');
             $table->json('units')->nullable();
             $table->date('manufacture_date')->nullable();
-            $table->string('lot_number')->nullable();
             $table->string('image')->nullable();
             $table->boolean('status')->default(0);
             $table->unsignedBigInteger('created_by');
