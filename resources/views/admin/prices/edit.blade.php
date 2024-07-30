@@ -49,8 +49,9 @@
                             <div class="row">
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Product Name</label>
-                                    <input name="product" type="text" class="form-control product-autocomplete" placeholder="Product" value="{{ $price->product->name }}">
-                                    <div class="autocomplete-items"></div>
+                                    <select name="product" id="product-dropdown" class="form-control chosen-select" required>
+                                        <option></option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="row">
@@ -84,42 +85,36 @@
     </div>
     @endsection
 @section('script')
+<script src="https://cdn.jsdelivr.net/npm/chosen-js/chosen.jquery.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('body').on('input', '.product-autocomplete', function() {
-            var input = $(this).val().trim();
-            var autocompleteContainer = $(this).siblings('.autocomplete-items');
+    $(document).ready(function() {
+        $('[name="product"]').chosen({
+            placeholder_text_single: 'Enter Product Name',
+            allow_single_deselect: true,
+            no_results_text: 'No results matched'
+        });
+        $('.chosen-search-input').on('keyup', function() {
+            var inputValue = $(this).val().trim();
 
             $.ajax({
-                type: 'GET',
-                url: '{{ route('autocomplete') }}',
-                data: { input: input },
-                success: function(response) {
-                    autocompleteContainer.empty();
-                    if (response.length > 0) {
-                        $.each(response, function(key, value) {
-                            var autocompleteItem = '<div class="autocomplete-item" data-id="' + value.id + '">' + value.name + '</div>';
-                            autocompleteContainer.append(autocompleteItem);
-                        });
-                        autocompleteContainer.show();
-                    } else {
-                        autocompleteContainer.hide();
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Autocomplete AJAX error:', status, error);
+                url : '{{ route("autocomplete") }}',
+                type : 'GET',
+                data : {
+                    'input' : inputValue
+                },success : function(response){
+                    console.log(response);
+                    $.each(response, function(i, item) {
+                        
+                        var optionExists = $('#product-dropdown option[value="' + item.name + '"]').length > 0;
+                        if (!optionExists) {
+                            $('#product-dropdown').append('<option value="' + item.name + '">' + item.name + '</option>');
+                            $('#product-dropdown').trigger('chosen:updated'); // Refresh chosen
+                        }
+                    });
+                },error : function(err){
+                    //console.log(err);
                 }
             });
-        });
-
-        // Function to handle click on autocomplete-item
-        $('body').on('click', '.autocomplete-item', function() {
-            var productName = $(this).text(); // Get the text of the selected item
-            var productId = $(this).data('id'); // Get the data-id attribute of the selected item
-            var inputField = $(this).closest('.mb-3').find('.product-autocomplete'); // Find the corresponding input field
-
-            inputField.val(productName); // Set the value of the input field to the selected product name
-            $(this).parent('.autocomplete-items').empty().hide(); // Hide the autocomplete dropdown
         });
     });
 

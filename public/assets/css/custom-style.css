@@ -171,3 +171,8 @@ a.chosen-single.chosen-single-with-deselect {
     color: red;
     font-weight: 600;
 }
+a.chosen-single.chosen-default {
+    height: 35px;
+    display: flex;
+    align-items: center;
+}
