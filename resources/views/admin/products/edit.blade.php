@@ -97,7 +97,7 @@
                     </div>
                 </div>
                 <div class="col-lg-12">
-                    <div class="btn-addproduct mb-4">
+                    <div class="btn-add mb-4">
                         <button type="submit" class="btn btn-submit">Update Product</button>
                     </div>
                 </div>
