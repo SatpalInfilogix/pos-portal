@@ -1,27 +1,27 @@
 @extends('admin.layouts.app')
-    @section('content')
+@section('content')
     <script src="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.jquery.min.js"></script>
-    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
-<style>
-    .autocomplete-items {
-        position: absolute;
-        background-color: #fff;
-        border: 1px solid #ddd;
-        max-height: 150px;
-        overflow-y: auto;
-        z-index: 1000;
-        width: 96%;
-    }
+    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
+    <style>
+        .autocomplete-items {
+            position: absolute;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            max-height: 150px;
+            overflow-y: auto;
+            z-index: 1000;
+            width: 96%;
+        }
 
-    .autocomplete-item {
-        padding: 10px;
-        cursor: pointer;
-    }
+        .autocomplete-item {
+            padding: 10px;
+            cursor: pointer;
+        }
 
-    .autocomplete-item:hover {
-        background-color: #f0f0f0;
-    }
-</style>
+        .autocomplete-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
     <div class="content">
         <div class="page-header">
             <div class="add-item d-flex">
@@ -40,8 +40,9 @@
             </ul>
         </div>
 
-        <form action="{{ route('prices.update', $price->id) }}" method="post" enctype="multipart/form-data" id='product-form'>
-        @csrf
+        <form action="{{ route('prices.update', $price->id) }}" method="post" enctype="multipart/form-data"
+            id='product-form'>
+            @csrf
             <div class="card">
                 <div class="card-body add-product pb-0">
                     <div class="accordion-card-one accordion" id="accordionExample">
@@ -57,19 +58,22 @@
                             <div class="row">
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Quantity</label></label>
-                                    <input type="text" name="quantityValue" id="quantityValue" class="form-control" value="{{ $price->quantity }}">
+                                    <input type="text" name="quantityValue" id="quantityValue" class="form-control"
+                                        value="{{ $price->quantity }}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Quantity Type</label></label>
-                                    <input type="text" name="quantity" id="quantity" class="form-control" value="{{ $price->quantity_type }}">
+                                    <input type="text" name="quantity" id="quantity" class="form-control"
+                                        value="{{ $price->quantity_type }}">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Price</label></label>
-                                    <input type="text" name="price" id="price" class="form-control" value="{{ $price->price }}">
+                                    <input type="text" name="price" id="price" class="form-control"
+                                        value="{{ $price->price }}">
                                 </div>
                             </div>
                         </div>
@@ -83,41 +87,60 @@
             </div>
         </form>
     </div>
-    @endsection
+@endsection
 @section('script')
-<script src="https://cdn.jsdelivr.net/npm/chosen-js/chosen.jquery.min.js"></script>
-<script>
-    $(document).ready(function() {
-        $('[name="product"]').chosen({
-            placeholder_text_single: 'Enter Product Name',
-            allow_single_deselect: true,
-            no_results_text: 'No results matched'
-        });
-        $('.chosen-search-input').on('keyup', function() {
-            var inputValue = $(this).val().trim();
-
+    <script src="https://cdn.jsdelivr.net/npm/chosen-js/chosen.jquery.min.js"></script>
+    <script>
+        function updateProductSearch(keyword) {
             $.ajax({
-                url : '{{ route("autocomplete") }}',
-                type : 'GET',
-                data : {
-                    'input' : inputValue
-                },success : function(response){
-                    console.log(response);
-                    $.each(response, function(i, item) {
-                        
-                        var optionExists = $('#product-dropdown option[value="' + item.name + '"]').length > 0;
-                        if (!optionExists) {
-                            $('#product-dropdown').append('<option value="' + item.name + '">' + item.name + '</option>');
-                            $('#product-dropdown').trigger('chosen:updated'); // Refresh chosen
-                        }
-                    });
-                },error : function(err){
-                    //console.log(err);
+                url: "{{ route('autocomplete') }}",
+                type: 'GET',
+                data: {
+                    'input': keyword
+                },
+                success: function(response) {
+                    // Cache jQuery selector and create a Set to track existing options
+                    var $dropdown = $('#product-dropdown');
+                    var existingOptions = new Set($dropdown.find('option').map(function() {
+                        return $(this).val();
+                    }).get());
+
+                    // Create an array to hold new options
+                    var newOptions = response
+                        .filter(item => !existingOptions.has(item
+                            .name)) // Filter out existing options
+                        .map(item =>
+                            `<option value="${item.name}">${item.name}</option>`
+                        ); // Create new option elements
+
+                    if (newOptions.length > 0) {
+                        // Append all new options in one go
+                        $dropdown.append(newOptions.join(''));
+                        // Trigger chosen:updated only once
+                        $dropdown.trigger('chosen:updated');
+                    }
+
+                    $('.chosen-search-input').val(keyword);
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err); // Better error logging
                 }
             });
+        }
+
+        $(document).ready(function() {
+            $('[name="product"]').chosen({
+                placeholder_text_single: 'Enter Product Name',
+                allow_single_deselect: true,
+                no_results_text: 'No results matched'
+            });
+
+            updateProductSearch('');
+
+            $('.chosen-search-input').on('keyup', function() {
+                const searchKeyword = $(this).val().trim();
+                updateProductSearch(searchKeyword);
+            });
         });
-    });
-
-
-</script>
+    </script>
 @endsection
