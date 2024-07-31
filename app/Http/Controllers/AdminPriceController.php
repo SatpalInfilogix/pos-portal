@@ -22,7 +22,7 @@ class AdminPriceController extends Controller
         $maxItemsPerPage = 10;
     
         // Base query
-        $pricesQuery = PriceMaster::select(['price_masters.id', 'price_masters.price', 'price_masters.product_id', 'price_masters.status', 'products.product_code', 'products.name as product_name'])
+        $pricesQuery = PriceMaster::select(['price_masters.id', 'price_masters.price', 'price_masters.quantity', 'price_masters.product_id', 'price_masters.status', 'products.product_code', 'products.name as product_name'])
             ->join('products', 'price_masters.product_id', '=', 'products.id'); // Join the products table
     
         // Search filter
@@ -42,7 +42,7 @@ class AdminPriceController extends Controller
             $column = $request->columns[$orderColumnIndex]['data'];
     
             // Sort by valid columns only
-            $validColumns = ['id', 'price', 'status', 'product_code', 'product_name'];
+            $validColumns = ['id', 'price', 'quantity', 'status', 'product_code', 'product_name'];
             if (in_array($column, $validColumns)) {
                 if ($column === 'product_code') {
                     $pricesQuery->orderBy('products.product_code', $orderDirection);
@@ -68,15 +68,34 @@ class AdminPriceController extends Controller
             "data" => $prices
         ]);
     }
-    
-    
 
     public function autocomplete(Request $request)
     {
         $searchTerm = $request->input('input');
         $products = Product::where('status', 0)->where('name', 'like', '%' . $searchTerm . '%')->take(2)->get(['id', 'name']);
 
+        foreach($products as $key => $product){
+            $products[$key]['units'] = json_decode($product->units, true) ?: [];
+        }
+
         return response()->json($products);
+    }
+
+    public function getUnits($id)
+    {
+        $product = Product::where('status', 0)->where('id', $id)->first();
+        $units = json_decode($product->units, true) ?: [];
+        $options='<option value="" selected disabled>Select Unit</option>';
+        if($units) {
+            foreach($units as $unit)
+            {
+                $options .= '<option value="'.  $unit .'">'. $unit .'</option>';
+            }
+        }
+
+        return response()->json([
+            'options' => $options,
+        ]);
     }
 
     public function create()
@@ -100,8 +119,10 @@ class AdminPriceController extends Controller
     public function edit($id) 
     {
         $price = PriceMaster::with('product')->where('id', $id)->first(); // Fetch the product by ID
+        $product = Product::where('id', $price->product_id)->first();
+        $units = json_decode($product->units, true) ?? [];
 
-        return view('admin.prices.edit', compact('price'));
+        return view('admin.prices.edit', compact('price', 'units'));
     }
 
     public function update(Request $request, $id)

@@ -56,17 +56,27 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Quantity</label></label>
-                                    <input type="text" name="quantityValue" id="quantityValue" class="form-control"
-                                        value="{{ $price->quantity }}">
+                                <div class="col-md-6 add-product">
+                                    <div class="mb-3">
+                                        <label class="form-label">Units</label></label>
+                                        <!-- <input type="text" name="quantity" id="quantity" class="form-control"
+                                            value="{{ $price->quantity_type }}"> -->
+                                        <select name="quantity" id="unit-dropdown" class="form-control chosen-select" required>
+                                            <option value="" selected disabled>Select Unit</option>
+                                            @if($units)
+                                                @foreach($units as $unit)
+                                                    <option value="{{$unit}}" {{ $price->quantity_type == $unit ? 'selected' : '' }}>{{ $unit}}</option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
-                                    <label class="form-label">Quantity Type</label></label>
-                                    <input type="text" name="quantity" id="quantity" class="form-control"
-                                        value="{{ $price->quantity_type }}">
+                                <div class="col-md-6 add-product">
+                                    <div class="mb-3">
+                                        <label class="form-label">Quantity</label></label>
+                                        <input type="text" name="quantityValue" id="quantityValue" class="form-control"
+                                            value="{{ $price->quantity }}">
+                                    </div>
                                 </div>
                             </div>
                             <div class="row">
@@ -138,6 +148,26 @@
                     updateProductSearch(searchKeyword);
                 }, 300); // Adjust delay as needed
             });
+
+            $('#product-dropdown').on('change', function() {
+                const productId = $(this).val();
+                if (productId) {
+                    updateUnitDropdown(productId);
+                }
+            });
+
+            function updateUnitDropdown(productId) {
+                $.ajax({
+                    url: "{{ url('/product-units/') }}/" + productId,
+                    type: 'GET',
+                    success: function(result) {
+                        $('#unit-dropdown').html(result.options);
+                    },
+                    error: function(err) {
+                        console.error('Error fetching units:', err);
+                    }
+                });
+            }
         });
     </script>
 @endsection

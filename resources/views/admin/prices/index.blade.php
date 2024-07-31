@@ -36,6 +36,7 @@
                                 <th>#</th>
                                 <th>Product Code</th>
                                 <th>Product</th>
+                                <th>Available Quantity</th>
                                 <th>Price</th>
                                 <th class="no-sort">Action</th>
                             </tr>
@@ -83,16 +84,26 @@
                     }
                 },
                 columns: [{
-                        data: "id"
+                    data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        title: '#'
                     },
                     {
                         data: "product_code"
                     }, // Ensure this matches the key from the backend
                     {
                         data: "product_name"
-                    }, // Ensure this matches the key from the backend
+                    },
                     {
-                        data: "price"
+                        data: "quantity"
+                    },
+                    {
+                        data: "price",
+                        render: function(data, type, row) {
+                            return `$${parseFloat(data).toFixed(2)}`;
+                        }
                     },
                     {
                         data: null,
@@ -119,7 +130,7 @@
                 ],
                 columnDefs: [{
                     orderable: false,
-                    targets: 4, // Adjust based on the actual number of columns
+                    targets: 5, // Adjust based on the actual number of columns
                     className: "action-table-data"
                 }],
                 paging: true,
