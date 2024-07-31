@@ -60,4 +60,12 @@ class User extends Authenticatable
         $roles = $this->getRoleNames(); // Returns a collection
         return $roles->isNotEmpty() ? $roles->first() : null; // Assuming a user has only one role
     }
+
+    /**
+     * Get the store associated with the user.
+     */
+    public function store()
+    {
+        return $this->belongsTo(Store::class, 'store_id', 'id');
+    }
 }
