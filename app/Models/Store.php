@@ -9,4 +9,6 @@ class Store extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+   
 }

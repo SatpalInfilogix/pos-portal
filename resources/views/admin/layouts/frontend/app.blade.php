@@ -68,6 +68,21 @@
             <ul class="nav user-menu">
                 <li class="nav-item nav-searchinputs"></li>
 
+                @if (auth()->user()->store)
+                <li class="nav-item main-drop">
+                    <a href="javascript:void(0);" class="nav-link select-store">
+                        <span class="user-info">
+                            <span class="user-letter">
+                                <img src="{{asset('assets/img/logo-small.png') }}" alt="Store Logo" class="img-fluid">
+                            </span>
+                            <span class="user-detail">
+                                <span class="user-name">{{ auth()->user()->store->name }}</span>
+                            </span>
+                        </span>
+                    </a>
+                </li>
+                @endif
+
                 @if (auth()->user()->profile_image)
                     @php
                         $profile_picture = asset(auth()->user()->profile_image);
@@ -114,7 +129,8 @@
                             </a>
                             <hr class="m-0">
                             <a href="{{ route('logout') }}" class="dropdown-item logout pb-0">
-                                <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
+                                <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2"
+                                    alt="">
                                 Logout
                             </a>
                         </div>
@@ -384,6 +400,7 @@
             const tokenMeta = document.querySelector('meta[name="csrf-token"]');
             return tokenMeta ? tokenMeta.getAttribute('content') : '';
         }
+
         function updateCartUI(cartData) {
             let cartHtml = ``;
             if (cartData.count == 0) {
@@ -398,27 +415,29 @@
                 const csrfToken = getCSRFToken();
 
                 fetch('/product-quantity', { // Replace with your API endpoint
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken // Include CSRF token
-                    },
-                    body: JSON.stringify({ product_ids: productIds }) // Send product IDs as JSON
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log('API Response:', data.productQuantity   );
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken // Include CSRF token
+                        },
+                        body: JSON.stringify({
+                            product_ids: productIds
+                        }) // Send product IDs as JSON
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log('API Response:', data.productQuantity);
 
-                    const productQuantityLookup = data.productQuantity.reduce((acc, item) => {
-                        acc[item.product_id] = item.product_quantity;
-                        return acc;
-                    }, {});
+                        const productQuantityLookup = data.productQuantity.reduce((acc, item) => {
+                            acc[item.product_id] = item.product_quantity;
+                            return acc;
+                        }, {});
 
-                    $(`.cart-indicator`).removeClass('d-none');
-                    $.each(cartData.products, function(key, product) {
-                        const productQuantity = productQuantityLookup[product.id] || product.quantity;
-                        cartHtml += `<div class="product-list d-flex align-items-center justify-content-between" id="product_${product.id}">
+                        $(`.cart-indicator`).removeClass('d-none');
+                        $.each(cartData.products, function(key, product) {
+                            const productQuantity = productQuantityLookup[product.id] || product.quantity;
+                            cartHtml += `<div class="product-list d-flex align-items-center justify-content-between" id="product_${product.id}">
                             <div class="d-flex align-items-center product-info">
                                 <a href="javascript:void(0);" class="img-bg">
                                     <img src="${product.image}" alt="Products">
@@ -445,22 +464,22 @@
                             </div>
                         </div>`;
 
-                        $('.product-list-cart').html(cartHtml);
-                        let cart = cartData.formatted_sub_total;
-                        let amount = '<b>' + cart + '</b>';
-                        $('.totalAmount').html(amount);
-                        $('.grandTotal').html(cartData.formatted_grand_total);
-                        $('.tax').html(`$${cartData.tax}`);
-                        $('.payable').html(`$${cartData.payable}`);
-                        $('.count-products').html(cartData.count);
-            
-                        let discountAmount = cartData.discount_amount;
-                        let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
-                        $('.discountAmount').html(formatedDiscountAmount);
-                        feather.replace();
-                    });
+                            $('.product-list-cart').html(cartHtml);
+                            let cart = cartData.formatted_sub_total;
+                            let amount = '<b>' + cart + '</b>';
+                            $('.totalAmount').html(amount);
+                            $('.grandTotal').html(cartData.formatted_grand_total);
+                            $('.tax').html(`$${cartData.tax}`);
+                            $('.payable').html(`$${cartData.payable}`);
+                            $('.count-products').html(cartData.count);
 
-                });
+                            let discountAmount = cartData.discount_amount;
+                            let formatedDiscountAmount = '$' + discountAmount.toFixed(2);
+                            $('.discountAmount').html(formatedDiscountAmount);
+                            feather.replace();
+                        });
+
+                    });
             }
 
         }
@@ -500,7 +519,7 @@
                 success: function(response) {
                     if (response.success) {
                         updateCartUI(response.cart);
-                        $('.products-'+productId).removeClass('added-to-cart');
+                        $('.products-' + productId).removeClass('added-to-cart');
                         if (response.cart.count == 0) {
                             $('.discountSelect').val(' ')
                         }
