@@ -74,7 +74,7 @@
         </div>
     </div>
     <script>
-        $(function() {
+      $(function() {
             $('.products-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -86,60 +86,51 @@
                         return d;
                     }
                 },
-                columns: [{
-                        data: "id"
-                    },
-                    {
-                        data: "category_name"
-                    },
-                    {
-                        data: "name"
-                    },
-                    {
-                        data: "manufacture_date"
-                    },
+                columns: [
+                    { data: "id" },
+                    { data: "category_name" },
+                    { data: "name" },
+                    { data: "manufacture_date" },
                     {
                         data: "image",
                         render: function(data, type, row) {
-                            return `<img src="${data ? '{{ url('') }}' + '/' + data : 'default-image-url'}" alt="${row.name}" style="width: 50px; height: 50px;">`;
+                            const defaultImageUrl = '{{ asset('path/to/default-image.jpg') }}';
+                            const imageUrl = data ? '{{ url('') }}' + '/' + data : defaultImageUrl;
+                            return `<img src="${imageUrl}" alt="${row.name}" style="width: 50px; height: 50px;">`;
                         }
                     },
                     {
                         data: null,
                         render: function(data, type, row) {
                             var actions = '<div class="edit-delete-action">';
-                            actions +=
-                                `<a class="me-2 p-2 edit-btn" href="./products/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
+                            actions += `<a class="me-2 p-2 edit-btn" href="./products/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
 
                             if (row.status == 1) {
-                                actions +=
-                                    `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
-                                actions +=
-                                    `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
+                                actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
+                                actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
                             } else {
-                                actions +=
-                                    `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
-                                actions +=
-                                    `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" style="display: none;">Restore</a>`;
+                                actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
+                                actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" style="display: none;">Restore</a>`;
                             }
                             actions += '</div>';
                             return actions;
                         }
                     }
                 ],
-                columnDefs: [{
-                    orderable: false,
-                    targets: 5, // Adjust this index based on the actual number of columns
-                    className: "action-table-data"
-                }],
+                columnDefs: [
+                    {
+                        orderable: false,
+                        targets: 5, // Ensure this index is correct based on your column order
+                        className: "action-table-data"
+                    }
+                ],
                 paging: true,
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100],
-                order: [
-                    [0, 'asc']
-                ]
+                order: [[0, 'asc']]
             });
         });
+
 
         $(document).ready(function() {
             $(document).on('click', '.delete-btn', function(e) {

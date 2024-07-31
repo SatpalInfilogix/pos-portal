@@ -28,53 +28,55 @@ class AdminProductController extends Controller
     {
         $generatorHTML = new BarcodeGeneratorHTML();
         $maxItemsPerPage = 10;
-    
-        $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'categories.name as category_name'])
-                                ->join('categories', 'products.category_id', '=', 'categories.id'); // Join categories table
 
-        // Search filter
+        $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'price_masters.quantity as available_quantity', 'categories.name as category_name'])
+                                ->join('categories', 'products.category_id', '=', 'categories.id')
+                                ->join('price_masters', 'products.id', '=', 'price_masters.product_id');
+
+        // Apply search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
             $productsQuery->where(function ($query) use ($searchValue) {
                 $query->where('products.name', 'like', '%' . $searchValue . '%')
                     ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
-                    ->orWhere('categories.name', 'like', '%' . $searchValue . '%');
+                    ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('price_masters.quantity', 'like', '%' . $searchValue . '%');
             });
         }
-    
+
         if ($request->has('order')) {
             $orderColumnIndex = $request->order[0]['column'];
             $orderDirection = $request->order[0]['dir'];
             $column = $request->columns[$orderColumnIndex]['data'];
-    
-            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status', 'category_name'];
+
+            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status', 'category_name', 'available_quantity'];
             if (in_array($column, $validColumns)) {
                 if ($column === 'category_name') {
                     $productsQuery->orderBy('categories.name', $orderDirection);
+                } elseif ($column === 'available_quantity') {
+                    $productsQuery->orderBy('price_masters.quantity', $orderDirection);
                 } else {
                     $productsQuery->orderBy('products.' . $column, $orderDirection);
                 }
             }
         }
-    
+
         $totalRecords = $productsQuery->count();
         $perPage = $request->input('length', $maxItemsPerPage);
-        $currentPage = (int) ($request->input('start', 0) / $perPage);
+        $currentPage = max((int) ($request->input('start', 0) / $perPage), 0);
         $products = $productsQuery->skip($currentPage * $perPage)->take($perPage)->get();
+
         // foreach ($products as $product) {
-        //     // Generate barcode with product_name
         //     $barcodeData = $product->product_code . ' ' . $product->name;
         //     $barcodeHTML = $generatorHTML->getBarcode(
         //         $barcodeData, $generatorHTML::TYPE_CODE_128, 2, 60
         //     );
-    
-        //     // Combine product name and barcode HTML
         //     $product->barcode = '<div style="text-align: center;">' .
         //                         '<div>' . $barcodeHTML . '</div>' .
         //                         '<div>P- ' . $product->product_code .' ' .$product->name  . '</div>' .
         //                     '</div>';
         // }
-    
+
         return response()->json([
             "draw" => intval($request->input('draw')),
             "recordsTotal" => $totalRecords,
