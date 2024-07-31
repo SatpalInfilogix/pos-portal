@@ -53,7 +53,7 @@
                                         <th>Manufactured Date</th>
                                         <th>Image</th>
                                         <th>Available Quantity</th>
-                                        <th class="no-sort">Quantity</th>
+                                        <th>Quantity</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -91,6 +91,7 @@
                     type: "POST",
                     data: function(d) {
                         d._token = "{{ csrf_token() }}";
+                        d.is_deleted = false;
                         return d;
                     }
                 },
