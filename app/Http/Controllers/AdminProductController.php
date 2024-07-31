@@ -26,7 +26,6 @@ class AdminProductController extends Controller
 
     public function getProducts(Request $request)
     {
-        $generatorHTML = new BarcodeGeneratorHTML();
         $maxItemsPerPage = 10;
 
         $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'price_masters.quantity as available_quantity', 'categories.name as category_name'])
@@ -42,6 +41,10 @@ class AdminProductController extends Controller
                     ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
                     ->orWhere('price_masters.quantity', 'like', '%' . $searchValue . '%');
             });
+        }
+
+        if($request->is_deleted=='false'){
+            $productsQuery->where('products.status', 0);
         }
 
         if ($request->has('order')) {

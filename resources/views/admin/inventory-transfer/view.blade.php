@@ -6,7 +6,7 @@
             <div class="add-item d-flex">
                 <div class="page-title">
                     <h4>Inventory Transfers</h4>
-                    <h6>View Inventory Transfers</h6>
+                    <h6>Inventory transfer details</h6>
                 </div>
             </div>
 
@@ -17,23 +17,44 @@
                 </a>
             </div>
         </div>
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-        @endif
 
-        <div class="card table-list-card">
+        <div class="card">
             <div class="card-body">
-                <table class="">
-                    <tr>
-                        <td>Store : </td>
-                        <td>Date :</td>
-                        <td></td>
-                    </tr>
-                </table>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <h5>Store Name</h5>
+                        <p>{{ $transferedInventory->store->name }}</p>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <h5>Transfer Date</h5>
+                        <p>{{ $transferedInventory->created_at }}</p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <h5>Products</h5>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <td>#</td>
+                                    <td>Product Name</td>
+                                    <td>Delivered Quantity</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                               {{--  @foreach ($transferedInventory->delivered_items as $key => $delivered_item)
+                                    <tr>
+                                        <td>{{$key}}</td>
+                                        <td>{{$delivered_item->product->name}}</td>
+                                        <td>{{$delivered_item->quantity}}</td>
+                                    </tr>
+                                @endforeach --}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 @endsection
-
