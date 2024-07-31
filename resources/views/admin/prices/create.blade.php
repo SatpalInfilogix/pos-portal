@@ -32,14 +32,16 @@
             <ul class="table-top-head">
                 <li>
                     <div class="page-btn">
-                        <a href="{{ route('prices.index') }}" class="btn btn-secondary"><i data-feather="arrow-left"
-                                class="me-2"></i>Back to Prices</a>
+                        <a href="{{ route('prices.index') }}" class="btn btn-secondary">
+                            <i data-feather="arrow-left" class="me-2"></i>
+                            Back to Prices
+                        </a>
                     </div>
                 </li>
             </ul>
         </div>
 
-        <form action="{{ route('prices.store') }}" method="post" enctype="multipart/form-data" id='product-form'>
+        <form action="{{ route('prices.store') }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="card">
                 <div class="card-body add-product pb-0">

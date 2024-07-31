@@ -86,21 +86,15 @@ class AdminPriceController extends Controller
 
     public function store(Request $request)
     {
-        $product = Product::where('name', $request->product)->first();
-        if($product) {
-            $product_id = $product->id;
-            PriceMaster::create([
-                'product_id'        => $product_id,
-                'quantity'          => $request->quantityValue,
-                'quantity_type'     => $request->quantity,
-                'price'             => $request->price,
-                'created_by'        => Auth::id(),
-            ]);
+        PriceMaster::create([
+            'product_id'        => $request->product,
+            'quantity'          => $request->quantityValue,
+            'quantity_type'     => $request->quantity,
+            'price'             => $request->price,
+            'created_by'        => Auth::id(),
+        ]);
 
-            return redirect()->route('prices.index')->with('success', 'Price created successfully.');
-        } else {
-            return redirect()->route('prices.index')->with('success', 'Price not found.'); 
-        }
+        return redirect()->route('prices.index')->with('success', 'Price created successfully.');      
     }
 
     public function edit($id) 
@@ -112,21 +106,15 @@ class AdminPriceController extends Controller
 
     public function update(Request $request, $id)
     {
-        $product = Product::where('name', $request->product)->first();
-        if($product) {
-            $product_id = $product->id;
-            PriceMaster::where('id', $id)->update([
-                'product_id'        => $product_id,
-                'quantity'          => $request->quantityValue,
-                'quantity_type'     => $request->quantity,
-                'price'             => $request->price,
-                'created_by'        => Auth::id(),
-            ]);
+        PriceMaster::where('id', $id)->update([
+            'product_id'        => $request->product,
+            'quantity'          => $request->quantityValue,
+            'quantity_type'     => $request->quantity,
+            'price'             => $request->price,
+            'created_by'        => Auth::id(),
+        ]);
 
-            return redirect()->route('prices.index')->with('success', 'Price Updated successfully.');
-        } else {
-            return redirect()->route('prices.index')->with('success', 'Product not found.'); 
-        }
+        return redirect()->route('prices.index')->with('success', 'Price Updated successfully.');
     }
 
     public function destroy($id)

@@ -40,8 +40,7 @@
             </ul>
         </div>
 
-        <form action="{{ route('prices.update', $price->id) }}" method="post" enctype="multipart/form-data"
-            id='product-form'>
+        <form action="{{ route('prices.update', $price->id) }}" method="post" enctype="multipart/form-data">
             @csrf
             <div class="card">
                 <div class="card-body add-product pb-0">
@@ -50,8 +49,9 @@
                             <div class="row">
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Product Name</label>
-                                    <select name="product" id="product-dropdown" class="form-control chosen-select" required>
-                                        <option value="{{ $price->product->name }}">{{ $price->product->name }}</option>
+                                    <select name="product" id="product-dropdown" class="form-control chosen-select"
+                                        required>
+                                        <option value="{{ $price->product->id }}">{{ $price->product->name }}</option>
                                     </select>
                                 </div>
                             </div>
@@ -99,31 +99,24 @@
                     'input': keyword
                 },
                 success: function(response) {
-                    // Cache jQuery selector and create a Set to track existing options
                     var $dropdown = $('#product-dropdown');
                     var existingOptions = new Set($dropdown.find('option').map(function() {
                         return $(this).val();
                     }).get());
 
-                    // Create an array to hold new options
                     var newOptions = response
-                        .filter(item => !existingOptions.has(item
-                            .name)) // Filter out existing options
-                        .map(item =>
-                            `<option value="${item.name}">${item.name}</option>`
-                        ); // Create new option elements
+                        .filter(item => !existingOptions.has(item.name))
+                        .map(item => `<option value="${item.id}">${item.name}</option>`);
 
                     if (newOptions.length > 0) {
-                        // Append all new options in one go
                         $dropdown.append(newOptions.join(''));
-                        // Trigger chosen:updated only once
                         $dropdown.trigger('chosen:updated');
                     }
 
                     $('.chosen-search-input').val(keyword);
                 },
                 error: function(err) {
-                    console.error('Error fetching data:', err); // Better error logging
+                    console.error('Error fetching data:', err);
                 }
             });
         }
@@ -137,9 +130,13 @@
 
             updateProductSearch('');
 
+            let debounceTimeout;
             $('.chosen-search-input').on('keyup', function() {
+                clearTimeout(debounceTimeout);
                 const searchKeyword = $(this).val().trim();
-                updateProductSearch(searchKeyword);
+                debounceTimeout = setTimeout(() => {
+                    updateProductSearch(searchKeyword);
+                }, 300); // Adjust delay as needed
             });
         });
     </script>
