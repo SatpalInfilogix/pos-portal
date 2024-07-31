@@ -13,7 +13,7 @@
             <div class="page-btn">
                 <a href="{{ route('inventory-transfer.create') }}" class="btn btn-added">
                     <i data-feather="truck" class="me-2"></i>
-                    Send new items
+                    Transfer new items
                 </a>
             </div>
         </div>
