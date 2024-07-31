@@ -89,44 +89,44 @@
     <script src="https://cdn.jsdelivr.net/npm/chosen-js/chosen.jquery.min.js"></script>
 
     <script>
-        $(document).ready(function() {
-            function updateProductSearch(keyword) {
-                $.ajax({
-                    url: "{{ route('autocomplete') }}",
-                    type: 'GET',
-                    data: {
-                        'input': keyword
-                    },
-                    success: function(response) {
-                        // Cache jQuery selector and create a Set to track existing options
-                        var $dropdown = $('#product-dropdown');
-                        var existingOptions = new Set($dropdown.find('option').map(function() {
-                            return $(this).val();
-                        }).get());
+        function updateProductSearch(keyword) {
+            $.ajax({
+                url: "{{ route('autocomplete') }}",
+                type: 'GET',
+                data: {
+                    'input': keyword
+                },
+                success: function(response) {
+                    // Cache jQuery selector and create a Set to track existing options
+                    var $dropdown = $('#product-dropdown');
+                    var existingOptions = new Set($dropdown.find('option').map(function() {
+                        return $(this).val();
+                    }).get());
 
-                        // Create an array to hold new options
-                        var newOptions = response
-                            .filter(item => !existingOptions.has(item
+                    // Create an array to hold new options
+                    var newOptions = response
+                        .filter(item => !existingOptions.has(item
                             .name)) // Filter out existing options
-                            .map(item =>
-                            `<option value="${item.name}">${item.name}</option>`); // Create new option elements
+                        .map(item =>
+                            `<option value="${item.name}">${item.name}</option>`
+                        ); // Create new option elements
 
-                        if (newOptions.length > 0) {
-                            // Append all new options in one go
-                            $dropdown.append(newOptions.join(''));
-                            // Trigger chosen:updated only once
-                            $dropdown.trigger('chosen:updated');
-                        }
-
-                        $('.chosen-search-input').val(keyword);
-                    },
-                    error: function(err) {
-                        console.error('Error fetching data:', err); // Better error logging
+                    if (newOptions.length > 0) {
+                        // Append all new options in one go
+                        $dropdown.append(newOptions.join(''));
+                        // Trigger chosen:updated only once
+                        $dropdown.trigger('chosen:updated');
                     }
-                });
-            }
 
+                    $('.chosen-search-input').val(keyword);
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err); // Better error logging
+                }
+            });
+        }
 
+        $(document).ready(function() {
             $('[name="product"]').chosen({
                 placeholder_text_single: 'Enter Product Name',
                 allow_single_deselect: true,
@@ -135,16 +135,10 @@
 
             updateProductSearch('');
 
-            let debounceTimer;
             $('.chosen-search-input').on('keyup', function() {
-                clearTimeout(debounceTimer);
                 const searchKeyword = $(this).val().trim();
-
-                debounceTimer = setTimeout(() => {
-                    updateProductSearch(searchKeyword);
-                }, 300); // Adjust delay as needed
+                updateProductSearch(searchKeyword);
             });
-
         });
     </script>
 @endsection
