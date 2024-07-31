@@ -50,7 +50,7 @@
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Product Name</label>
                                     <select name="product" id="product-dropdown" class="form-control chosen-select" required>
-                                        <option></option>
+                                        <option value="{{ $price->product->name }}">{{ $price->product->name }}</option>
                                     </select>
                                 </div>
                             </div>
