@@ -24,6 +24,12 @@
             @csrf
             <div class="card">
                 <div class="card-body pb-0">
+                    @error('error')
+                        <div class="alert alert-danger">
+                            {{ $message }}
+                        </div>
+                    @enderror
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Select Store</label>
@@ -35,10 +41,10 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row products-container d-none">
                         <h5 class="form-label fw-bold">Select Products</h5>
                         <div class="col-12">
-                            <table id="products-table" class="table products-table">
+                            <table id="products-table" class="table products-table w-100">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -67,6 +73,15 @@
 
     <script>
         $(function() {
+            $('[name="store"]').change(function() {
+                let store_id = $(this).val();
+                if (store_id) {
+                    $('.products-container').removeClass('d-none');
+                } else {
+                    $('.products-container').addClass('d-none');
+                }
+            })
+
             $('.products-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -106,7 +121,7 @@
                         data: null,
                         className: 'quantity-column',
                         render: function(data, type, row) {
-                            return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 1}" style="width: 100px;">`;
+                            return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" style="width: 100px;">`;
                         }
                     }
                 ],
@@ -169,18 +184,31 @@
                 }
             });
 
-            $('#inventory-transfer-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent default form submission
+            $("#inventory-transfer-form").validate({
+                rules: {
+                    store: "required"
+                },
+                messages: {
+                    store: "Please select store"
+                },
+                errorClass: "invalid-feedback",
+                errorElement: "span",
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass("is-invalid");
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass("is-invalid");
+                },
+                submitHandler: function(form) {
+                    // Add products data to form
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'products_data',
+                        value: JSON.stringify(products)
+                    }).appendTo('#inventory-transfer-form');
 
-                // Add products data to form
-                $('<input>').attr({
-                    type: 'hidden',
-                    name: 'products_data',
-                    value: JSON.stringify(products)
-                }).appendTo('#inventory-transfer-form');
-
-                // Submit the form
-                this.submit();
+                    form.submit();
+                }
             });
         });
     </script>

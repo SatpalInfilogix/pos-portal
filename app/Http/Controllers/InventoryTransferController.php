@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\InventoryTransfer;
+use App\Models\Inventory;
+use App\Models\InventoryProduct;
 use App\Models\Store;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryTransferController extends Controller
 {
@@ -30,13 +32,40 @@ class InventoryTransferController extends Controller
      */
     public function store(Request $request)
     {
-        print_r($request->all());
+        $products = json_decode($request->products_data);
+
+        if(isset($products) && count($products) > 0){
+            $store_id = $request->store;
+
+            $inventory = Inventory::create([
+                'store_id' => $store_id,
+                'sent_by' => Auth::id(),
+            ]);
+
+            foreach($products as $product){
+                $product_id = $product->id;
+                
+                if($request->quantity > 0){
+                    InventoryProduct::create([
+                        'inventory_id' => $inventory->id,
+                        'store_id' => $store_id,
+                        'product_id' => $product_id,
+                        'quantity' => $request->quantity,
+                        'sent_by' => Auth::id(),
+                    ]);
+                }
+            }
+
+            die('inventory transfered');
+        } else {
+            return redirect()->back()->withErrors(['error' => 'No products data provided.']);
+        }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(InventoryTransfer $inventoryTransfer)
+    public function show(Inventory $inventoryTransfer)
     {
         //
     }
@@ -44,7 +73,7 @@ class InventoryTransferController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(InventoryTransfer $inventoryTransfer)
+    public function edit(Inventory $inventoryTransfer)
     {
         //
     }
@@ -52,7 +81,7 @@ class InventoryTransferController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, InventoryTransfer $inventoryTransfer)
+    public function update(Request $request, Inventory $inventoryTransfer)
     {
         //
     }
@@ -60,7 +89,7 @@ class InventoryTransferController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(InventoryTransfer $inventoryTransfer)
+    public function destroy(Inventory $inventoryTransfer)
     {
         //
     }

@@ -1,9 +1,10 @@
 @extends('admin.layouts.app')
-    @section('content')
+@section('content')
     <style>
         .card .card-size {
             padding: 0.25rem;
         }
+
         .btn.btn-sm {
             padding: 0px 0px 0px 0px;
             font-size: 9px;
@@ -38,7 +39,7 @@
                                     <label class="form-label">Category</label>
                                     <select name="category_id" id="category_id" class="form-control">
                                         <option value="" selected disabled>Select Category</option>
-                                        @foreach($categories as $category)
+                                        @foreach ($categories as $category)
                                             <option value="{{ $category->id }}">{{ $category->name }}</option>
                                         @endforeach
                                     </select>
@@ -46,7 +47,8 @@
                                 <div class="col-md-6 add-product">
                                     <label class="form-label">Product Code</label>
                                     <input type="text" name="product_code" class="form-control">
-                                    <small id="pcode-err" style="color:red; display:none;">Product code already exist</small>
+                                    <small id="pcode-err" style="color:red; display:none;">Product code already
+                                        exist</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -68,7 +70,8 @@
                                 </div>
                                 <div class="col-md-6 add-product">
                                     <label class="form-label">Manufacture Date</label>
-                                    <input type="text" name="manufacture_date" id="manufacture_date" class="form-control">
+                                    <input type="text" name="manufacture_date" id="manufacture_date"
+                                        class="form-control">
                                 </div>
                             </div>
                             <div class="row">
@@ -89,136 +92,136 @@
             </div>
         </form>
     </div>
-    @endsection
+@endsection
 @section('script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-<script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-<script>
-    $(document).ready(function () {
-        //Image preivew
-        $('#img-product').change(function() {
-            var input = this;
-            if (input.files && input.files[0]) {
-                $('#image_preview').prop('hidden', false);
-                var reader = new FileReader();
-                reader.onload = function(e) {
-                    $('#image_preview').attr('src', e.target.result);
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+    <script>
+        $(document).ready(function() {
+            //Image preivew
+            $('#img-product').change(function() {
+                var input = this;
+                if (input.files && input.files[0]) {
+                    $('#image_preview').prop('hidden', false);
+                    var reader = new FileReader();
+                    reader.onload = function(e) {
+                        $('#image_preview').attr('src', e.target.result);
+                    }
+                    reader.readAsDataURL(input.files[0]);
                 }
-                reader.readAsDataURL(input.files[0]);
-            }
-        });
-
-        // Array to store entered quantities
-        var quantities = []; // Initialize quantities as an empty array
-
-        // Add Units button click event
-        $('#add-units').click(function () {
-            var quantityValue = $('#quantity').val().trim();
-            if (quantityValue !== '') {
-                quantities.push(quantityValue); // Add to quantities array
-                updateQuantityList(); // Update the displayed quantities
-                $('#quantity').val(''); // Clear the input field
-            } else {
-                alert('Units cannot be empty');
-            }
-        });
-
-        // Function to update displayed quantities
-        function updateQuantityList() {
-            $('#unit-list').empty(); // Clear previous entries
-            quantities.forEach(function (quantity, index) {
-                var listItem = $('<div class="card added-quantity me-2 mb-2">' +
-                                    '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
-                                        '<span>' + quantity + '</span>' +
-                                        '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
-                                        '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' + index + '"><span class="badge rounded-pill">x</span></button>' +
-                                    '</div>' +
-                                '</div>');
-                                    $('#unit-list').append(listItem); // Append each quantity as a new item
             });
-        }
 
-        // Remove Quantity button click event (for dynamically added elements)
-        $('#unit-list').on('click', '.remove-units', function () {
-            var index = $(this).data('index');
-            quantities.splice(index, 1); // Remove from array
-            updateQuantityList(); // Update displayed quantities
-        });
+            // Array to store entered quantities
+            var quantities = []; // Initialize quantities as an empty array
 
-        // Datepicker initialization
-        $('#manufacture_date').datepicker({
-            format: 'yyyy-mm-dd', // specify the format you want
-            todayHighlight: true,
-            autoclose: true,
-            endDate: new Date(), // Set the end date to today
-            orientation: 'bottom'
-        });
-
-        // Form validation
-        $("#product-form").validate({
-            rules: {
-                category_id: "required",
-                product_name: "required",
-                product_code: "required",
-                // 'quantities[]': {
-                //     required: true,
-                //     minlength: 1 // Require at least one quantity
-                // },
-                image: "required",
-                manufacture_date: "required",
-            },
-            messages: {
-                category_id: "Please enter category",
-                product_name: "Please enter the product name",
-                product_code: "Please enter the product code",
-                // 'quantities[]': {
-                //     required: "Please enter at least one quantity",
-                //     minlength: "Please enter at least one quantity"
-                // },
-                image: "Please select image",
-                manufacture_date: "Please enter the manufacture date",
-            },
-            errorClass: "invalid-feedback",
-            errorElement: "span",
-            highlight: function(element, errorClass, validClass) {
-                $(element).addClass("is-invalid");
-            },
-            unhighlight: function(element, errorClass, validClass) {
-                $(element).removeClass("is-invalid");
-            },
-            submitHandler: function(form) {
-                form.submit();
-            }
-        });
-    });
-    //check product code
-    $(document).on('keyup','[name="product_code"]',function(){
-        var product_code = $(this).val(); 
-        var token = "{{ csrf_token() }}";
-        var url = "{{ route('products.check_code') }}";
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: {
-                "_token": token,
-                product_code
-            },
-            success: function(response) {
-                console.log(response);
-                if(response.success){
-                    $('#pcode-err').show();
-                    $('.btn-submit').prop('disabled', true);
-                }else{
-                    $('#pcode-err').hide();
-                    $('.btn-submit').prop('disabled', false);
+            // Add Units button click event
+            $('#add-units').click(function() {
+                var quantityValue = $('#quantity').val().trim();
+                if (quantityValue !== '') {
+                    quantities.push(quantityValue); // Add to quantities array
+                    updateQuantityList(); // Update the displayed quantities
+                    $('#quantity').val(''); // Clear the input field
+                } else {
+                    alert('Units cannot be empty');
                 }
-            },
-            error: function(xhr) {
-                console.log(xhr);
-            }
-        });
-    });
+            });
 
-</script>
+            // Function to update displayed quantities
+            function updateQuantityList() {
+                $('#unit-list').empty(); // Clear previous entries
+                quantities.forEach(function(quantity, index) {
+                    var listItem = $('<div class="card added-quantity me-2 mb-2">' +
+                        '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
+                        '<span>' + quantity + '</span>' +
+                        '<input type="hidden" name="quantities[]" value="' + quantity + '">' +
+                        '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' +
+                        index + '"><span class="badge rounded-pill">x</span></button>' +
+                        '</div>' +
+                        '</div>');
+                    $('#unit-list').append(listItem); // Append each quantity as a new item
+                });
+            }
+
+            // Remove Quantity button click event (for dynamically added elements)
+            $('#unit-list').on('click', '.remove-units', function() {
+                var index = $(this).data('index');
+                quantities.splice(index, 1); // Remove from array
+                updateQuantityList(); // Update displayed quantities
+            });
+
+            // Datepicker initialization
+            $('#manufacture_date').datepicker({
+                format: 'yyyy-mm-dd', // specify the format you want
+                todayHighlight: true,
+                autoclose: true,
+                endDate: new Date(), // Set the end date to today
+                orientation: 'bottom'
+            });
+
+            // Form validation
+            $("#product-form").validate({
+                rules: {
+                    category_id: "required",
+                    product_name: "required",
+                    product_code: "required",
+                    // 'quantities[]': {
+                    //     required: true,
+                    //     minlength: 1 // Require at least one quantity
+                    // },
+                    image: "required",
+                    manufacture_date: "required",
+                },
+                messages: {
+                    category_id: "Please enter category",
+                    product_name: "Please enter the product name",
+                    product_code: "Please enter the product code",
+                    // 'quantities[]': {
+                    //     required: "Please enter at least one quantity",
+                    //     minlength: "Please enter at least one quantity"
+                    // },
+                    image: "Please select image",
+                    manufacture_date: "Please enter the manufacture date",
+                },
+                errorClass: "invalid-feedback",
+                errorElement: "span",
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass("is-invalid");
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass("is-invalid");
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            });
+        });
+        //check product code
+        $(document).on('keyup', '[name="product_code"]', function() {
+            var product_code = $(this).val();
+            var token = "{{ csrf_token() }}";
+            var url = "{{ route('products.check_code') }}";
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    "_token": token,
+                    product_code
+                },
+                success: function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        $('#pcode-err').show();
+                        $('.btn-submit').prop('disabled', true);
+                    } else {
+                        $('#pcode-err').hide();
+                        $('.btn-submit').prop('disabled', false);
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                }
+            });
+        });
+    </script>
 @endsection

@@ -15,12 +15,12 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('inventory_id')->nullable();
             $table->unsignedBigInteger('store_id')->nullable();
-            $table->unsignedBigInteger('product_id')->nullable();
+            $table->unsignedBigInteger('product_id');
             $table->string('quantity')->nullable();
             $table->unsignedBigInteger('sent_by')->nullable();
             $table->timestamps();
 
-            $table->foreign('inventory_id')->references('id')->on('inventory');
+            $table->foreign('inventory_id')->references('id')->on('inventories');
             $table->foreign('store_id')->references('id')->on('stores');
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('sent_by')->references('id')->on('users');
