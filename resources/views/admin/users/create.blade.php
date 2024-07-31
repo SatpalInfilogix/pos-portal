@@ -52,7 +52,9 @@
                                     <select name="role" id="role" class="form-control">
                                         <option value="" selected disabled>Select Role</option>
                                         @foreach ($roles as $key => $role)
-                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @if ($role->id !== 1)
+                                                <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -88,14 +90,16 @@
                     last_name: "required",
                     email: "required",
                     phone_number: "required",
-                    role: "required"
+                    role: "required",
+                    store_id: "required"
                 },
                 messages: {
                     first_name: "Please enter the first name",
                     last_name: "Please enter the last name",
                     email: "Please enter the email",
                     phone_number: "Please enter phone number",
-                    role: "Please select role"
+                    role: "Please select role",
+                    store_id: "Please select store"
                 },
                 errorClass: "invalid-feedback",
                 errorElement: "span",
