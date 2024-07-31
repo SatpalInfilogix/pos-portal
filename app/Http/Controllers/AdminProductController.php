@@ -92,15 +92,6 @@ class AdminProductController extends Controller
 
     public function store(Request $request)
     {
-        $product = Product::orderByDesc('lot_number')->first();
-        if (!$product) {
-            $uniqueCode =  'PR0001';
-        } else {
-            $numericPart = (int)substr($product->lot_number, 3);
-            $nextNumericPart = str_pad($numericPart + 1, 4, '0', STR_PAD_LEFT);
-            $uniqueCode = 'PR' . $nextNumericPart;
-        }
-
         if ($request->hasFile('image'))
         {
             $file = $request->file('image');
@@ -112,9 +103,8 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'units'              => json_encode($request->quantities),
+            'units'              => json_encode($request->units),
             'manufacture_date'  => $request->manufacture_date,
-            'lot_number'        => $uniqueCode,
             'created_by'        => Auth::id(),
             'image'             => 'uploads/products/'. $filename,
         ]);
@@ -151,7 +141,7 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'units'              => json_encode($request->quantities),
+            'units'              => json_encode($request->units),
             'manufacture_date'  => $request->manufacture_date,
         ]);
         
