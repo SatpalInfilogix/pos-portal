@@ -96,7 +96,10 @@ class InventoryTransferController extends Controller
      */
     public function show(Inventory $inventoryTransfer)
     {
-        return view('admin.inventory-transfer.view');
+        $inventoryTransfer->load('store');
+        $inventoryTransfer->load('deliveredItems');
+        $transferedInventory = $inventoryTransfer;
+        return view('admin.inventory-transfer.view', compact('transferedInventory'));
     }
 
     /**
