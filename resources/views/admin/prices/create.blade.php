@@ -69,7 +69,7 @@
                                 <div class="col-md-6 add-product">
                                     <div class="mb-3">
                                         <label class="form-label">Quantity</label>
-                                        <input type="text" name="quantityValue" id="quantityValue" class="form-control">
+                                        <input type="number" name="quantityValue" id="quantityValue" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@
     <script>
         function updateProductSearch(keyword) {
             $.ajax({
-                url: "{{ route('autocomplete') }}",
+                url: "{{ route('search-products') }}",
                 type: 'GET',
                 data: {
                     'input': keyword
@@ -136,13 +136,13 @@
             updateProductSearch('');
 
             let debounceTimeout;
-            $('.chosen-search-input').on('keyup', function() {
+            /* $('.chosen-search-input').on('keyup', function() {
                 clearTimeout(debounceTimeout);
                 const searchKeyword = $(this).val().trim();
                 debounceTimeout = setTimeout(() => {
                     updateProductSearch(searchKeyword);
                 }, 300); // Adjust delay as needed
-            });
+            }); */
 
             $('#product-dropdown').on('change', function() {
                 const productId = $(this).val();

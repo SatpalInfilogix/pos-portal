@@ -137,11 +137,11 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::view('credit-customer-sales-receipt-pdf','admin.sales.sales-pdf-template.credit-customer-sales-receipt-pdf');
     Route::view('gate-pass-pdf','admin.sales.sales-pdf-template.gate-pass-pdf');
     Route::view('stock-transfer-pdf','admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf');
-    Route::get('/autocomplete', [AdminPriceController::class,'autocomplete'])->name('autocomplete');
     
     Route::get('/pos-dashboard',[PosDashboardController::class,'index'])->name('pos-dashboard');
 });
 /***************  Frontend Routes ****************/
+Route::get('/search-products', [AdminProductController::class,'searchProducts'])->name('search-products');
 Route::get('/return-inventory', [InventoryReturnController::class, 'index'])->name('return-inventory-list');
 Route::post('/import-products', [AdminProductController::class, 'import_products'])->name('import-products');
 Route::post('/return-inventory', [InventoryReturnController::class, 'create'])->name('return-inventory');

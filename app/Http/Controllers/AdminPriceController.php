@@ -69,18 +69,6 @@ class AdminPriceController extends Controller
         ]);
     }
 
-    public function autocomplete(Request $request)
-    {
-        $searchTerm = $request->input('input');
-        $products = Product::where('status', 0)->where('name', 'like', '%' . $searchTerm . '%')->take(2)->get(['id', 'name']);
-
-        foreach($products as $key => $product){
-            $products[$key]['units'] = json_decode($product->units, true) ?: [];
-        }
-
-        return response()->json($products);
-    }
-
     public function getUnits($id)
     {
         $product = Product::where('status', 0)->where('id', $id)->first();
@@ -108,8 +96,8 @@ class AdminPriceController extends Controller
         PriceMaster::create([
             'product_id'        => $request->product,
             'quantity'          => $request->quantityValue,
-            'quantity_type'     => $request->quantity,
-            'price'             => $request->price,
+            'quantity_type'     => $request->quantity ?? 0,
+            'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
         ]);
 
@@ -130,8 +118,8 @@ class AdminPriceController extends Controller
         PriceMaster::where('id', $id)->update([
             'product_id'        => $request->product,
             'quantity'          => $request->quantityValue,
-            'quantity_type'     => $request->quantity,
-            'price'             => $request->price,
+            'quantity_type'     => $request->quantity ?? 0,
+            'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
         ]);
 

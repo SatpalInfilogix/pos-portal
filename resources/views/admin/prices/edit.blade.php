@@ -51,7 +51,7 @@
                                     <label class="form-label">Product Name</label>
                                     <select name="product" id="product-dropdown" class="form-control chosen-select"
                                         required>
-                                        <option value="{{ $price->product->id }}">{{ $price->product->name }}</option>
+                                        {{-- <option value="{{ $price->product->id }}">{{ $price->product->name }}</option> --}}
                                     </select>
                                 </div>
                             </div>
@@ -74,7 +74,7 @@
                                 <div class="col-md-6 add-product">
                                     <div class="mb-3">
                                         <label class="form-label">Quantity</label></label>
-                                        <input type="text" name="quantityValue" id="quantityValue" class="form-control"
+                                        <input type="number" name="quantityValue" id="quantityValue" class="form-control"
                                             value="{{ $price->quantity }}">
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
     <script>
         function updateProductSearch(keyword) {
             $.ajax({
-                url: "{{ route('autocomplete') }}",
+                url: "{{ route('search-products') }}",
                 type: 'GET',
                 data: {
                     'input': keyword

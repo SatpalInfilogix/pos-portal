@@ -124,6 +124,19 @@ class AdminProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Products imported successfully.');
     }
 
+    
+    public function searchProducts(Request $request)
+    {
+        $searchTerm = $request->input('input');
+        $products = Product::where('status', 0)->where('name', 'like', '%' . $searchTerm . '%')->get(['id', 'name']);
+
+        foreach($products as $key => $product){
+            $products[$key]['units'] = json_decode($product->units, true) ?: [];
+        }
+
+        return response()->json($products);
+    }
+
     public function show(Product $product) 
     {
         //
