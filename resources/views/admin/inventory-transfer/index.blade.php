@@ -30,10 +30,10 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Return Invoice ID</th>
-                                <th>Invoice ID</th>
+                                <th>Store</th>
+                                <th>Store Contact</th>
                                 <th>Vehicle Number</th>
-                                <th>Contact Number</th>
+                                <th>Date & Time</th>
                                 <th class="no-sort">Action</th>
                             </tr>
                         </thead>
@@ -48,55 +48,54 @@
 
 @section('script')
     <script>
-        $(function() {
-            $('.inventory-transfer').DataTable({
-                processing: true,
-                serverSide: true,
-                ajax: {
-                    "url": "{{ route('get-return-stock-inventory') }}",
-                    "type": "POST",
-                    "data": {
-                        _token: "{{ csrf_token() }}"
+$(function() {
+    $('.inventory-transfer').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                "url": "{{ route('get-transfer-stock-inventory') }}",
+                "type": "POST",
+                "data": {
+                    _token: "{{ csrf_token() }}"
+                }
+            },
+            columns: [
+                { "data": "id" },
+                { "data": "store_name" },
+                { "data": "store_contact" },
+                { "data": "vehicle_number" },
+                {
+                    "data": "created_at",
+                    "render": function(data, type, row) {
+                        // Format the date using JavaScript
+                        var date = new Date(data);
+                        var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
+                        return date.toLocaleDateString('en-US', options).replace(',', ''); // Customize format as needed
                     }
                 },
-                columns: [{
-                        "data": "id"
-                    },
-                    {
-                        "data": "return_invoice_id"
-                    },
-                    {
-                        "data": "order_id"
-                    },
-                    {
-                        "data": "vehicle_number"
-                    },
-                    {
-                        "data": "contact_number"
-                    },
-                    {
-                        data: null,
-                        render: function(data, type, row) {
-                            var actions = '<div class="edit-invoice">';
-                            actions +=
-                            `<a class="me-2 p-2 edit-btn" href="./users/${row.return_invoice_id}/edit">`;
-                            actions += '<i class="fa fa-edit"></i>';
-                            actions += '</a>';
-                            actions += '</div>';
-                            return actions;
-                        }
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        var actions = '<div class="edit-invoice">';
+                        actions += `<a class="me-2 p-2 edit-btn" href="{{ route('inventory-transfer.show','') }}/${data.id}">`;
+                        actions += '<i class="fa fa-eye"></i>';
+                        actions += '</a>';
+                        actions += '</div>';
+                        return actions;
                     }
-                ],
-                columnDefs: [{
-                        "orderable": false,
-                        "targets": 5,
-                        "className": "action-table-data"
-                    } // Disable sorting on 'Action' column
-                ],
-                paging: true,
-                pageLength: 10,
-                lengthMenu: [10, 25, 50, 100]
-            });
-        })
+                }
+            ],
+            columnDefs: [
+                {
+                    "orderable": false,
+                    "targets": 5, // Adjust target index if necessary
+                    "className": "action-table-data"
+                } // Disable sorting on 'Action' column
+            ],
+            paging: true,
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100]
+        });
+    });
     </script>
 @endsection

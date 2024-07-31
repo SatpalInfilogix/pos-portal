@@ -160,7 +160,7 @@ Route::post('/get-products', [AdminProductController::class, 'getProducts'])->na
 Route::post('/get-prices', [AdminPriceController::class, 'getPrices'])->name('get-prices');
 Route::post('/get-customers', [AdminCustomerController::class, 'getCustomers'])->name('get-customers');
 Route::post('/get-sales', [AdminSalesController::class, 'getSalesOrder'])->name('get-sales');
-Route::post('/get-return-inventory-stock', [InventoryReturnController::class, 'getReturnStockInventory'])->name('get-return-stock-inventory');
+Route::post('/get-transfer-stock-inventory', [InventoryTransferController::class, 'getTransferStockInventory'])->name('get-transfer-stock-inventory');
 /************************* End DataTables Routes ************************/
 
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');
