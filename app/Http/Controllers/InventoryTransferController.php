@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Inventory;
 use App\Models\InventoryProduct;
+use App\Models\PriceMaster;
+use App\Models\StoreProduct;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon; 
 
 class InventoryTransferController extends Controller
 {
@@ -53,10 +56,36 @@ class InventoryTransferController extends Controller
                         'quantity' => $product->quantity,
                         'sent_by' => Auth::id(),
                     ]);
+
+                    #If product and store already exists
+                    $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$product_id)->first();
+                    if($recordExist){
+
+                        $recordExist->update([
+                            "quantity" => $recordExist->quantity + $product->quantity,
+                        ]);
+
+                    }else{
+
+                        $storeProduct = StoreProduct::create([
+                            "store_id" => $store_id,
+                            "product_id" => $product_id,
+                            "quantity" => $product->quantity,
+                        ]);
+
+                    }
+
+                    #Price Master quantity update
+                    $priceMasterUpdate = PriceMaster::where('product_id',$product_id)->first();
+                    $priceMasterUpdate->update([
+                        "quantity" => $priceMasterUpdate->quantity - $product->quantity,
+                    ]);
+
                 }
+
             }
 
-            die('inventory transfered');
+            return redirect()->route('inventory-transfer.index')->with('success','Inventory Transfer Updated Successfully');
         } else {
             return redirect()->back()->withErrors(['error' => 'No products data provided.']);
         }
@@ -67,7 +96,7 @@ class InventoryTransferController extends Controller
      */
     public function show(Inventory $inventoryTransfer)
     {
-        //
+        return view('admin.inventory-transfer.view');
     }
 
     /**
@@ -92,5 +121,56 @@ class InventoryTransferController extends Controller
     public function destroy(Inventory $inventoryTransfer)
     {
         //
+    }
+
+    public function getTransferStockInventory(Request $request)
+    {
+        $maxItemsPerPage = 10;
+    
+        // Start the query with necessary joins
+        $transferQuery = Inventory::select([
+                'inventories.id', 
+                'inventories.store_id', 
+                'inventories.vehicle_number', 
+                'inventories.sent_by', 
+                'inventories.created_at',
+                'stores.contact_number as store_contact', 
+                'stores.name as store_name',
+
+            ])
+            ->join('stores', 'inventories.store_id', '=', 'stores.id'); // Join with products table
+    
+        // Add search filter
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $transferQuery->where(function ($query) use ($searchValue) {
+                $query->where('inventories.vehicle_number', 'like', '%' . $searchValue . '%')
+                    ->orWhere('stores.name', 'like', '%' . $searchValue . '%');
+            });
+        }
+    
+        // Add sorting
+        if ($request->has('order')) {
+            $orderColumn = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $column = $request->columns[$orderColumn]['data'];
+            $transferQuery->orderBy($column, $orderDirection);
+        }
+    
+        // Count total records
+        $totalRecords = $transferQuery->count();
+    
+        // Pagination
+        $perPage = $request->input('length', $maxItemsPerPage);
+        $currentPage = $request->input('start', 0) / $perPage;
+        $returnTransfers = $transferQuery->skip($currentPage * $perPage)->take($perPage)->get();
+
+        // Return JSON response
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $returnTransfers
+        ]);
     }
 }

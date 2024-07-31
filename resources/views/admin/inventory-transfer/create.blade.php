@@ -125,7 +125,7 @@
                         data: null,
                         className: 'quantity-column',
                         render: function(data, type, row) {
-                            return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" max-quantity="${data.available_quantity || 0}" style="width: 100px;">`;
+                            return `<input type="number" name="quantity-input" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" max-quantity="${data.available_quantity || 0}" style="width: 100px;">`;
                             // return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" style="width: 100px;">`;
                         }
                     }
@@ -225,6 +225,16 @@
                     form.submit();
                 }
             });
+        });
+        // Auto checked on quantity change or enter
+        $(document).on('keyup','[name="quantity-input"]',function(){
+            var quantity = $(this).val(); 
+            var product_id = $(this).data('id');
+            if(quantity>0){
+                $('.product-item[data-id="' + product_id + '"]').prop('checked',true);
+            }if(quantity == 0){
+                $('.product-item[data-id="' + product_id + '"]').prop('checked',false);
+            }
         });
     </script>
 @endsection
