@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
-    @section('content')
-    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet"/>
+@section('content')
+    <link href="https://cdn.rawgit.com/harvesthq/chosen/gh-pages/chosen.min.css" rel="stylesheet" />
     <style>
         .autocomplete-items {
             position: absolute;
@@ -48,7 +48,8 @@
                             <div class="row">
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Product Name</label>
-                                    <select name="product" id="product-dropdown" class="form-control chosen-select" required>
+                                    <select name="product" id="product-dropdown" class="form-control chosen-select"
+                                        required>
                                         <option></option>
                                     </select>
                                 </div>
@@ -82,42 +83,68 @@
             </div>
         </form>
     </div>
-    @endsection
+@endsection
 @section('script')
-<script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-<script src="https://cdn.jsdelivr.net/npm/chosen-js/chosen.jquery.min.js"></script>
+    <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chosen-js/chosen.jquery.min.js"></script>
 
-<script>
-    $(document).ready(function() {
-        $('[name="product"]').chosen({
-            placeholder_text_single: 'Enter Product Name',
-            allow_single_deselect: true,
-            no_results_text: 'No results matched'
-        });
-        $('.chosen-search-input').on('keyup', function() {
-            var inputValue = $(this).val().trim();
+    <script>
+        $(document).ready(function() {
+            function updateProductSearch(keyword) {
+                $.ajax({
+                    url: "{{ route('autocomplete') }}",
+                    type: 'GET',
+                    data: {
+                        'input': keyword
+                    },
+                    success: function(response) {
+                        // Cache jQuery selector and create a Set to track existing options
+                        var $dropdown = $('#product-dropdown');
+                        var existingOptions = new Set($dropdown.find('option').map(function() {
+                            return $(this).val();
+                        }).get());
 
-            $.ajax({
-                url : '{{ route("autocomplete") }}',
-                type : 'GET',
-                data : {
-                    'input' : inputValue
-                },success : function(response){
-                    console.log(response);
-                    $.each(response, function(i, item) {
-                        
-                        var optionExists = $('#product-dropdown option[value="' + item.name + '"]').length > 0;
-                        if (!optionExists) {
-                            $('#product-dropdown').append('<option value="' + item.name + '">' + item.name + '</option>');
-                            $('#product-dropdown').trigger('chosen:updated'); // Refresh chosen
+                        // Create an array to hold new options
+                        var newOptions = response
+                            .filter(item => !existingOptions.has(item
+                            .name)) // Filter out existing options
+                            .map(item =>
+                            `<option value="${item.name}">${item.name}</option>`); // Create new option elements
+
+                        if (newOptions.length > 0) {
+                            // Append all new options in one go
+                            $dropdown.append(newOptions.join(''));
+                            // Trigger chosen:updated only once
+                            $dropdown.trigger('chosen:updated');
                         }
-                    });
-                },error : function(err){
-                    //console.log(err);
-                }
-            });
-        });
-    });
 
-</script>
+                        $('.chosen-search-input').val(keyword);
+                    },
+                    error: function(err) {
+                        console.error('Error fetching data:', err); // Better error logging
+                    }
+                });
+            }
+
+
+            $('[name="product"]').chosen({
+                placeholder_text_single: 'Enter Product Name',
+                allow_single_deselect: true,
+                no_results_text: 'No results matched'
+            });
+
+            updateProductSearch('');
+
+            let debounceTimer;
+            $('.chosen-search-input').on('keyup', function() {
+                clearTimeout(debounceTimer);
+                const searchKeyword = $(this).val().trim();
+
+                debounceTimer = setTimeout(() => {
+                    updateProductSearch(searchKeyword);
+                }, 300); // Adjust delay as needed
+            });
+
+        });
+    </script>
 @endsection

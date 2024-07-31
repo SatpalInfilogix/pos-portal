@@ -74,7 +74,7 @@ class AdminPriceController extends Controller
     public function autocomplete(Request $request)
     {
         $searchTerm = $request->input('input');
-        $products = Product::where('status', 0)->where('name', 'like', '%' . $searchTerm . '%')->get(['id', 'name']);
+        $products = Product::where('status', 0)->where('name', 'like', '%' . $searchTerm . '%')->take(2)->get(['id', 'name']);
 
         return response()->json($products);
     }
