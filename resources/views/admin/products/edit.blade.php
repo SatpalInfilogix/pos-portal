@@ -70,15 +70,17 @@
                                 </div>
                                 <div id="unit-list" class="mt-3 d-flex flex-wrap">
                                     <!-- Display saved units from database -->
-                                    @foreach(json_decode($product->units) as $index => $unit)
-                                    <div class="card added-units me-2 mb-2">
-                                        <div class="card-body card-size d-flex justify-content-between align-items-center">
-                                            <span>{{ $unit }}</span>
-                                            <input type="hidden" name="units[]" value="{{ $unit }}">
-                                            <button type="button" class="btn btn-sm btn-danger remove-units" data-index="{{ $index }}"><span class="badge rounded-pill">x</span></button>
+                                    @if($product->units && is_array($units = json_decode($product->units, true)))
+                                        @foreach(json_decode($product->units) as $index => $unit)
+                                        <div class="card added-units me-2 mb-2">
+                                            <div class="card-body card-size d-flex justify-content-between align-items-center">
+                                                <span>{{ $unit }}</span>
+                                                <input type="hidden" name="units[]" value="{{ $unit }}">
+                                                <button type="button" class="btn btn-sm btn-danger remove-units" data-index="{{ $index }}"><span class="badge rounded-pill">x</span></button>
+                                            </div>
                                         </div>
-                                    </div>
-                                    @endforeach
+                                        @endforeach
+                                    @endif
                                 </div>
                             </div>
                             <div class="col-md-6 add-product">
@@ -136,9 +138,11 @@
         var units = [];
 
         // Add saved units to array
+        @if($product->units && is_array($units = json_decode($product->units, true)))
         @foreach(json_decode($product->units) as $unit)
         units.push('{{ $unit }}');
         @endforeach
+        @endif
 
         // Function to initialize displayed units
         function initializeUnitList() {

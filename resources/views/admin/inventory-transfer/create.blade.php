@@ -52,6 +52,7 @@
                                         <th>Product</th>
                                         <th>Manufactured Date</th>
                                         <th>Image</th>
+                                        <th>Available Quantity</th>
                                         <th class="no-sort">Quantity</th>
                                     </tr>
                                 </thead>
@@ -118,10 +119,14 @@
                         }
                     },
                     {
+                        data: "available_quantity",
+                    },
+                    {
                         data: null,
                         className: 'quantity-column',
                         render: function(data, type, row) {
-                            return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" style="width: 100px;">`;
+                            return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" max-quantity="${data.available_quantity || 0}" style="width: 100px;">`;
+                            // return `<input type="number" class="quantity-input" data-id="${row.id}" value="${data.quantity || 0}" style="width: 100px;">`;
                         }
                     }
                 ],
@@ -140,6 +145,16 @@
                 order: [
                     [2, 'asc']
                 ]
+            });
+
+            $(document).on('keyup', '.quantity-input', function() {
+                const maxQuantity = parseInt($(this).attr('max-quantity'), 10);
+                console.log(maxQuantity);
+                let value = parseInt($(this).val(), 10);
+                console.log(value);
+                if (value > maxQuantity) {
+                    $(this).val(maxQuantity);
+                }
             });
 
             let products = [];

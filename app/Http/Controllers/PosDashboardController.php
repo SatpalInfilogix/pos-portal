@@ -9,6 +9,9 @@ use App\Models\PriceMaster;
 use App\Models\Order;
 use App\Models\Discount;
 use App\Models\Customer;
+use App\Models\User;
+use App\Models\InventoryProduct;
+use Illuminate\Support\Facades\Auth;
 
 class PosDashboardController extends Controller
 {
@@ -35,9 +38,15 @@ class PosDashboardController extends Controller
         foreach ($products as $proKey => $product) {
             $category = Category::where('id', $product->category_id)->first();
             $price = PriceMaster::where('product_id', $product->id)->where('status', 0)->first();
+            $storeId = User::where('id', Auth::id())->value('store_id');
+            $inventory = InventoryProduct::where('store_id', $storeId)->first();
+            $quantity = 0;
+            if($inventory) {
+                $quantity = $inventory->quantity;
+            }
             $products[$proKey]['categoryName'] = $category->name ?? '';
             $products[$proKey]['price'] = optional($price)->price;
-            $products[$proKey]['quantity'] = $price->quantity ?? 0;
+            $products[$proKey]['quantity'] = $quantity;
         }
 
         $latestOrder = Order::orderBy('id', 'desc')->first();

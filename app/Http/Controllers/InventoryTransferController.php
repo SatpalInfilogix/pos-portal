@@ -41,16 +41,16 @@ class InventoryTransferController extends Controller
                 'store_id' => $store_id,
                 'sent_by' => Auth::id(),
             ]);
-
+            
             foreach($products as $product){
                 $product_id = $product->id;
                 
-                if($request->quantity > 0){
+                if($product->quantity && $product->quantity > 0){
                     InventoryProduct::create([
                         'inventory_id' => $inventory->id,
                         'store_id' => $store_id,
                         'product_id' => $product_id,
-                        'quantity' => $request->quantity,
+                        'quantity' => $product->quantity,
                         'sent_by' => Auth::id(),
                     ]);
                 }
