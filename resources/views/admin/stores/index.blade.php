@@ -38,7 +38,7 @@
                                 <th>Email</th>
                                 <th>Contact</th>
                                 <th>Location</th>
-                                <th class="no-sort">Action</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,12 +49,14 @@
                                     <td>{{ $store->email }}</td>
                                     <td>{{ $store->contact_number }}</td>
                                     <td>{{ $store->location }}</td>
-                                    <td class="no-sort">
+                                    <td class="action-table-data">
                                         <div class="edit-delete-action">
                                             <a class="me-2 p-2" href="{{ route('stores.edit', $store->id) }}">
-                                                <i data-feather="edit" class="feather-edit"></i></a>
-                                            <a class="me-2 p-2 delete-btn" href="#" data-id="{{ $store->id }}"><i
-                                                    class="fa fa-trash"></i></a>
+                                                <i data-feather="edit" class="feather-edit"></i>
+                                            </a>
+                                            <a class="me-2 p-2 delete-btn" href="#" data-id="{{ $store->id }}">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>
