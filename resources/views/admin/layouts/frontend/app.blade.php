@@ -414,7 +414,7 @@
                 const productIds = productsArray.map(product => product.id);
                 const csrfToken = getCSRFToken();
 
-                fetch('/product-quantity', { // Replace with your API endpoint
+                fetch("{{ url('/product-quantity') }}", { // Replace with your API endpoint
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

@@ -1,4 +1,4 @@
-<div class="customizer-links" id="setdata">
+{{-- <div class="customizer-links" id="setdata">
     <ul class="sticky-sidebar">
         <li class="sidebar-icons">
             <a href="#" class="navigation-add" data-bs-toggle="tooltip" data-bs-placement="left"
@@ -25,18 +25,6 @@
                     <div class="col-xl-12 ere">
                         <div class="layout-wrap">
                             <h5>
-                                <a href="#" data-bs-toggle="modal"
-                                data-bs-target="#gate-pass-modal">Gate Pass</a>
-                            </h5>
-                        </div>
-                        <div class="layout-wrap">
-                            <h5>
-                                <a href="#" data-bs-toggle="modal"
-                                    data-bs-target="#inventory-return-modal">Inventory Return</a>
-                            </h5>
-                        </div>
-                        <div class="layout-wrap">
-                            <h5>
                                 <a href="#">Stock Reconcilation</a>
                             </h5>
                         </div>
@@ -46,3 +34,4 @@
         </div>
     </div>
 </div>
+ --}}
