@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-6 mb-3">
                         <h5>Transfer Date</h5>
-                        <p>{{ $transferedInventory->created_at }}</p>
+                        <p>{{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('d F Y h:i:s A') }}</p>
                     </div>
                 </div>
 
