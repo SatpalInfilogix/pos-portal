@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Models\Discount; 
 use App\Models\Product; 
 use App\Models\ProductOrderHistory; 
+use App\Models\PriceMaster;
+use App\Models\StoreProduct;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
@@ -19,6 +21,7 @@ class OrderController extends Controller
     public function POSSaleSubmission(Request $request){
         // Create Customer
         $invoice_id = $this->generateInvoice();
+        $store_id = Auth::user()->store_id;
         $customer = Customer::where('contact_number','=',$request->contact_number)->first();
         if(!$customer){
             $customer = Customer::create([
@@ -103,6 +106,17 @@ class OrderController extends Controller
                     'price' => $product['price'],
                     'product_total_amount' => $product['product_total_amount']
                 ]);
+                if(isset($store_id)){
+                    $updateInventory = StoreProduct::where('store_id',$store_id)->where('product_id',$productDetails->id)->first();
+                    $updateInventory->update([
+                        "quantity" => $updateInventory->quantity - $product['quantity']
+                    ]);
+                }else{
+                    $updateInventory = PriceMaster::where('product_id',$productDetails->id)->first();
+                    $updateInventory->update([
+                        "quantity" => $updateInventory->quantity - $product['quantity']
+                    ]);
+                }
             }
 
 
