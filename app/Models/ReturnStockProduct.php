@@ -10,4 +10,9 @@ class ReturnStockProduct extends Model
     use HasFactory;
     protected $table = "return_stock_products";
     protected $guarded = [];
+    
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

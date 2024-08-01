@@ -85,7 +85,10 @@ class ReturnStockController extends Controller
      */
     public function show(ReturnStock $returnStock)
     {
-        //
+        $returnStock->load('store');
+        $returnStock->load('deliveredItems');
+        $returnStockInventory = $returnStock;
+        return view('admin.stocks.return-stock.view', compact('returnStockInventory'));
     }
 
     /**
