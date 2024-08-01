@@ -94,14 +94,6 @@
                                 </a>
                             </li>
                         @endcanany
-                        @canany(['view sales'])
-                            <li @class(['active' => Request::is('admin/sales', 'admin/sales/*')])>
-                                <a href="{{ route('sales.index') }}">
-                                    <i data-feather="box"></i>
-                                    <span>Sales Details</span>
-                                </a>
-                            </li>
-                        @endcanany
                         @canany(['view return stocks'])
                             <li @class([
                                 'active' => Request::is(
@@ -111,6 +103,14 @@
                                 <a href="{{ route('return_stocks.index') }}">
                                     <i data-feather="box"></i>
                                     <span>Return Stocks</span>
+                                </a>
+                            </li>
+                        @endcanany
+                        @canany(['view sales'])
+                            <li @class(['active' => Request::is('admin/sales', 'admin/sales/*')])>
+                                <a href="{{ route('sales.index') }}">
+                                    <i data-feather="box"></i>
+                                    <span>Sales Details</span>
                                 </a>
                             </li>
                         @endcanany

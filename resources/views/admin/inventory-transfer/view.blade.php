@@ -34,7 +34,7 @@
                 <div class="row">
                     <div class="col-12 mb-3">
                         <h5>Products</h5>
-                        <table>
+                        <table class="table table-responsive">
                             <thead>
                                 <tr>
                                     <td>#</td>
@@ -43,13 +43,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                               {{--  @foreach ($transferedInventory->delivered_items as $key => $delivered_item)
+                               @foreach ($transferedInventory->deliveredItems as $key => $delivered_item)
                                     <tr>
-                                        <td>{{$key}}</td>
+                                        <td>{{++$key}}</td>
                                         <td>{{$delivered_item->product->name}}</td>
                                         <td>{{$delivered_item->quantity}}</td>
                                     </tr>
-                                @endforeach --}}
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

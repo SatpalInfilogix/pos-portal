@@ -34,7 +34,7 @@
                                 <th>Store Contact</th>
                                 <th>Vehicle Number</th>
                                 <th>Date & Time</th>
-                                <th class="no-sort">Action</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -67,16 +67,13 @@ $(function() {
                 {
                     "data": "created_at",
                     "render": function(data, type, row) {
-                        // Format the date using JavaScript
-                        var date = new Date(data);
-                        var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
-                        return date.toLocaleDateString('en-US', options).replace(',', ''); // Customize format as needed
+                        return formatDate(data);
                     }
                 },
                 {
                     data: null,
                     render: function(data, type, row) {
-                        var actions = '<div class="edit-invoice">';
+                        var actions = '<div class="edit-delete-action">';
                         actions += `<a class="me-2 p-2 edit-btn" href="{{ route('inventory-transfer.show','') }}/${data.id}">`;
                         actions += '<i class="fa fa-eye"></i>';
                         actions += '</a>';

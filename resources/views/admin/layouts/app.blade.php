@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
@@ -24,7 +25,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/feather.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/icofont.css') }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
@@ -57,9 +59,41 @@
     <script src="{{ asset('assets/css/default/sweetalert/sweetalerts.min.js') }}"></script>
     <script src="{{ asset('assets/js/theme-script.js') }}"></script>
     <script src="{{ asset('assets/js/script.js') }}"></script>
-    <script src="{{ asset('assets/js/rocket-loader.min.js') }}" data-cf-settings="8c3c6b194b68e17fc7217ea3-|49" defer></script>
+    <script src="{{ asset('assets/js/rocket-loader.min.js') }}" data-cf-settings="8c3c6b194b68e17fc7217ea3-|49" defer>
+    </script>
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        function formatDate(data) {
+            var date = new Date(data);
+
+            // Define month names
+            var monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+
+            // Extract date components
+            var day = String(date.getDate()).padStart(2, '0');
+            var month = monthNames[date.getMonth()];
+            var year = date.getFullYear();
+            var hours = date.getHours();
+            var minutes = String(date.getMinutes()).padStart(2, '0');
+            var seconds = String(date.getSeconds()).padStart(2, '0');
+
+            // Convert to 12-hour format
+            var ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            hours = String(hours).padStart(2, '0');
+
+            // Format the date string
+            var formattedDate = `${day} ${month} ${year} ${hours}:${minutes}:${seconds} ${ampm}`;
+
+            return formattedDate;
+        }
+    </script>
     @yield('script')
 </body>
+
 </html>
