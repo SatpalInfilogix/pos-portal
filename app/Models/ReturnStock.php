@@ -10,4 +10,14 @@ class ReturnStock extends Model
     use HasFactory;
     protected $table = 'return_stocks';
     protected $guarded = [];
+    
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
+    public function deliveredItems()
+    {
+        return $this->hasMany(ReturnStockProduct::class)->with('product');
+    }
 }

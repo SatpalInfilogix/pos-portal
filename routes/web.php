@@ -24,6 +24,7 @@ use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\PosCustomerController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ReturnStockController;
+use App\Http\Controllers\InventoryReturnController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
