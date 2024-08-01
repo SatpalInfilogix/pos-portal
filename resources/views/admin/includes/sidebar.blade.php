@@ -19,8 +19,9 @@
                         'view product',
                         'view prices',
                         'view discounts',
-                        'view
-                        roles & permissions',
+                        'view return stocks',
+                        'view inventory transfers',
+                        'view roles & permissions',
                         ])
                         <h6 class="submenu-hdr">Inventory</h6>
                     @endcanany

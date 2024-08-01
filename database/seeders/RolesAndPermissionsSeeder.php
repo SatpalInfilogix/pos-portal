@@ -84,7 +84,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $managerRole->givePermissionTo('backend');
 
         $salespersonRole = Role::where(['name' => 'Sales Person'])->first();
-        $salespersonRole->givePermissionTo('backend');
+        $salespersonRole->givePermissionTo('frontend');
 
     }
 }

@@ -373,7 +373,6 @@
     @include('partials.recent-transactions')
     @include('partials.orders')
 
-    @include('partials.inventory-return')
     @include('partials.gate-pass')
 
     <script>

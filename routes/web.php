@@ -21,7 +21,7 @@ use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\PosGatePassController;
 use App\Http\Controllers\AdminSalesController;
 use App\Http\Controllers\InventoryTransferController;
-use App\Http\Controllers\PosCustomerController;
+use App\Http\Controllers\InventoryReturnController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ReturnStockController;
 /* End Backend Controller Import */
