@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\RedirectResponse;
+use App\Models\UserActivity;
 
 class LoginController extends Controller
 {
@@ -25,7 +26,12 @@ class LoginController extends Controller
       
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            echo "User authenticated<br>";
+            
+            $userActivities = UserActivity::create([
+                "user_id" => $user->id,
+                "logged_in" => now(),
+                "ip_address" => $request->ip()
+            ]);
 
             if ($user->hasPermissionTo('backend')) {
                 return redirect()->route('backend-dashboard');
@@ -39,6 +45,10 @@ class LoginController extends Controller
 
     public function logout(Request $request): RedirectResponse
     {
+        $userActivities = UserActivity::where('user_id',Auth::id())->latest('id')->first();
+        $userActivities->update([
+            "logged_out" => now()
+        ]);
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
