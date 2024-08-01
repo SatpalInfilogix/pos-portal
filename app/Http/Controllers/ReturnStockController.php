@@ -2,23 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Inventory;
+use App\Models\ReturnStock;
+use Illuminate\Http\Request;
+use App\Models\Store;
+use Illuminate\Support\Facades\Auth;
+
+use App\Models\ReturnStockProduct;
 use App\Models\InventoryProduct;
 use App\Models\PriceMaster;
 use App\Models\StoreProduct;
-use App\Models\Store;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon; 
 
-class InventoryTransferController extends Controller
+class ReturnStockController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('admin.inventory-transfer.index');
+        return view('admin.stocks.return-stock.index');
     }
 
     /**
@@ -27,7 +28,7 @@ class InventoryTransferController extends Controller
     public function create()
     {
         $stores = Store::latest()->get();
-        return view('admin.inventory-transfer.create', compact('stores'));
+        return view('admin.stocks.return-stock.create', compact('stores'));
     }
 
     /**
@@ -36,75 +37,61 @@ class InventoryTransferController extends Controller
     public function store(Request $request)
     {
         $products = json_decode($request->products_data);
-
+ 
         if(isset($products) && count($products) > 0){
-            $store_id = $request->store;
-
-            $inventory = Inventory::create([
+            $store_id = Auth::user()->store_id;
+            $returnStock = ReturnStock::create([
                 'store_id' => $store_id,
-                'sent_by' => Auth::id(),
+                'returned_by' => Auth::id(),
             ]);
-            
+
             foreach($products as $product){
                 $product_id = $product->id;
                 
                 if($product->quantity && $product->quantity > 0){
-                    InventoryProduct::create([
-                        'inventory_id' => $inventory->id,
-                        'store_id' => $store_id,
-                        'product_id' => $product_id,
-                        'quantity' => $product->quantity,
-                        'sent_by' => Auth::id(),
+                    $priceMaster = PriceMaster::where('product_id',$product_id)->first();
+
+                    $priceMaster->update([
+                        "quantity" => $priceMaster->quantity + $product->quantity
                     ]);
 
-                    #If product and store already exists
-                    $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$product_id)->first();
-                    if($recordExist){
-                        $recordExist->update([
-                            "quantity" => $recordExist->quantity + $product->quantity,
-                        ]);
+                    $storeProduct = StoreProduct::where('store_id',$store_id)->where('product_id',$product_id)->first();
+                    $storeProduct->update([
+                        "quantity" => $storeProduct->quantity - $product->quantity
+                    ]);
 
-                    }else{
-
-                        $storeProduct = StoreProduct::create([
-                            "store_id" => $store_id,
-                            "product_id" => $product_id,
-                            "quantity" => $product->quantity,
-                        ]);
-
-                    }
-
-                    #Price Master quantity update
-                    $priceMasterUpdate = PriceMaster::where('product_id',$product_id)->first();
-                    $priceMasterUpdate->update([
-                        "quantity" => $priceMasterUpdate->quantity - $product->quantity,
+                    $returnStockProduct = ReturnStockProduct::create([
+                        "return_stock_id" => $returnStock->id,
+                        "store_id" => $store_id,
+                        "product_id" => $product_id,
+                        "quantity" => $product->quantity
                     ]);
 
                 }
 
             }
 
-            return redirect()->route('inventory-transfer.index')->with('success','Inventory Transfer Updated Successfully');
+            return redirect()->route('return-stock.index')->with('success','Return Stock Updated Successfully');
+
         } else {
+
             return redirect()->back()->withErrors(['error' => 'No products data provided.']);
+
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Inventory $inventoryTransfer)
+    public function show(ReturnStock $returnStock)
     {
-        $inventoryTransfer->load('store');
-        $inventoryTransfer->load('deliveredItems');
-        $transferedInventory = $inventoryTransfer;
-        return view('admin.inventory-transfer.view', compact('transferedInventory'));
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Inventory $inventoryTransfer)
+    public function edit(ReturnStock $returnStock)
     {
         //
     }
@@ -112,7 +99,7 @@ class InventoryTransferController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Inventory $inventoryTransfer)
+    public function update(Request $request, ReturnStock $returnStock)
     {
         //
     }
@@ -120,33 +107,48 @@ class InventoryTransferController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Inventory $inventoryTransfer)
+    public function destroy(ReturnStock $returnStock)
     {
         //
     }
-
-    public function getTransferStockInventory(Request $request)
+    public function getReturnStockInventory(Request $request)
     {
         $maxItemsPerPage = 10;
-    
+        $store_id = Auth::user()->store_id;
         // Start the query with necessary joins
-        $transferQuery = Inventory::select([
-                'inventories.id', 
-                'inventories.store_id', 
-                'inventories.vehicle_number', 
-                'inventories.sent_by', 
-                'inventories.created_at',
+        if(isset($store_id)){
+            $transferQuery = ReturnStock::select([
+                'return_stocks.id', 
+                'return_stocks.store_id', 
+                'return_stocks.vehicle_number', 
+                'return_stocks.returned_by', 
+                'return_stocks.created_at',
                 'stores.contact_number as store_contact', 
                 'stores.name as store_name',
 
             ])
-            ->join('stores', 'inventories.store_id', '=', 'stores.id'); // Join with products table
+            ->join('stores', 'return_stocks.store_id', '=', 'stores.id')
+            ->where('store_id',$store_id); // Join with products table
+        }else{
+            $transferQuery = ReturnStock::select([
+                'return_stocks.id', 
+                'return_stocks.store_id', 
+                'return_stocks.vehicle_number', 
+                'return_stocks.returned_by', 
+                'return_stocks.created_at',
+                'stores.contact_number as store_contact', 
+                'stores.name as store_name',
+
+            ])
+            ->join('stores', 'return_stocks.store_id', '=', 'stores.id');
+        }
+
     
         // Add search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
             $transferQuery->where(function ($query) use ($searchValue) {
-                $query->where('inventories.vehicle_number', 'like', '%' . $searchValue . '%')
+                $query->where('return_stocks.vehicle_number', 'like', '%' . $searchValue . '%')
                     ->orWhere('stores.name', 'like', '%' . $searchValue . '%');
             });
         }

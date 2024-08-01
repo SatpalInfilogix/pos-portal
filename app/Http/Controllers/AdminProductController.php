@@ -27,22 +27,41 @@ class AdminProductController extends Controller
     public function getProducts(Request $request)
     {
         $maxItemsPerPage = 10;
+   
+        if(isset($request->store_id)){
+            $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'store_products.quantity as available_quantity', 'categories.name as category_name'])
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->join('price_masters', 'products.id', '=', 'price_masters.product_id')
+            ->join('store_products', 'products.id', '=', 'store_products.product_id')
+            ->where('store_products.store_id', '=', $request->store_id);
+                    // Apply search filter
+            if ($request->has('search') && !empty($request->search['value'])) {
+                $searchValue = $request->search['value'];
+                $productsQuery->where(function ($query) use ($searchValue) {
+                    $query->where('products.name', 'like', '%' . $searchValue . '%')
+                        ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
+                        ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
+                        ->orWhere('store_products.quantity', 'like', '%' . $searchValue . '%');
+                });
+            }
+        }else{
+            $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'price_masters.quantity as available_quantity', 'categories.name as category_name'])
+            ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->join('price_masters', 'products.id', '=', 'price_masters.product_id');
 
-        $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'price_masters.quantity as available_quantity', 'categories.name as category_name'])
-                                ->join('categories', 'products.category_id', '=', 'categories.id')
-                                ->join('price_masters', 'products.id', '=', 'price_masters.product_id');
-
-        // Apply search filter
-        if ($request->has('search') && !empty($request->search['value'])) {
-            $searchValue = $request->search['value'];
-            $productsQuery->where(function ($query) use ($searchValue) {
-                $query->where('products.name', 'like', '%' . $searchValue . '%')
-                    ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
-                    ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
-                    ->orWhere('price_masters.quantity', 'like', '%' . $searchValue . '%');
-            });
+            // Apply search filter
+            if ($request->has('search') && !empty($request->search['value'])) {
+                $searchValue = $request->search['value'];
+                $productsQuery->where(function ($query) use ($searchValue) {
+                    $query->where('products.name', 'like', '%' . $searchValue . '%')
+                        ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
+                        ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
+                        ->orWhere('price_masters.quantity', 'like', '%' . $searchValue . '%');
+                });
+            }
         }
 
+ 
         if($request->is_deleted=='false'){
             $productsQuery->where('products.status', 0);
         }

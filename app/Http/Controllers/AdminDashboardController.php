@@ -10,7 +10,6 @@ use App\Models\Product;
 use App\Models\PriceMaster;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Models\InventoryReturnOrder;
 /* Library Imports Stops Here */
 
 /* Controller Imports Imports Starts Here */
@@ -32,7 +31,7 @@ class AdminDashboardController extends Controller
         $totalCustomers = Customer::get()->count();
         $totalProducts = Product::get()->count();
         $totalSaleInvoices = Order::get()->count();
-        $totalInventoryReturn = InventoryReturnOrder::select('return_invoice_id')->groupBy('return_invoice_id')->get()->count();
+        $totalInventoryReturn = 0;
         $totalSaleAmount = Order::get()->sum('TotalAmount');
         $products = $this->getLatestProducts();
         return view('admin.index')->with([

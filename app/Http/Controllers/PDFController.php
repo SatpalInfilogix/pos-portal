@@ -9,7 +9,6 @@ use App\Models\Discount;
 use App\Models\Product; 
 use App\Models\Customer; 
 use App\Models\ProductOrderHistory; 
-use App\Models\InventoryReturnOrder;
 class PDFController extends Controller
 {
     public function download() {
@@ -44,10 +43,8 @@ class PDFController extends Controller
         // }
         
         $invoice_id = 'INV-000037';
-        $returnStocks = InventoryReturnOrder::where('order_id','=',$invoice_id)->get();
-        $totalProduct = InventoryReturnOrder::where('order_id','=',$invoice_id)->sum('quantity');
         $customer = Customer::where('id','=',37)->first();
 
-        return view('admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf',compact('returnStocks','customer','totalProduct'));
+        return view('admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf',compact('customer','totalProduct'));
     }
 }
