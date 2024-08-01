@@ -206,8 +206,8 @@ class PosCartController extends Controller
 
     public function update(Request $request)
     {
-        $productQuantity = PriceMaster::where('product_id', $request->product_id)->value('quantity');
-        if($request->qty <= $productQuantity) {
+        // $productQuantity = PriceMaster::where('product_id', $request->product_id)->value('quantity');
+        // if($request->qty <= $productQuantity) {
             if ($request->product_id && $request->qty) {
                 $cart = session()->get('cart');
                 // Check if the product already exists in the cart
@@ -300,12 +300,12 @@ class PosCartController extends Controller
                     'message' => 'Product ID and quantity are required.'
                 ]);
             }
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => 'Product quantity is less then '.$request->qty.'.'
-            ]);
-        }
+        // } else {
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Product quantity is less then '.$request->qty.'.'
+            // ]);
+        // }
     }
 
     public function clearCart(Request $request)
