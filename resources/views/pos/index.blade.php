@@ -59,8 +59,10 @@
 
         .disabled-link {
             pointer-events: none;
-            color: grey; /* Optional: visually indicate it's disabled */
-            cursor: not-allowed; /* Optional: change the cursor to a "not-allowed" icon */
+            color: grey;
+            /* Optional: visually indicate it's disabled */
+            cursor: not-allowed;
+            /* Optional: change the cursor to a "not-allowed" icon */
         }
 
         [name="vehicle_number"] {
@@ -79,7 +81,8 @@
                     </span>
                     View Orders
                 </a>
-                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#recent-transactions">
+                <a href="javascript:void(0);" class="btn btn-primary" data-bs-toggle="modal"
+                    data-bs-target="#recent-transactions">
                     <span class="me-1 d-flex align-items-center">
                         <i data-feather="refresh-ccw" class="feather-16"></i>
                     </span>
@@ -116,7 +119,7 @@
                         </div>
                         <div class="tabs_container">
                             <div class="tab_content active" data-tab="all">
-                                <div class="row"  id="products-container">
+                                <div class="row" id="products-container">
                                     @foreach ($products as $product)
                                         @php
                                             $cartProducts = session('cart.products', []); // Retrieve the 'products' array from session or default to an empty array
@@ -128,14 +131,19 @@
 
                                         <div class="col-sm-2 col-md-6 col-lg-3 col-xl-3">
                                             <div id="product-check_{{ $product->id }}" @class([
-                                                'product-info default-cover card', 'products-' . $product->id,
+                                                'product-info default-cover card',
+                                                'products-' . $product->id,
                                                 'added-to-cart' => in_array($product->id, $cartProductIds),
+                                                'disabled' => $product->quantity == 0,
                                             ])
                                                 onclick="addToCartAndToggleTick('{{ $product->id }}')">
                                                 <div class="img-bg">
                                                     <img class="img-bg" id="productImage{{ $product->id }}"
                                                         src="{{ asset($product->image) }}" alt="Product Image">
 
+                                                    @if ($product->quantity == 0)
+                                                        <div class="out-of-stock">Out Of Stock</div>
+                                                    @endif
                                                 </div>
                                                 <h6 class="cat-name"><a
                                                         href="javascript:void(0);">{{ $product->categoryName }}</a></h6>
@@ -143,7 +151,7 @@
                                                         href="javascript:void(0);">{{ $product->name }}</a>
                                                 </h6>
                                                 <div class="d-flex align-items-center justify-content-between price">
-                                                    <span>{{$product->quantity }} Pcs</span>
+                                                    <span>{{ $product->quantity }} Pcs</span>
                                                     <p>${{ number_format(optional($product)->price, 2) }}</p>
                                                 </div>
                                                 <div class="input-group mt-2">
@@ -212,13 +220,19 @@
                                                 </div>
                                             </div>
                                             <div class="qty-item text-center">
-                                                <a href="javascript:void(0);" class="dec d-flex justify-content-center align-items-center decrease decrease-button"
-                                                    data-bs-toggle="tooltip" data-id="{{ $product['id'] }}" data-bs-placement="top" title="minus">
+                                                <a href="javascript:void(0);"
+                                                    class="dec d-flex justify-content-center align-items-center decrease decrease-button"
+                                                    data-bs-toggle="tooltip" data-id="{{ $product['id'] }}"
+                                                    data-bs-placement="top" title="minus">
                                                     <i data-feather="minus-circle" class="feather-14"></i>
                                                 </a>
-                                                <input type="text" class="form-control text-center quantity__number" name="qty" value="{{ $product['quantity'] }}" readonly>
-                                                <a href="javascript:void(0);" class="inc d-flex justify-content-center align-items-center increase increase_{{ $product['id'] }} {{ $product['quantity'] >= getProductQuantity($product['id']) ? 'disabled-link' : '' }}"
-                                                    data-bs-toggle="tooltip" data-id="{{ $product['id'] }}" data-quantity="{{ getProductQuantity($product['id']) }}" data-bs-placement="top"  title="plus">
+                                                <input type="text" class="form-control text-center quantity__number"
+                                                    name="qty" value="{{ $product['quantity'] }}" readonly>
+                                                <a href="javascript:void(0);"
+                                                    class="inc d-flex justify-content-center align-items-center increase increase_{{ $product['id'] }} {{ $product['quantity'] >= getProductQuantity($product['id']) ? 'disabled-link' : '' }}"
+                                                    data-bs-toggle="tooltip" data-id="{{ $product['id'] }}"
+                                                    data-quantity="{{ getProductQuantity($product['id']) }}"
+                                                    data-bs-placement="top" title="plus">
                                                     <i data-feather="plus-circle" class="feather-14"></i>
                                                 </a>
                                             </div>
@@ -250,9 +264,9 @@
                                             $discountValue = session('cart')['discount_percentage'];
                                         }
                                         ?>
-                                        <input type="number" class="form-control discountSelect" name="discount" id="discountSelect"
-                                            min="0" data-max="{{ $discount->discount ?? '' }}"
-                                            value="{{ $discountValue }}">
+                                        <input type="number" class="form-control discountSelect" name="discount"
+                                            id="discountSelect" min="0"
+                                            data-max="{{ $discount->discount ?? '' }}" value="{{ $discountValue }}">
                                         <div class="text-danger" id="discountError"></div>
                                     </td>
                                 </tr>
@@ -351,7 +365,7 @@
         </div>
     </div>
 
-    
+
     @include('partials.place-order')
 
     @include('partials.hold-order')
@@ -363,7 +377,7 @@
     @include('partials.gate-pass')
 
     <script>
-         $(document).ready(function() {
+        $(document).ready(function() {
             $('.pos-category li').click(function() {
                 var categoryId = $(this).data('category-id');
                 $.ajax({
@@ -373,7 +387,7 @@
                         category_id: categoryId,
                     },
                     success: function(response) {
-                        if(response.success == true) {
+                        if (response.success == true) {
                             // Update products container with the response data
                             $('#products-container').html(response.productsHtml);
                             $('.tab_content').addClass('active');
@@ -439,8 +453,7 @@
             });
         });
 
-        function emptyCart()
-        {
+        function emptyCart() {
             $.ajax({
                 url: "{{ route('clear-cart') }}",
                 method: "POST",
@@ -503,16 +516,12 @@
         }
 
         $(document).on('click', '.increase', function() {
-            console.log()
             var productQuantity = $(this).attr("data-quantity");
             var productId = $(this).attr("data-id");
             var quantityInput = $(this).parent().find('.quantity__number');
-            console.log(quantityInput); 
             var currentValue = parseInt(quantityInput.val());
             if (currentValue <= productQuantity) {
                 $(`.increase_${productId}`).removeClass('disabled-link');
-                console.log(currentValue);
-                console.log(productQuantity);
 
                 var qty = currentValue;
                 if ($('body').hasClass('updated-cart')) {
@@ -522,12 +531,10 @@
                 $(this).parent().find('.quantity__number').val(qty);
                 updateQuantity(productId, qty);
                 if (currentValue >= productQuantity) {
-                    console.log('asd');
                     $(`.increase_${productId}`).addClass('disabled-link');
                     quantityInput.val(productQuantity);
                 }
             } else {
-                console.log('Maximum quantity reached.');
                 $('.quantity__number').val(productQuantity);
                 $(`.increase_${productId}`).addClass('disabled-link');
             }
@@ -747,7 +754,7 @@
                                         </div>
                                         <p class="p-4 mb-4">Customer need to recheck the product once</p>
                                         <div class="btn-row d-flex align-items-center justify-content-between">
-                                            <a href="{{ route('sales.view','') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
+                                            <a href="{{ route('sales.view', '') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
                                             <a href="javascript:void(0);"
                                                 class="btn btn-danger btn-icon flex-fill">Products</a>
                                             <a href="javascript:void(0);"
@@ -755,12 +762,12 @@
                                         </div>
                                     </div>
                                 </div>`;
-                            $('.completed-orders').prepend(completedOrder);
+                        $('.completed-orders').prepend(completedOrder);
                     }
                 }
             });
         });
-        
+
         $(document).on('keyup', '[name="tender_amount"]', function() {
             var tender_amount = $(this).val();
             var payable = parseInt($('span.payable:first').text());
@@ -787,9 +794,9 @@
             $.ajax({
                 url: "{{ route('hold.order') }}",
                 type: 'GET',
-                success : function(response){
-                    if(response.success){
-                        
+                success: function(response) {
+                    if (response.success) {
+
                         $("#hold-order").modal("hide");
                         Swal.fire({
                             position: "top-end",
@@ -832,7 +839,7 @@
                                         </div>
                                         <p class="p-4 mb-4">Customer need to recheck the product once</p>
                                         <div class="btn-row d-flex align-items-center justify-content-between">
-                                            <a href="{{ route('sales.view','') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
+                                            <a href="{{ route('sales.view', '') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
                                             <a href="javascript:void(0);"
                                                 class="btn btn-danger btn-icon flex-fill">Products</a>
                                             <a href="javascript:void(0);"
@@ -840,10 +847,10 @@
                                         </div>
                                     </div>
                                 </div>`;
-                            $('.hold-orders').prepend(holdOrder);
+                        $('.hold-orders').prepend(holdOrder);
                     }
                 }
-            });    
+            });
         });
     </script>
 @endsection

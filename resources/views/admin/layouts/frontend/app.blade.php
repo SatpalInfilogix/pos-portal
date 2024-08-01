@@ -69,18 +69,19 @@
                 <li class="nav-item nav-searchinputs"></li>
 
                 @if (auth()->user()->store)
-                <li class="nav-item main-drop">
-                    <a href="javascript:void(0);" class="nav-link select-store">
-                        <span class="user-info">
-                            <span class="user-letter">
-                                <img src="{{asset('assets/img/logo-small.png') }}" alt="Store Logo" class="img-fluid">
+                    <li class="nav-item main-drop">
+                        <a href="javascript:void(0);" class="nav-link select-store">
+                            <span class="user-info">
+                                <span class="user-letter">
+                                    <img src="{{ asset('assets/img/logo-small.png') }}" alt="Store Logo"
+                                        class="img-fluid">
+                                </span>
+                                <span class="user-detail">
+                                    <span class="user-name">{{ auth()->user()->store->name }}</span>
+                                </span>
                             </span>
-                            <span class="user-detail">
-                                <span class="user-name">{{ auth()->user()->store->name }}</span>
-                            </span>
-                        </span>
-                    </a>
-                </li>
+                        </a>
+                    </li>
                 @endif
 
                 @if (auth()->user()->profile_image)
@@ -129,8 +130,7 @@
                             </a>
                             <hr class="m-0">
                             <a href="{{ route('logout') }}" class="dropdown-item logout pb-0">
-                                <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2"
-                                    alt="">
+                                <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
                                 Logout
                             </a>
                         </div>
@@ -378,23 +378,25 @@
 
     <script>
         function addToCartAndToggleTick(productId) {
-            // Simulate adding to cart (you would typically use Ajax to do this)
-            let productImage = document.getElementById(`productImage${productId}`);
-            let productCard = productImage.closest('.product-info');
+            if (!$(`.products-${productId}`).hasClass('disabled')) {
+                let $productImage = $(`#productImage${productId}`);
+                let $productCard = $productImage.closest('.product-info');
 
-            $('body').addClass('updated-cart');
+                $('body').addClass('updated-cart');
 
-            // Check if product is already in cart
-            if (productCard.classList.contains('added-to-cart')) {
-                // Remove from cart (simulated)
-                productCard.classList.remove('added-to-cart');
-                removeFromCart(productId);
-            } else {
-                // Add to cart (simulated)
-                productCard.classList.add('added-to-cart');
-                addToCart(productId);
+                // Check if product is already in cart
+                if ($productCard.hasClass('added-to-cart')) {
+                    // Remove from cart (simulated)
+                    $productCard.removeClass('added-to-cart');
+                    removeFromCart(productId);
+                } else {
+                    // Add to cart (simulated)
+                    $productCard.addClass('added-to-cart');
+                    addToCart(productId);
+                }
             }
         }
+
 
         function getCSRFToken() {
             const tokenMeta = document.querySelector('meta[name="csrf-token"]');
@@ -414,7 +416,7 @@
                 const productIds = productsArray.map(product => product.id);
                 const csrfToken = getCSRFToken();
 
-                fetch("{{ url('/product-quantity') }}", { // Replace with your API endpoint
+                fetch("{{ route('check-products-quantity') }}", { // Replace with your API endpoint
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',

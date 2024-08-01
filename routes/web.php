@@ -169,6 +169,6 @@ Route::post('/products/check-product-code', [AdminProductController::class, 'che
 /* Login And Registration Routes Ends Here */
 Route::get('/generate-pdf', [PDFController::class, 'download'])->name('download');
 /* Api product quantity */ 
-Route::post('/product-quantity',[InventoryReturnController::class, 'availableProductQuantity']);
+Route::post('/products-quantity',[InventoryReturnController::class, 'availableProductQuantity'])->name('check-products-quantity');
 /*  product units  */
 Route::get('/product-units/{productId}', [AdminPriceController::class, 'getUnits']);

@@ -33217,6 +33217,16 @@ th.fixed-width {
     transition: all .5s ease
 }
 
+.out-of-stock{
+    position: absolute;
+    background: red;
+    top: 0;
+    left: 8px;
+    padding: 0px 10px;
+    color: #ffff;
+    border-radius: 6px;
+}
+
 .pos-products .product-info .img-bg span {
     -webkit-transition: all .5s ease;
     -ms-transition: all .5s ease;

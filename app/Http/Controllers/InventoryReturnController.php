@@ -9,9 +9,10 @@ use App\Models\InventoryReturnOrder;
 use App\Models\CustomerReturnCredit;
 use App\Models\Product;
 use App\Models\PriceMaster;
+use App\Models\StoreProduct;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryReturnController extends Controller
 {
@@ -198,7 +199,9 @@ class InventoryReturnController extends Controller
     {
         $availableProductQuantity = [];
         foreach($request->product_ids as $key =>  $product_id){
-            $product = PriceMaster::where('product_id', $product_id)->first();
+            $product = StoreProduct::where('product_id', $product_id)
+                ->where('store_id', Auth::user()->store_id)
+                ->first();
             $availableProductQuantity[$key]['product_id'] = $product_id;
             $availableProductQuantity[$key]['product_quantity'] = 0;
             if($product) {
