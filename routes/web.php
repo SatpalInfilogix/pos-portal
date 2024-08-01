@@ -15,7 +15,6 @@ use App\Http\Controllers\AdminDiscountController;
 use App\Http\Controllers\AdminCategoryController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\AdminRoleAndPermissionController;
-use App\Http\Controllers\InventoryReturnController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AdminCustomerController;
@@ -24,6 +23,7 @@ use App\Http\Controllers\AdminSalesController;
 use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\PosCustomerController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\ReturnStockController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
@@ -58,13 +58,12 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             'profile'     => DashboardSettingController::class,
             'roles-and-permissions' => AdminRoleAndPermissionController::class,
             'inventory-transfer' => InventoryTransferController::class,
-            'stores' => StoreController::class
+            'stores' => StoreController::class,
+            'return-stock' => ReturnStockController::class,
         ]);
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
         Route::get('/sales/{id}',[AdminSalesController::class,'show'])->name('sales.view');
-        Route::get('/return-stocks',[InventoryReturnController::class,'returnStockList'])->name('return_stocks.index');
-        Route::get('/return-stocks/{id}',[InventoryReturnController::class,'show'])->name('view_return_stocks.index');
 
         /********************** Sales Routes Ends Here  **********************/
          
@@ -142,16 +141,12 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 });
 /***************  Frontend Routes ****************/
 Route::get('/search-products', [AdminProductController::class,'searchProducts'])->name('search-products');
-Route::get('/return-inventory', [InventoryReturnController::class, 'index'])->name('return-inventory-list');
 Route::post('/import-products', [AdminProductController::class, 'import_products'])->name('import-products');
-Route::post('/return-inventory', [InventoryReturnController::class, 'create'])->name('return-inventory');
-Route::post('/inventory-return-order', [InventoryReturnController::class, 'store'])->name('inventory-return-order');
 Route::post('add-to-cart', [PosCartController::class, 'addToCart'])->name('add-to-cart');
 Route::post('remove-from-cart', [PosCartController::class, 'remove'])->name('remove-from-cart');
 Route::post('update-cart', [PosCartController::class, 'update'])->name('update-cart');
 Route::post('discount', [PosCartController::class, 'discountApply'])->name('discount');
 Route::post('clear-cart', [PosCartController::class, 'clearCart'])->name('clear-cart');
-Route::post('/set-invoice-for-inventory-return', [InventoryReturnController::class, 'setInvoice'])->name('set-invoice-for-inventory-return');
 
 /************************* DataTables Routes ************************/
 Route::post('/get-users', [AdminUserController::class, 'getUsers'])->name('get-users');
@@ -161,6 +156,7 @@ Route::post('/get-prices', [AdminPriceController::class, 'getPrices'])->name('ge
 Route::post('/get-customers', [AdminCustomerController::class, 'getCustomers'])->name('get-customers');
 Route::post('/get-sales', [AdminSalesController::class, 'getSalesOrder'])->name('get-sales');
 Route::post('/get-transfer-stock-inventory', [InventoryTransferController::class, 'getTransferStockInventory'])->name('get-transfer-stock-inventory');
+Route::post('/get-return-stock-inventory', [ReturnStockController::class, 'getReturnStockInventory'])->name('get-return-stock-inventory');
 /************************* End DataTables Routes ************************/
 
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');
@@ -169,6 +165,6 @@ Route::post('/products/check-product-code', [AdminProductController::class, 'che
 /* Login And Registration Routes Ends Here */
 Route::get('/generate-pdf', [PDFController::class, 'download'])->name('download');
 /* Api product quantity */ 
-Route::post('/product-quantity',[InventoryReturnController::class, 'availableProductQuantity']);
+//Route::post('/product-quantity',[InventoryReturnController::class, 'availableProductQuantity']);
 /*  product units  */
 Route::get('/product-units/{productId}', [AdminPriceController::class, 'getUnits']);

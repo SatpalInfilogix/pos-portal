@@ -108,7 +108,7 @@
                                     'admin/return-stocks',
                                     'admin/return-stocks/*'),
                             ])>
-                                <a href="{{ route('return_stocks.index') }}">
+                                <a href="{{ route('return-stock.index') }}">
                                     <i data-feather="box"></i>
                                     <span>Return Stocks</span>
                                 </a>
