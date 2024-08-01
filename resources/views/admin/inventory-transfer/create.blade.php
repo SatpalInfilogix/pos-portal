@@ -150,11 +150,17 @@
 
             $(document).on('keyup', '.quantity-input', function() {
                 const maxQuantity = parseInt($(this).attr('max-quantity'), 10);
-                console.log(maxQuantity);
-                let value = parseInt($(this).val(), 10);
-                console.log(value);
-                if (value > maxQuantity) {
+                let quantity = parseInt($(this).val(), 10);
+                var product_id = $(this).data('id');
+
+                if (quantity > maxQuantity) {
                     $(this).val(maxQuantity);
+                }
+                if(quantity>0){
+                    $('.product-item[data-id="' + product_id + '"]').prop('checked',true);
+                }
+                if(quantity == 0){
+                    $('.product-item[data-id="' + product_id + '"]').prop('checked',false);
                 }
             });
 
@@ -226,16 +232,6 @@
                     form.submit();
                 }
             });
-        });
-        // Auto checked on quantity change or enter
-        $(document).on('keyup','[name="quantity-input"]',function(){
-            var quantity = $(this).val(); 
-            var product_id = $(this).data('id');
-            if(quantity>0){
-                $('.product-item[data-id="' + product_id + '"]').prop('checked',true);
-            }if(quantity == 0){
-                $('.product-item[data-id="' + product_id + '"]').prop('checked',false);
-            }
         });
     </script>
 @endsection
