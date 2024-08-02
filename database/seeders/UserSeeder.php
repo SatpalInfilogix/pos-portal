@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
             'first_name' => 'Admin',
             'last_name' => '123',
             'email' => 'admin@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('Admin@12345'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10)
         ]);
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
             'first_name' => 'Manager',
             'last_name' => 'User',
             'email' => 'manager@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('Manager@12345'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
             'store_id' => 1
@@ -59,7 +59,7 @@ class UserSeeder extends Seeder
             'first_name' => 'Sales',
             'last_name' => 'Person',
             'email' => 'salesperson@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('Sales@12345'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
             'store_id' => 1
@@ -72,7 +72,7 @@ class UserSeeder extends Seeder
             'first_name' => '2nd Sales',
             'last_name' => 'Person',
             'email' => 'salesperson2@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('Sales@12345'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10),
             'store_id' => 2

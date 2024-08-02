@@ -151,7 +151,7 @@
                                                         href="javascript:void(0);">{{ $product->name }}</a>
                                                 </h6>
                                                 <div class="d-flex align-items-center justify-content-between price">
-                                                    <span>{{ $product->quantity }} Pcs</span>
+                                                    <span><span id="up-quantity">{{ $product->quantity }}</span> Pcs</span>
                                                     <p>${{ number_format(optional($product)->price, 2) }}</p>
                                                 </div>
                                                 <div class="input-group mt-2">
@@ -599,12 +599,12 @@
         });
 
         $(document).on('keyup', '[name="tender_amount"]', function() {
-            var tender_amount = $(this).val();
-            var payable = parseInt($('span.payable:first').text().replace("$", ""));
+            var tender_amount = parseFloat($(this).val());
+            var payable = parseFloat($('span.payable:first').text().replace("$", ""));
 
             if (tender_amount > payable) {
                 var total_change = tender_amount - payable;
-                $('[name="order_change_amount"]').val(total_change);
+                $('[name="order_change_amount"]').val(total_change.toFixed(2)); // toFixed(2) to ensure two decimal places
             } else {
                 $('[name="order_change_amount"]').val(0);
             }
@@ -702,6 +702,13 @@
                     billing_address_pin_code: billing_address_pin_code,
                 },
                 success: function(response) {
+                    
+                    $.each(response.returnProductDetails, function (key, val) {
+                        var currentQty = $(`.products-${val.product_id}`).find('#up-quantity').text();
+                        var updatedQty = parseInt(currentQty) - parseInt(val.quantity);
+                        $(`.products-${val.product_id}`).find('#up-quantity').text(updatedQty);
+                    });
+                    
                     if (response.success) {
                         Swal.fire({
                             title: "Order Placed!",

@@ -30,8 +30,8 @@
                     <tr>
                         <td>{{ $key+1 }}. {{ $products['name'] }} </td>
                         <td>{{ $products['quantity'] }} </td>
-                        <td>{{ $products['price'] }}</td>
-                        <td>{{ $products['product_total_amount'] }}</td>
+                        <td>${{ $products['price'] }}</td>
+                        <td>${{ $products['product_total_amount'] }}</td>
                     </tr>
                 @endforeach
                 @if(isset($discountDetails) && !empty($discountDetails))
@@ -39,7 +39,7 @@
                     <td>{{ $discountDetails['name'] }}</td>
                     <td></td>
                     <td></td>
-                    <td>({{ $discountDetails['discount_amount'] }})</td>
+                    <td>(${{ $discountDetails['discount_amount'] }})</td>
                 </tr>
                 @endif
                 <tr>
@@ -50,12 +50,12 @@
                 @if(isset($discountDetails) && !empty($discountDetails))
                     <tr>
                         <td colspan="2">Total Discount</td>
-                        <td>({{ $discountDetails['discount_amount'] }})</td>
+                        <td>(${{ $discountDetails['discount_amount'] }})</td>
                     </tr>
                 @else
                     <tr>
                         <td colspan="2">Total Discount</td>
-                        <td>(0)</td>
+                        <td>($0)</td>
                     </tr>
                 @endif
                 <tr>
@@ -64,15 +64,15 @@
                 </tr>
                 <tr>
                     <td colspan="2">GCT @15%</td>
-                    <td>{{ $cart['tax'] }}</td>
+                    <td>${{ $cart['tax'] }}</td>
                 </tr>
                 <tr>
                     <td colspan="2">Total Payable</td>
-                    <td>{{ $cart['payable'] }} </td>
+                    <td>${{ $cart['payable'] }} </td>
                 </tr>
                 <tr>
                     <td colspan="2">Tendered Amount</td>
-                    <td>{{ $cart['payable'] }}</td>
+                    <td>${{ $cart['payable'] }}</td>
                 </tr>
                 <tr>
                     <td colspan="2">Change</td>

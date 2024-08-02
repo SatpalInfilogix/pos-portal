@@ -89,8 +89,10 @@ class OrderController extends Controller
                 'CreatedBy' => Auth::id(),
             ]);
 
+            $returnProductDetails =[];
             foreach($cart['products'] as $product){
                 $productDetails = Product::find($product['id']);
+                $returnProductDetails[] = ["product_id" => $product['id'], "quantity" =>  $product['quantity']];
                 $order = ProductOrderHistory::create([
                     'order_id' => $invoice_id,
                     'product_id' => $productDetails->id,
@@ -127,7 +129,8 @@ class OrderController extends Controller
                 'pdfUrl' => $status['invoicePath'],
                 'totalAmount' => $cart['payable'],
                 'orderDate' => now(),
-                'customerName' => $request->customer_name
+                'customerName' => $request->customer_name,
+                'returnProductDetails' => $returnProductDetails
             ]);
         }
     }

@@ -112,7 +112,7 @@ $customers = DB::table('customers')->get();
                         </div>
                         <div class="col-md-6 col-lg-4 item">
                             <input type="number" name="order_change_amount" class="form-control"
-                                placeholder="Change Amount">
+                                placeholder="Change Amount" readonly>
                         </div>
                         <div class="col-md-6 col-lg-4 item">
 
