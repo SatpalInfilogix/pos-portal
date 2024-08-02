@@ -33,18 +33,18 @@
                             <h2>Invoice</h2><h3 class="pull-right">Order # {{ $orders->OrderID  ?? ''}}</h3>
                         </div>
                         <hr>
-                        <h3 class="customer-name">{{ $orders->CustomerName }}</h3>
+                        <h3 class="customer-name">{{ $orders->CustomerName ?? 'Guest' }}</h3>
                         <div class="row">
                             <div class="col-md-6">
                                 <address>
                                 <strong>Billed To:</strong><br>
-                                {!! nl2br(e($orders->BillingAddress)) !!}
+                                {!! nl2br(e($orders->BillingAddress ?? '')) !!}
                                 </address>
                             </div>
                             <div class="col-md-6 text-right">
                                 <address>
                                 <strong>Shipped To:</strong><br>
-                                {!! nl2br(e($orders->ShippingAddress)) !!}
+                                {!! nl2br(e($orders->ShippingAddress ?? '')) !!}
                                 </address>
                             </div>
                         </div>
