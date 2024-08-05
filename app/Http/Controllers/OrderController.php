@@ -110,13 +110,22 @@ class OrderController extends Controller
                 ]);
                 if(isset($store_id)){
                     $updateInventory = StoreProduct::where('store_id',$store_id)->where('product_id',$productDetails->id)->first();
+                    $totalQty = $updateInventory->quantity - $product['quantity'];
+                    if($totalQty <= 0 ){
+                        $totalQty = 0;
+                    }
                     $updateInventory->update([
-                        "quantity" => $updateInventory->quantity - $product['quantity']
+                        "quantity" => $totalQty
                     ]);
+
                 }else{
-                    $updateInventory = PriceMaster::where('product_id',$productDetails->id)->first();
-                    $updateInventory->update([
-                        "quantity" => $updateInventory->quantity - $product['quantity']
+                    $priceMaster = PriceMaster::where('product_id',$productDetails->id)->first();
+                    $totalQty = $priceMaster->quantity - $product['quantity'];
+                    if($totalQty <= 0 ){
+                        $totalQty = 0;
+                    }
+                    $priceMaster->update([
+                        "quantity" => $totalQty
                     ]);
                 }
             }

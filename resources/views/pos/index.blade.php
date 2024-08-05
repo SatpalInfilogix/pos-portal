@@ -515,26 +515,27 @@
         }
 
         $(document).on('click', '.increase', function() {
-            var productQuantity = $(this).attr("data-quantity");
+            var productQuantity = parseInt($(this).attr("data-quantity"));
             var productId = $(this).attr("data-id");
             var quantityInput = $(this).parent().find('.quantity__number');
             var currentValue = parseInt(quantityInput.val());
-            if (currentValue <= productQuantity) {
-                $(`.increase_${productId}`).removeClass('disabled-link');
 
-                var qty = currentValue;
+            if (currentValue < productQuantity) {
+                var newQty = currentValue + 1;
+                
                 if ($('body').hasClass('updated-cart')) {
-                    qty = currentValue + 1;
+                    newQty = currentValue + 1;
                 }
 
-                $(this).parent().find('.quantity__number').val(qty);
-                updateQuantity(productId, qty);
-                if (currentValue >= productQuantity) {
+                quantityInput.val(newQty);
+                updateQuantity(productId, newQty);
+                if (newQty >= productQuantity) {
                     $(`.increase_${productId}`).addClass('disabled-link');
-                    quantityInput.val(productQuantity);
+                } else {
+                    $(`.increase_${productId}`).removeClass('disabled-link');
                 }
             } else {
-                $('.quantity__number').val(productQuantity);
+                quantityInput.val(productQuantity);
                 $(`.increase_${productId}`).addClass('disabled-link');
             }
         });
@@ -704,9 +705,16 @@
                 success: function(response) {
                     
                     $.each(response.returnProductDetails, function (key, val) {
-                        var currentQty = $(`.products-${val.product_id}`).find('#up-quantity').text();
+                        var targetCls = $(`.products-${val.product_id}`);
+                        var currentQty = targetCls.find('#up-quantity').text();
                         var updatedQty = parseInt(currentQty) - parseInt(val.quantity);
-                        $(`.products-${val.product_id}`).find('#up-quantity').text(updatedQty);
+                        if(parseInt(updatedQty) <= 0){
+                            targetCls.find('#up-quantity').text(0);
+                            targetCls.addClass('disabled');
+                            targetCls.find('div.img-bg').append('<div class="out-of-stock">Out Of Stock</div>');
+                        }else{
+                            targetCls.find('#up-quantity').text(updatedQty);
+                        }
                     });
                     
                     if (response.success) {
