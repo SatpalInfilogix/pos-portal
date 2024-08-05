@@ -36,7 +36,7 @@
                 @endforeach
                 @if(isset($discountDetails) && !empty($discountDetails))
                 <tr>
-                    <td>{{ $discountDetails['name'] }}</td>
+                    <td>Discount {{ $discountDetails['discount_percentage'] }}%</td>
                     <td></td>
                     <td></td>
                     <td>(${{ $discountDetails['discount_amount'] }})</td>
@@ -50,7 +50,7 @@
                 @if(isset($discountDetails) && !empty($discountDetails))
                     <tr>
                         <td colspan="2">Total Discount</td>
-                        <td>(${{ $discountDetails['discount_amount'] }})</td>
+                        <td>${{$discountDetails['discount_amount'] ?? '0' }}</td>
                     </tr>
                 @else
                     <tr>
