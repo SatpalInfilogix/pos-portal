@@ -45,12 +45,9 @@ class OrderController extends Controller
         $cart  = session('cart');
         $customerDetails = $request;
         $discountDetails = [];
-        
-        if(isset($cart['discount']) && !empty($cart['discount'])){
-            $discount = Discount::find($cart['discount']['id']);
-            if($discount){
-                $discountDetails = ["name" => "", "discount_amount"=>$cart['discount']['discount_amount']];
-            }
+
+        if(isset($cart['discount_amount']) && !empty($cart['discount_amount'])){
+            $discountDetails = $cart['discount'];
         }
 
         // Payment Process
