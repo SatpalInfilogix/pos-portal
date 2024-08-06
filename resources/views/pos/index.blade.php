@@ -684,7 +684,7 @@
             let shipping_address_pin_code = $('[name="shipping_address_pin_code"]').val();
             let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
             let tender_amount = $('[name="tender_amount"]').val();
-            let change_amount = $('[name="change_amount"]').val();
+            let order_change_amount = $('[name="order_change_amount"]').val();
             $.ajax({
                 url: "{{ url('admin/pos-sale-submission') }}",
                 type: 'POST',
@@ -698,7 +698,7 @@
                     billing_address: billing_address,
                     payment_method: payment_method,
                     tender_amount: tender_amount,
-                    change_amount: change_amount,
+                    order_change_amount: order_change_amount,
                     shipping_address_pin_code: shipping_address_pin_code,
                     billing_address_pin_code: billing_address_pin_code,
                 },
@@ -783,14 +783,14 @@
         });
 
         $(document).on('keyup', '[name="tender_amount"]', function() {
-            var tender_amount = $(this).val();
-            var payable = parseInt($('span.payable:first').text());
+            var tender_amount = parseFloat($(this).val());
+            var payable = parseFloat($('span.payable:first').text().replace("$", ""));
 
-            if (tender_amount > payable) {
+            if (tender_amount >= payable) {
                 var total_change = tender_amount - payable;
-                $('[name="change_amount"]').val(total_change);
+                $('[name="order_change_amount"]').val(total_change.toFixed(2)); // Ensure two decimal places
             } else {
-                $('[name="change_amount"]').val(0);
+                $('[name="order_change_amount"]').val(0);
             }
         });
 
