@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
             'first_name' => 'Super',
             'last_name' => 'Admin',
             'email' => 'superadmin@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('Admin@12345'),
             'email_verified_at' => now(),
             'remember_token' => Str::random(10)
         ]);
