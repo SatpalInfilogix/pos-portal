@@ -10,16 +10,17 @@ use App\Models\Category;
 use App\Imports\ProductsImport;
 use Picqer\Barcode\BarcodeGeneratorHTML;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Gate;
 
 class AdminProductController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view product')) {
+            abort(403);
+        }
+
         $products = Product::with('category')->latest()->get();
-        // foreach($products as $key=> $product) {
-        //     $genertorHTML = new BarcodeGeneratorHTML();
-        //     $products[$key]['barcode'] = $genertorHTML->getBarcode($product->product_code. ' ' .$product->product_name, $genertorHTML::TYPE_CODE_128,2);
-        // }
 
         return view('admin.products.index', compact('products'));
     }
@@ -88,17 +89,6 @@ class AdminProductController extends Controller
         $currentPage = max((int) ($request->input('start', 0) / $perPage), 0);
         $products = $productsQuery->skip($currentPage * $perPage)->take($perPage)->get();
 
-        // foreach ($products as $product) {
-        //     $barcodeData = $product->product_code . ' ' . $product->name;
-        //     $barcodeHTML = $generatorHTML->getBarcode(
-        //         $barcodeData, $generatorHTML::TYPE_CODE_128, 2, 60
-        //     );
-        //     $product->barcode = '<div style="text-align: center;">' .
-        //                         '<div>' . $barcodeHTML . '</div>' .
-        //                         '<div>P- ' . $product->product_code .' ' .$product->name  . '</div>' .
-        //                     '</div>';
-        // }
-
         return response()->json([
             "draw" => intval($request->input('draw')),
             "recordsTotal" => $totalRecords,
@@ -166,6 +156,10 @@ class AdminProductController extends Controller
 
     public function edit($id) 
     {
+        if (!Gate::allows('edit product')) {
+            abort(403);
+        }
+
         $categories  = Category::where('status', 0)->latest()->get();
         $product = Product::where('id', $id)->first(); // Fetch the product by ID
 
@@ -187,6 +181,10 @@ class AdminProductController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('delete product')) {
+            abort(403);
+        }
+
         $product = Product::where('id',$id)->first();
 
         if ($product) {

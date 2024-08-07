@@ -17,9 +17,9 @@
                 @endcanany
             </div>
             <!-- <div class="page-btn import">
-                                    <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
-                                            data-feather="download" class="me-2"></i>Import Product</a>
-                                </div> -->
+                                            <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
+                                                    data-feather="download" class="me-2"></i>Import Product</a>
+                                        </div> -->
         </div>
         @if (session('success'))
             <div class="alert alert-success">
@@ -36,11 +36,11 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Image</th>
-                                @canany(['edit categories', 'delete categories'])
-                                <th>Action</th>
-                                @else
-                                <th></th>
-                                @endcanany
+                                <th>
+                                    @canany(['edit categories', 'delete categories'])
+                                        Action
+                                    @endcanany
+                                </th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -57,7 +57,7 @@
         $(function() {
             let can_edit = $('[name="can_edit"]').val();
             let can_delete = $('[name="can_delete"]').val();
-            
+
             $('.categories-table').DataTable({
                 processing: true,
                 serverSide: true,
