@@ -6,16 +6,26 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use App\Models\Store;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+
 class AdminCustomerController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view customers')) {
+            abort(403);
+        }
+
         $customers = Customer::latest()->get();
         return view('admin.customers.index', compact('customers'));
     }
 
     public function create()
     {
+        if (!Gate::allows('create customers')) {
+            abort(403);
+        }
+
         $stores = Store::where('is_deleted',0)->get();
         return view('admin.customers.create',compact('stores'));
     }
@@ -92,8 +102,11 @@ class AdminCustomerController extends Controller
 
     public function edit($id)
     {
-        $customer = Customer::where('id', $id)->first();
+        if (!Gate::allows('edit customers')) {
+            abort(403);
+        }
 
+        $customer = Customer::where('id', $id)->first();
         return view('admin.customers.edit', compact('customer'));
     }
 
@@ -116,6 +129,10 @@ class AdminCustomerController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('delete customers')) {
+            abort(403);
+        }
+
         $customer = Customer::where('id', $id)->first();
         if ($customer) {
             if($customer->status == 1) {
