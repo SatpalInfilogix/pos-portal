@@ -6,13 +6,17 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-use App\Models\Product;
 use App\Models\Discount;
+use Illuminate\Support\Facades\Gate;
 
 class AdminDiscountController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view discounts')) {
+            abort(403);
+        }
+
         $discounts = Discount::with('product')->where('role_id', '!=', 1)->latest()->get();
         foreach($discounts as $key => $discount)
         {
@@ -25,6 +29,10 @@ class AdminDiscountController extends Controller
 
     public function create()
     {
+        if (!Gate::allows('create discounts')) {
+            abort(403);
+        }
+
         $roles = Role::where('name', '!=', 'Super Admin')->latest()->get();
         foreach($roles as $key => $role) {
             $discount = Discount::where('role_id', $role->id)->first();
@@ -70,6 +78,10 @@ class AdminDiscountController extends Controller
 
     public function edit($id) 
     {
+        if (!Gate::allows('edit discounts')) {
+            abort(403);
+        }
+
         $discount = Discount::with('product')->where('id', $id)->first(); // Fetch the product by ID
 
         return view('admin.discount.edit', compact('discount'));
@@ -88,6 +100,10 @@ class AdminDiscountController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('delete discounts')) {
+            abort(403);
+        }
+
         $discountData = Discount::where('id', $id)->first();
 
         if ($discountData) {

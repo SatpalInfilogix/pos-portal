@@ -81,7 +81,6 @@
         </div>
     </div>
 
-
     <input type="hidden" name="can_edit" value="{{ Auth::user()->can('edit product') }}">
     <input type="hidden" name="can_delete" value="{{ Auth::user()->can('delete product') }}">
 

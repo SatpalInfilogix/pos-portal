@@ -10,16 +10,14 @@
                 </div>
             </div>
 
-            <div class="page-btn">
-                <a href="{{ route('stores.create') }}" class="btn btn-added">
-                    <i data-feather="plus-circle" class="me-2"></i>
-                    Add Store
-                </a>
-            </div>
-            <!-- <div class="page-btn import">
-                                                            <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
-                                                                    data-feather="download" class="me-2"></i>Import Product</a>
-                                                        </div> -->
+            @canany(['create stores'])
+                <div class="page-btn">
+                    <a href="{{ route('stores.create') }}" class="btn btn-added">
+                        <i data-feather="plus-circle" class="me-2"></i>
+                        Add Store
+                    </a>
+                </div>
+            @endcanany
         </div>
         @if (session('success'))
             <div class="alert alert-success">
@@ -38,7 +36,11 @@
                                 <th>Email</th>
                                 <th>Contact</th>
                                 <th>Location</th>
-                                <th>Action</th>
+                                <th>
+                                    @canany(['edit stores', 'delete stores'])
+                                        Action
+                                    @endcanany
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,16 +51,22 @@
                                     <td>{{ $store->email }}</td>
                                     <td>{{ $store->contact_number }}</td>
                                     <td>{{ $store->location }}</td>
-                                    <td class="action-table-data">
-                                        <div class="edit-delete-action">
-                                            <a class="me-2 p-2" href="{{ route('stores.edit', $store->id) }}">
-                                                <i data-feather="edit" class="feather-edit"></i>
-                                            </a>
-                                            <a class="me-2 p-2 delete-btn" href="#" data-id="{{ $store->id }}">
-                                                <i class="fa fa-trash"></i>
-                                            </a>
-                                        </div>
-                                    </td>
+                                    @canany(['edit stores', 'delete stores'])
+                                        <td class="action-table-data">
+                                            <div class="edit-delete-action">
+                                                @canany(['edit stores'])
+                                                    <a class="me-2 p-2" href="{{ route('stores.edit', $store->id) }}">
+                                                        <i data-feather="edit" class="feather-edit"></i>
+                                                    </a>
+                                                @endcanany
+                                                @canany(['delete stores'])
+                                                    <a class="me-2 p-2 delete-btn" href="#" data-id="{{ $store->id }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                @endcanany
+                                            </div>
+                                        </td>
+                                    @endcanany
                                 </tr>
                             @endforeach
                         </tbody>
@@ -68,11 +76,11 @@
         </div>
     </div>
     <script>
-    $(document).on('click', '.delete-btn', function(e) {
+        $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();
             var storeId = $(this).data('id');
             var token = "{{ csrf_token() }}";
-            var url = "{{ route('stores.destroy','') }}/" + storeId; // Use Laravel helper for URL
+            var url = "{{ route('stores.destroy', '') }}/" + storeId; // Use Laravel helper for URL
 
             if (confirm('Are you sure you want to delete this Store?')) {
                 $.ajax({
@@ -82,8 +90,8 @@
                         "_token": token,
                     },
                     success: function(response) {
-                        if(response.success){
-                            $('[data-hide-store="'+storeId+'"]').hide();
+                        if (response.success) {
+                            $('[data-hide-store="' + storeId + '"]').hide();
                         }
                     },
                     error: function(xhr) {

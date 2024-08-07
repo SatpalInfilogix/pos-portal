@@ -10,17 +10,16 @@
                 </div>
             </div>
 
-            <div class="page-btn">
-                <a href="{{ route('users.create') }}" class="btn btn-added">
-                    <i data-feather="plus-circle" class="me-2"></i>
-                    Add New User
-                </a>
-            </div>
-            <!-- <div class="page-btn import">
-                                                        <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
-                                                                data-feather="download" class="me-2"></i>Import Product</a>
-                                                    </div> -->
+            @canany(['create users'])
+                <div class="page-btn">
+                    <a href="{{ route('users.create') }}" class="btn btn-added">
+                        <i data-feather="plus-circle" class="me-2"></i>
+                        Add New User
+                    </a>
+                </div>
+            @endcanany
         </div>
+
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
@@ -39,7 +38,11 @@
                                 <th>Email</th>
                                 <th>Role</th>
                                 <th>Phone Number</th>
-                                <th class="no-sort">Action</th>
+                                <th>
+                                    @canany(['edit users', 'delete users'])
+                                        Action
+                                    @endcanany
+                                </th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -48,12 +51,18 @@
             </div>
         </div>
     </div>
+
+    <input type="hidden" name="can_edit" value="{{ Auth::user()->can('edit users') }}">
+    <input type="hidden" name="can_delete" value="{{ Auth::user()->can('delete users') }}">
 @endsection
 
 
 @section('script')
     <script>
         $(function() {
+            let can_edit = $('[name="can_edit"]').val();
+            let can_delete = $('[name="can_delete"]').val();
+
             $('.users-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -86,21 +95,25 @@
                         data: null,
                         render: function(data, type, row) {
                             var actions = '<div class="edit-delete-action">';
-                            actions +=
-                            `<a class="me-2 p-2 edit-btn" href="./users/${row.id}/edit">`;
-                            actions += '<i class="fa fa-edit"></i>';
-                            actions += '</a>';
+                            if (can_edit) {
+                                actions +=
+                                    `<a class="me-2 p-2 edit-btn" href="./users/${row.id}/edit">`;
+                                actions += '<i class="fa fa-edit"></i>';
+                                actions += '</a>';
+                            }
 
-                            if (row.status == 1) {
+                            if (row.status == 1 && can_delete) {
                                 actions +=
                                     '<a class="me-2 p-2 delete-btn" id="restore-user" data-id="' +
                                     row.id + '" href="#">Restore</a>';
                                 actions +=
-                                    '<a class="me-2 p-2 delete-btn" id="delete-user" data-id="' +row.id +
+                                    '<a class="me-2 p-2 delete-btn" id="delete-user" data-id="' +
+                                    row.id +
                                     '" style="display: none;"><i class="fa fa-trash"></i></a>';
-                            } else {
+                            } else if(can_delete) {
                                 actions +=
-                                    '<a class="me-2 p-2 delete-btn" id="delete-user" data-id="' +row.id +
+                                    '<a class="me-2 p-2 delete-btn" id="delete-user" data-id="' +
+                                    row.id +
                                     '" href="#"><i class="fa fa-trash"></i></a>';
                                 actions +=
                                     '<a class="me-2 p-2 delete-btn" id="restore-user" data-id="' +

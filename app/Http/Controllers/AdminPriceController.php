@@ -9,11 +9,16 @@ use App\Models\PriceMaster;
 use App\Models\Product;
 use App\Imports\PriceMasterImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Gate;
 
 class AdminPriceController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view prices')) {
+            abort(403);
+        }
+
         $prices = PriceMaster::with('product')->latest()->get();
 
         return view('admin.prices.index', compact('prices'));
@@ -90,6 +95,10 @@ class AdminPriceController extends Controller
 
     public function create()
     {
+        if (!Gate::allows('create prices')) {
+            abort(403);
+        }
+
         return view('admin.prices.create');
     }
 
@@ -108,6 +117,10 @@ class AdminPriceController extends Controller
 
     public function edit($id) 
     {
+        if (!Gate::allows('edit prices')) {
+            abort(403);
+        }
+
         $price = PriceMaster::with('product')->where('id', $id)->first(); // Fetch the product by ID
         $product = Product::where('id', $price->product_id)->first();
         $units = json_decode($product->units, true) ?? [];
@@ -130,6 +143,10 @@ class AdminPriceController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('delete prices')) {
+            abort(403);
+        }
+
         $priceData = PriceMaster::where('id', $id)->first();
 
         if ($priceData) {
