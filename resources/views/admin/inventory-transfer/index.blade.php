@@ -45,6 +45,7 @@
     </div>
 @endsection
 
+@include('partials.gate-pass')
 
 @section('script')
     <script>
@@ -77,6 +78,9 @@ $(function() {
                         actions += `<a class="me-2 p-2 edit-btn" href="{{ route('inventory-transfer.show','') }}/${data.id}">`;
                         actions += '<i class="fa fa-eye"></i>';
                         actions += '</a>';
+                        actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-transfer-id="${data.id}">`;
+                        actions += '<i class="fa fa-download"></i>&nbsp;Generate Gate Pass';
+                        actions += '</a>';
                         actions += '</div>';
                         return actions;
                     }
@@ -94,5 +98,40 @@ $(function() {
             lengthMenu: [10, 25, 50, 100]
         });
     });
+    $(document).on('click','#open-gatepass-model',function(e){
+        e.preventDefault();
+        $('#gate-pass-modal').modal('show');
+        var transfer_id = $(this).data('transfer-id');
+        $('[name="transfer-id"]').val(transfer_id);
+    });
+
+    $(document).on('click','#generate-gatepass',function(){
+        
+        var transfer_id = $('[name="transfer-id"]').val();
+        var vehicle_number = $('[name="vehicle-number"]').val();
+        if(!vehicle_number){
+            alert('Please Enter Vehicle Number');
+            return false;
+        }
+        var _token = "{{ csrf_token() }}";
+        $.ajax({
+            url : "{{ route('print.gatepass','') }}/"+transfer_id,
+            type : 'POST',
+            data : {
+                _token,
+                vehicle_number
+            },
+            success : function(resp){
+                const newWindow = window.open(resp.gatepassPath, '_blank', 'noopener,noreferrer');
+                if (newWindow) {
+                    setTimeout(() => {
+                        window.focus();
+                    }, 100);
+                }
+                location.reload();
+                $('#gate-pass-modal').modal('hide');
+            }
+        });
+    }); 
     </script>
 @endsection

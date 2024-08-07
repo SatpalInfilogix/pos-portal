@@ -3,7 +3,7 @@
         <div class="modal-dialog modal-md modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header p-4">
-                    <h5 class="modal-title">Gate Pass</h5>
+                    <h5 class="modal-title">Generate Gate Pass</h5>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -14,8 +14,9 @@
                             <div class="tab-pane fade show active" id="onhold" role="tabpanel"
                                 aria-labelledby="onhold-tab">
                                 <div class="form-group" id="searchbox">
-                                    <input type="search" class="form-control form-control-sm" placeholder="Search" name="search-invoice" id="search-invoice"><a href="#"
-                                    class="btn btn-info btn-icon flex-fill" name="get-details">Get Details</a>
+                                    <input type="hidden" name="transfer-id">
+                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Vehicle Number" name="vehicle-number" id="vehicle-number"><a href="#"
+                                    class="btn btn-info btn-icon flex-fill" id="generate-gatepass">Generate</a>
                                 </div>
                                 <div class="order-body" id="g-invoice-details">
                                     <div class="default-cover p-4 mb-4">
@@ -65,28 +66,3 @@
             </div>
         </div>
     </div>
-    <script>
-         $(document).on('click','[name="get-details"]',function(){
-            var invoice_id = $('[name="search-invoice"  ]').val();
-            $.ajax({
-                url : "{{ url('admin/search-invoice') }}/"+invoice_id,
-                type : 'GET',
-                success : function(resp){
-                    if(resp.invoice){
-                        $('#g-invoice-details').show();
-                        $('#g-error-msg').hide();
-                        $('span#g-invoice-id').text(resp.invoice.OrderID);
-                        $('#g-customer').text(resp.invoice.CustomerName);
-                        $('#g-cashier').text('Admin');
-                        $('#g-totalAmount').text(resp.invoice.TotalAmount);
-                        $('#g-inv-date').text(resp.invoice.OrderDate);
-                        var viewURL = "{{ url('/admin/print-gatepass/') }}/"+resp.invoice.OrderID;
-                        $('#g-view-invoice').attr('href',viewURL);
-                    }else{
-                        $('#g-invoice-details').hide();
-                        $('#g-error-msg').show();
-                    }
-                }
-            });
-        }); 
-    </script>

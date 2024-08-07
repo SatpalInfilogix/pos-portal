@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Inventory;
 use App\Models\InventoryProduct;
 use App\Models\PriceMaster;
@@ -174,5 +176,29 @@ class InventoryTransferController extends Controller
             "recordsFiltered" => $totalRecords,
             "data" => $returnTransfers
         ]);
+    }
+
+    public function printGatePass(Request $request, $transfer_id){
+        $transferedInventory = Inventory::with('store')->with('deliveredItems')->where('id',$transfer_id)->first();
+       
+            $pdfDirectory = 'inventory-gate-pass';
+            if (!Storage::disk('public')->exists($pdfDirectory)) {                 
+                Storage::disk('public')->makeDirectory($pdfDirectory);
+            }
+            
+            // Generate PDF
+            $pdf = PDF::loadView('admin.sales.sales-pdf-template.gate-pass-pdf',compact('transferedInventory'));
+            $pdfContent = $pdf->output();
+            $pdfFileName =  'gate-pass.pdf';
+            $invoicePath = $pdfDirectory . '/' . $pdfFileName;
+    
+            // Save PDF to public disk
+            Storage::disk('public')->put($invoicePath, $pdfContent);
+    
+            $publicUrl = Storage::disk('public')->url($invoicePath);
+            $transferedInventory->vehicle_number = $request->vehicle_number;
+            $transferedInventory->save();
+            return response()->json(["gatepassPath" => $publicUrl]);
+
     }
 }
