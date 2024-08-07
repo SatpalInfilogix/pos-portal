@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Store;
+use Illuminate\Support\Facades\Gate;
 
 class StoreController extends Controller
 {
@@ -12,6 +13,10 @@ class StoreController extends Controller
      */
     public function index()
     {
+        if (!Gate::allows('view stores')) {
+            abort(403);
+        }
+
         $stores = Store::where('is_deleted',0)->get();
         return view('admin.stores.index',compact('stores'));
     }
@@ -21,6 +26,10 @@ class StoreController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('create stores')) {
+            abort(403);
+        }
+
         return view('admin.stores.create');
     }
 
@@ -52,6 +61,10 @@ class StoreController extends Controller
      */
     public function edit(string $id)
     {
+        if (!Gate::allows('edit stores')) {
+            abort(403);
+        }
+
         $store = Store::find($id);
         return view('admin.stores.edit',compact('store'));
     }
@@ -76,6 +89,10 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
+        if (!Gate::allows('delete stores')) {
+            abort(403);
+        }
+
         $store = Store::where('id','=',$id)->update([
             "is_deleted" => 1
         ]);

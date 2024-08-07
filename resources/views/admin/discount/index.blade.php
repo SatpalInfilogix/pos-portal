@@ -50,44 +50,4 @@
             </div>
         </div>
     </div>
-    <!-- <script>
-        $(document).ready(function() {
-            $('.delete-product').click(function(e) {
-                e.preventDefault();
-                var productId = $(this).data('id');
-                var token = "{{ csrf_token() }}";
-                var url = "{{ route('discounts.destroy', '') }}/" + productId;
-
-                if (confirm('Are you sure you want to delete this discount record?')) {
-                    $.ajax({
-                        url: url,
-                        type: 'DELETE',
-                        data: {
-                            "_token": token,
-                        },
-                        success: function(response) {
-                            if (response.status == 'success') {
-                                if (response.discount == 1) {
-                                    $('#restore-discount[data-id="' + productId + '"]').show();
-                                    $('#delete-discount[data-id="' + productId + '"]').hide();
-                                } else {
-                                    $('#restore-discount[data-id="' + productId + '"]').hide();
-                                    $('#delete-discount[data-id="' + productId + '"]').show();
-                                }
-                                // $('#discount-record-row-' + productId).remove();
-                                // alert('Disciunt Record deleted successfully');
-                                // window.location.reload();
-                            } else {
-                                alert('Something went wrong. Please try again.');
-                            }
-                        },
-                        error: function(xhr) {
-                            console.log(xhr.responseText);
-                            alert('Something went wrong. Please try again.');
-                        }
-                    });
-                }
-            });
-        });
-    </script> -->
 @endsection

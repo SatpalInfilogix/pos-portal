@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
-use App\Models\Product;
 use App\Models\Discount;
 use Illuminate\Support\Facades\Gate;
 
