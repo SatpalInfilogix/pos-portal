@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\PriceMaster;
 use App\Models\Product;
+use App\Imports\PriceMasterImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminPriceController extends Controller
 {
@@ -144,5 +146,16 @@ class AdminPriceController extends Controller
         } else {
             return response()->json(['status' => 'error', 'message' => 'Price not found.'], 404);
         }
+    }
+
+    public function import_price_masters(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,xlsx',
+        ]);
+
+        Excel::import(new PriceMasterImport, $request->file('file'));
+        
+        return redirect()->route('prices.index')->with('success', 'Price master imported successfully.');
     }
 }

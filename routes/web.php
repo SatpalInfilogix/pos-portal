@@ -144,6 +144,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 /***************  Frontend Routes ****************/
 Route::get('/search-products', [AdminProductController::class,'searchProducts'])->name('search-products');
 Route::post('/import-products', [AdminProductController::class, 'import_products'])->name('import-products');
+Route::post('/import-price-master', [AdminPriceController::class, 'import_price_masters'])->name('import-price-master');
 Route::post('add-to-cart', [PosCartController::class, 'addToCart'])->name('add-to-cart');
 Route::post('remove-from-cart', [PosCartController::class, 'remove'])->name('remove-from-cart');
 Route::post('update-cart', [PosCartController::class, 'update'])->name('update-cart');
