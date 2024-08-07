@@ -26,19 +26,16 @@ class OrderController extends Controller
         if(!$customer){
             $customer = Customer::create([
                 'customer_name' => $request->customer_name,
+                'customer_email' => $request->email,
                 'contact_number' => $request->contact_number,
                 'alternate_number' => $request->alternate_number,
-                'shipping_address' => $request->shipping_address,
-                'shipping_address_pin_code' => $request->shipping_address_pin_code,
                 'billing_address' => $request->billing_address,
                 'billing_address_pin_code' => $request->billing_address_pin_code,
                 'created_by' => Auth::id(),
             ]);
         } else {
-            $customer->alternate_number = $request->alternate_number;
-            $customer->shipping_address = $request->shipping_address;
+            $customer->customer_email = $request->email;
             $customer->billing_address = $request->billing_address;
-            $customer->shipping_address_pin_code = $request->shipping_address_pin_code;
             $customer->billing_address_pin_code = $request->billing_address_pin_code;
             $customer->save();
         }
@@ -75,7 +72,7 @@ class OrderController extends Controller
                 'CustomerID' => $customer->id,
                 'CustomerName' => $request->customer_name,
                 'CustomerPhone' => $request->contact_number,
-                'ShippingAddress' => $request->shipping_address,
+                'ShippingAddress' => $request->billing_address,
                 'BillingAddress' => $request->billing_address,
                 'OrderStatus' => 'completed',
                 'PaymentMethod' => $request->payment_method,
@@ -84,6 +81,7 @@ class OrderController extends Controller
                 'TaxAmount' => $cart['tax'],
                 'DiscountAmount' => $cart['discount_amount'],
                 'CreatedBy' => Auth::id(),
+                'store_id' => $store_id,
             ]);
 
             $returnProductDetails =[];

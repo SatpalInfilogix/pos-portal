@@ -22,7 +22,17 @@
         {{ session('success') }}
     </div>
     @endif
-
+    <div class="row">
+        <div class="col-md-6 mb-3">
+            <label class="form-label">Store</label>
+            <select name="sales-store" id="sales-store" class="form-control">
+                <option value="">select store</option>
+                @foreach ($stores as $store)
+                    <option value="{{ $store->id }}" @selected($store->id == auth()->user()->store_id)>{{ $store->name }}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
     <div class="card table-list-card">
         <div class="card-body">
             <div class="table-responsive p-0 m-0">

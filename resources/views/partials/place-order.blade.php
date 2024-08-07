@@ -17,17 +17,15 @@ $customers = DB::table('customers')->get();
                     <div class="row">
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
-                                <label>Customer Name</label>
+                                <label>Customer Name <small style="color:red;">*</small></label>
                                 <select name="order_customer_id" class="form-control chosen-select" required>
                                     <option></option>
                                     @foreach ($customers as $customer)
                                         <option value="{{ $customer->customer_name }}"
                                             data-customer-id="{{ $customer->id }}"
                                             data-customer-contact = "{{ $customer->contact_number }}"
-                                            data-customer-alternate = "{{ $customer->alternate_number }}"
+                                            data-customer-email = "{{ $customer->customer_email }}"
                                             data-customer-billing = "{{ $customer->billing_address }}"
-                                            data-customer-shipping = "{{ $customer->shipping_address }}" 
-                                            data-shipping-pincode = "{{ $customer->shipping_address_pin_code }}" 
                                             data-billing-pincode = "{{ $customer->billing_address_pin_code }}" 
                                         >{{ $customer->customer_name.' ( '.$customer->contact_number.' )' }}</option>
                                     @endforeach
@@ -36,50 +34,32 @@ $customers = DB::table('customers')->get();
                         </div>
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
-                                <label>Vehicle Number</label>
-                                <input type="text" name="vehicle_number" class="form-control" required>
+                                <label>Email (Optional)</label>
+                                <input type="email" name="email" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
-                                <label>Contact No.</label>
-                                <input type="text" name="contact_number" class="form-control" required>
+                                <label>Contact No. <small style="color:red;">*</small></label>
+                                <input type="number" name="contact_number" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
-                                <label>Alternate Contact No.</label>
-                                <input type="text" name="alternate_number" class="form-control">
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12 col-12">
-                            <div class="input-blocks">
-                                <label>Shipping Address</label>
-                                <textarea name="shipping_address" required></textarea>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12 col-12">
-                            <div class="input-blocks">
-                                <label>Billing Address</label>
-                                <textarea name="billing_address" required></textarea>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12 col-12">
-                            <div class="input-blocks">
-                                <label>Shipping Pincode</label>
-                                <input type="text" name="shipping_address_pin_code" class="form-control"
-                                    required>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-sm-12 col-12">
-                            <div class="input-blocks">
-                                <label>Billing Pincode</label>
+                                <label>Pincode <small style="color:red;">*</small></label>
                                 <input type="text" name="billing_address_pin_code" class="form-control">
                             </div>
                         </div>
+                        <div class="col-lg-6 col-sm-12 col-12">
+                            <div class="input-blocks">
+                                <label>Billing Address <small style="color:red;">*</small></label>
+                                <textarea name="billing_address" required></textarea>
+                            </div>
+                        </div>
+
                     </div>
                     <div class="block-section payment-method">
-                        <h6>Payment Method</h6>
+                        <h6>Payment Method <small style="color:red;">*</small></h6>
                         <div class="row d-flex align-items-center justify-content-center methods">
                             <div class="col-md-6 col-lg-4 item">
                                 <div class="default-cover method" data-method="cash">
@@ -128,7 +108,7 @@ $customers = DB::table('customers')->get();
 
                     <div class="modal-footer d-sm-flex justify-content-end">
                         <button type="button" class="btn btn-cancel" data-bs-dismiss="modal">Cancel</button>
-                        <button class="btn btn-submit me-2">Place</button>
+                        <button class="btn btn-submit me-2" id="order-submission">Place</button>
                     </div>
                 </form>
             </div>
