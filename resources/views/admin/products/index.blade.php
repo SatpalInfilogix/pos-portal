@@ -102,7 +102,11 @@
                     }
                 },
                 columns: [{
-                        data: "id"
+                    data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        title: '#'
                     },
                     {
                         data: "category_name"
