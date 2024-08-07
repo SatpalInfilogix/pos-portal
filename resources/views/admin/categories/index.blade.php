@@ -10,16 +10,14 @@
                 </div>
             </div>
 
-            <div class="page-btn">
-                @canany(['create categories'])
-                    <a href="{{ route('categories.create') }}" class="btn btn-added"><i data-feather="plus-circle"
-                            class="me-2"></i>Add New Category</a>
-                @endcanany
-            </div>
-            <!-- <div class="page-btn import">
-                                            <a href="#" class="btn btn-added color" data-bs-toggle="modal" data-bs-target="#view-notes"><i
-                                                    data-feather="download" class="me-2"></i>Import Product</a>
-                                        </div> -->
+            @canany(['create categories'])
+                <div class="page-btn">
+                    <a href="{{ route('categories.create') }}" class="btn btn-added">
+                        <i data-feather="plus-circle" class="me-2"></i>
+                        Add New Category
+                    </a>
+                </div>
+            @endcanany
         </div>
         @if (session('success'))
             <div class="alert alert-success">

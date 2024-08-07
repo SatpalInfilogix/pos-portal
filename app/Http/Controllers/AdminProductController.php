@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Category;
 use App\Imports\ProductsImport;
-use Picqer\Barcode\BarcodeGeneratorHTML;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use Illuminate\Support\Facades\Gate;
