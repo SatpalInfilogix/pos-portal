@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\ProductOrderHistory;
 use App\Models\Store;
+use Illuminate\Support\Facades\Gate;
 
 class AdminSalesController extends Controller
 {
@@ -13,7 +14,10 @@ class AdminSalesController extends Controller
 
     //show the order details
     public function index(){
-        //getting all orders
+        if (!Gate::allows('view sales')) {
+            abort(403);
+        }
+
         $allOrders = $this->getAllOrders();
         $stores = Store::where('is_deleted',0)->get();
         return view('admin.sales.index')->with([
