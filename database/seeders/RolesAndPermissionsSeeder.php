@@ -16,75 +16,41 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        Permission::create(['name' => 'backend']);
-        Permission::create(['name' => 'frontend']);
+        $permissions = [
+            'backend',
+            'frontend',
+            'view stores', 'create stores', 'edit stores', 'delete stores',
+            'view users', 'create users', 'edit users', 'delete users',
+            'view categories', 'create categories', 'edit categories', 'delete categories',
+            'view product', 'create product', 'edit product', 'delete product',
+            'view prices', 'create prices', 'edit prices', 'delete prices',
+            'view discounts', 'create discounts', 'edit discounts', 'delete discounts',
+            'view sales', 'create sales', 'edit sales', 'delete sales',
+            'view return stocks', 'create return stocks', 'edit return stocks', 'delete return stocks',
+            'view inventory transfers', 'create inventory transfers', 'edit inventory transfers', 'delete inventory transfers',
+            'view customers', 'create customers', 'edit customers', 'delete customers',
+            'view roles & permissions', 'create roles & permissions', 'edit roles & permissions', 'delete roles & permissions',
+        ];
 
-        Permission::create(['name' => 'view stores']);
-        Permission::create(['name' => 'create stores']);
-        Permission::create(['name' => 'edit stores']);
-        Permission::create(['name' => 'delete stores']);
+        foreach ($permissions as $permission) {
+            Permission::firstOrCreate(['name' => $permission]);
+        }
 
-        Permission::create(['name' => 'view users']);
-        Permission::create(['name' => 'create users']);
-        Permission::create(['name' => 'edit users']);
-        Permission::create(['name' => 'delete users']);
+        $roles = [
+            'Super Admin' => Permission::all(),
+            'Admin' => Permission::all(),
+            'Manager' => ['backend', 'view sales', 'view return stocks', 'create return stocks', 'edit return stocks', 'delete return stocks'],
+            'Sales Person' => ['frontend']
+        ];
 
-        Permission::create(['name' => 'view categories']);
-        Permission::create(['name' => 'create categories']);
-        Permission::create(['name' => 'edit categories']);
-        Permission::create(['name' => 'delete categories']);
+        foreach ($roles as $roleName => $permissions) {
+            $role = Role::firstOrCreate(['name' => $roleName]);
 
-        Permission::create(['name' => 'view product']);
-        Permission::create(['name' => 'create product']);
-        Permission::create(['name' => 'edit product']);
-        Permission::create(['name' => 'delete product']);
-        
-        Permission::create(['name' => 'view prices']);
-        Permission::create(['name' => 'create prices']);
-        Permission::create(['name' => 'edit prices']);
-        Permission::create(['name' => 'delete prices']);
-
-        Permission::create(['name' => 'view discounts']);
-        Permission::create(['name' => 'create discounts']);
-        Permission::create(['name' => 'edit discounts']);
-        Permission::create(['name' => 'delete discounts']);
-
-        Permission::create(['name' => 'view sales']);
-        Permission::create(['name' => 'create sales']);
-        Permission::create(['name' => 'edit sales']);
-        Permission::create(['name' => 'delete sales']);
-
-        Permission::create(['name' => 'view return stocks']);
-        Permission::create(['name' => 'create return stocks']);
-        Permission::create(['name' => 'edit return stocks']);
-        Permission::create(['name' => 'delete return stocks']);
-
-        Permission::create(['name' => 'view inventory transfers']);
-        Permission::create(['name' => 'create inventory transfers']);
-        Permission::create(['name' => 'edit inventory transfers']);
-        Permission::create(['name' => 'delete inventory transfers']);
-
-        Permission::create(['name' => 'view customers']);
-        Permission::create(['name' => 'create customers']);
-        Permission::create(['name' => 'edit customers']);
-        Permission::create(['name' => 'delete customers']);
-
-        Permission::create(['name' => 'view roles & permissions']);
-        Permission::create(['name' => 'create roles & permissions']);
-        Permission::create(['name' => 'edit roles & permissions']);
-        Permission::create(['name' => 'delete roles & permissions']);
-
-        $role = Role::where(['name' => 'Super Admin'])->first();
-        $role->givePermissionTo(Permission::all());
-
-        $adminRole = Role::where(['name' => 'Admin'])->first();
-        $adminRole->givePermissionTo('backend');
-
-        $managerRole = Role::where(['name' => 'Manager'])->first();
-        $managerRole->givePermissionTo('backend');
-
-        $salespersonRole = Role::where(['name' => 'Sales Person'])->first();
-        $salespersonRole->givePermissionTo('frontend');
-
+            if (is_array($permissions)) {
+                $role->givePermissionTo($permissions);
+            } else {
+                $role->givePermissionTo($permissions);
+            }
+        }
     }
 }
