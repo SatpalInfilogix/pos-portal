@@ -17,8 +17,6 @@ return new class extends Migration
             $table->string('customer_email')->nullable();
             $table->string('contact_number')->nullable();
             $table->string('alternate_number')->nullable();
-            $table->text('shipping_address')->nullable();
-            $table->string('shipping_address_pin_code', 25)->nullable();
             $table->text('billing_address')->nullable();
             $table->string('billing_address_pin_code', 25)->nullable();
             $table->integer('created_by')->nullable();

@@ -655,16 +655,12 @@
 
         $(document).on('click', '.chosen-results .active-result', function() {
             var contact_number = $('[name="order_customer_id"]').find(':selected').data('customer-contact');
-            var alternate_number = $('[name="order_customer_id"]').find(':selected').data('customer-alternate');
-            var shipping_address = $('[name="order_customer_id"]').find(':selected').data('customer-shipping');
+            var email = $('[name="order_customer_id"]').find(':selected').data('customer-email');
             var billing_address = $('[name="order_customer_id"]').find(':selected').data('customer-billing');
-            var shipping_pincode = $('[name="order_customer_id"]').find(':selected').data('shipping-pincode');
             var billing_pincode = $('[name="order_customer_id"]').find(':selected').data('billing-pincode');
             $('[name="contact_number"]').val(contact_number);
-            $('[name="alternate_number"]').val(alternate_number);
-            $('[name="shipping_address"]').val(shipping_address);
+            $('[name="email"]').val(email);
             $('[name="billing_address"]').val(billing_address);
-            $('[name="shipping_address_pin_code"]').val(shipping_pincode);
             $('[name="billing_address_pin_code"]').val(billing_pincode);
         });
 
@@ -676,30 +672,26 @@
                 return false;
             }
             let customer_name = $('[name="order_customer_id"]').find(':selected').val();
-            let vehicle_number = $('[name="vehicle_number"]').val();
+            let email = $('[name="email"]').val();
             let contact_number = $('[name="contact_number"]').val();
-            let alternate_number = $('[name="alternate_number"]').val();
-            let shipping_address = $('[name="shipping_address"]').val();
             let billing_address = $('[name="billing_address"]').val();
-            let shipping_address_pin_code = $('[name="shipping_address_pin_code"]').val();
             let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
             let tender_amount = $('[name="tender_amount"]').val();
             let order_change_amount = $('[name="order_change_amount"]').val();
+            $('#order-submission').prop('disabled',true).text('Please Wait...');
+
             $.ajax({
                 url: "{{ url('admin/pos-sale-submission') }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
                     customer_name: customer_name,
-                    vehicle_number: vehicle_number,
+                    email: email,
                     contact_number: contact_number,
-                    alternate_number: alternate_number,
-                    shipping_address: shipping_address,
                     billing_address: billing_address,
                     payment_method: payment_method,
                     tender_amount: tender_amount,
                     order_change_amount: order_change_amount,
-                    shipping_address_pin_code: shipping_address_pin_code,
                     billing_address_pin_code: billing_address_pin_code,
                 },
                 success: function(response) {
@@ -718,11 +710,12 @@
                     });
                     
                     if (response.success) {
+                        $('#order-submission').prop('disabled',false).text('Place');
                         Swal.fire({
                             title: "Order Placed!",
                             text: "Your Order Placed " + response.orderId,
                             icon: "success",
-                            timer: 1000
+                            timer: 2000
                         });
                         $('#invoice-id').text(response.orderId);
                         const newWindow = window.open(response.pdfUrl, '_blank', 'noopener,noreferrer');
