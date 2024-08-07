@@ -29,6 +29,8 @@ use App\Http\Controllers\InventoryReturnController;
 /* Frontend Controller Import */
 use App\Http\Controllers\PosDashboardController;
 use App\Http\Controllers\PosCartController;
+use App\Http\Controllers\PrintController;
+
 /* End Frontend Controller Import */
 /* Controller Imports ends Here */
 
@@ -168,3 +170,6 @@ Route::get('/generate-pdf', [PDFController::class, 'download'])->name('download'
 Route::post('/products-quantity',[InventoryReturnController::class, 'availableProductQuantity'])->name('check-products-quantity');
 /*  product units  */
 Route::get('/product-units/{productId}', [AdminPriceController::class, 'getUnits']);
+
+/* Test print */
+Route::get('/test-print', [PrintController::class, 'printReceipt']);
