@@ -7,11 +7,16 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\Auth;
 use File;
+use Illuminate\Support\Facades\Gate;
 
 class AdminCategoryController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view categories')) {
+            abort(403);
+        }
+
         $categories = Category::latest()->get();
 
         return view('admin.categories.index', compact('categories'));
@@ -55,6 +60,10 @@ class AdminCategoryController extends Controller
 
     public function create()
     {
+        if (!Gate::allows('create categories')) {
+            abort(403);
+        }
+
         return view('admin.categories.create');
     }
 
@@ -78,6 +87,10 @@ class AdminCategoryController extends Controller
 
     public function edit($id) 
     {
+        if (!Gate::allows('edit categories')) {
+            abort(403);
+        }
+
         $category = Category::where('id', $id)->first(); // Fetch the product by ID
 
         return view('admin.categories.edit', compact('category'));
@@ -113,6 +126,10 @@ class AdminCategoryController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('delete categories')) {
+            abort(403);
+        }
+
         $category = Category::where('id', $id)->first();
 
         if ($category) {

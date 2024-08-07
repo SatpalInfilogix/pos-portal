@@ -36,7 +36,7 @@ class ThermalPrinterService
          }
  
          // Print total
-         $this->printer->text("\n" . str_pad("Total", 35) . $order['total'] . "\n");
+         $this->printer->text("\n" . str_pad("Total", 39) . $order['total'] . "\n");
  
         // Cut the paper and close the printer
         $this->printer->cut();
@@ -48,6 +48,6 @@ class ThermalPrinterService
         $name = str_pad(substr($name, 0, 24), 26);
         $quantity = str_pad($quantity, 3, ' ', STR_PAD_LEFT);
         $price = str_pad($price, 5, ' ', STR_PAD_LEFT); // Add padding to align prices
-        $this->printer->text($name . $quantity . str_pad("", 5) . $price . "\n");
+        $this->printer->text($name . $quantity . str_pad("", 10) . $price . "\n");
     }
 }
