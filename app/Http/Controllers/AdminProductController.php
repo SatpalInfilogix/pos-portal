@@ -99,6 +99,10 @@ class AdminProductController extends Controller
 
     public function create()
     {
+        if (!Gate::allows('create product')) {
+            abort(403);
+        }
+
         $categories = Category::latest()->where('status', 0)->get();
 
         return view('admin.products.create', compact('categories'));
