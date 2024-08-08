@@ -9,6 +9,7 @@
             padding: 0px 0px 0px 0px;
             font-size: 9px;
         }
+        
     </style>
     <div class="content">
         <div class="page-header">
@@ -57,16 +58,24 @@
                                     <input type="text" name="product_name" class="form-control">
                                 </div>
                             </div>
-                            <div class="row">
+                            <div class="row mb-3">
                                 <div class="col-md-6 add-product">
-                                    <div class="input-blocks add-product list">
+                                    <label class="form-label">Unit</label>
+                                    <select class="select2-multiple form-control" name="units[]" multiple="multiple"id="select2Multiple">
+                                        @foreach($units as $key => $unit)
+                                        <option value="{{$unit->id}}">{{$unit->name}}</option>
+                                        @endforeach
+                                        {{-- <option value="tag2">tag2</option>
+                                        <option value="tag3">tag3</option> --}}
+                                    </select>
+                                    {{-- <div class="input-blocks add-product list">
                                         <label class="form-label">Units</label>
                                         <input type="text" id="unit" class="form-control">
                                         <button type="button" id="add-units" class="btn btn-primaryadd">Add Units</button>
                                     </div>
                                     <div id="unit-list" class="mt-3 d-flex flex-wrap">
                                         <!-- Display entered units here -->
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="col-md-6 add-product">
                                     <label class="form-label">Manufacture Date</label>
@@ -74,8 +83,8 @@
                                         class="form-control">
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="mb-3 add-product">
+                            <div class="row mb-3">
+                                <div class="col-md-12 add-product">
                                     <label class="form-label">Image</label>
                                     <input type="file" name="image" id="img-product" class="form-control">
                                 </div>
@@ -97,6 +106,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
     <script>
+         $(document).ready(function() {
+            // Select2 Multiple
+            $('.select2-multiple').select2({
+                placeholder: "Select",
+                allowClear: true
+            });
+
+        });
         $(document).ready(function() {
             //Image preivew
             $('#img-product').change(function() {

@@ -127,7 +127,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::get('/pos-hold-order', [OrderController::class, 'posHoldOrder'])->name('hold.order');
         Route::get('/search-invoice/{invoice_id}', [OrderController::class, 'searchInvoice'])->name('search.invoice');
         Route::get('/view-invoice/{invoice_id}', [OrderController::class, 'viewInvoice'])->name('view.invoice');
-        Route::get('/print-gatepass/{invoice_id}', [PosGatePassController::class, 'printGatePass'])->name('print.gatepass');
+        Route::post('/print-gatepass/{transfer_id}', [InventoryTransferController::class, 'printGatePass'])->name('print.gatepass');
         /********************** Invoice Routes End**********************/
     });
 
@@ -144,6 +144,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
 /***************  Frontend Routes ****************/
 Route::get('/search-products', [AdminProductController::class,'searchProducts'])->name('search-products');
 Route::post('/import-products', [AdminProductController::class, 'import_products'])->name('import-products');
+Route::post('/import-price-master', [AdminPriceController::class, 'import_price_masters'])->name('import-price-master');
 Route::post('add-to-cart', [PosCartController::class, 'addToCart'])->name('add-to-cart');
 Route::post('remove-from-cart', [PosCartController::class, 'remove'])->name('remove-from-cart');
 Route::post('update-cart', [PosCartController::class, 'update'])->name('update-cart');
@@ -157,7 +158,6 @@ Route::post('/get-products', [AdminProductController::class, 'getProducts'])->na
 Route::post('/get-prices', [AdminPriceController::class, 'getPrices'])->name('get-prices');
 Route::post('/get-customers', [AdminCustomerController::class, 'getCustomers'])->name('get-customers');
 Route::post('/get-sales', [AdminSalesController::class, 'getSalesOrder'])->name('get-sales');
-Route::post('/get-store-sales', [AdminSalesController::class, 'getSalesOrderByStore'])->name('get-store-sales');
 Route::post('/get-transfer-stock-inventory', [InventoryTransferController::class, 'getTransferStockInventory'])->name('get-transfer-stock-inventory');
 Route::post('/get-return-stock-inventory', [ReturnStockController::class, 'getReturnStockInventory'])->name('get-return-stock-inventory');
 /************************* End DataTables Routes ************************/

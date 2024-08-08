@@ -65,7 +65,7 @@
                                             <option value="" selected disabled>Select Unit</option>
                                             @if($units)
                                                 @foreach($units as $unit)
-                                                    <option value="{{$unit}}" {{ $price->quantity_type == $unit ? 'selected' : '' }}>{{ $unit}}</option>
+                                                    <option value="{{$unit->name}}" {{ $price->quantity_type == $unit->name ? 'selected' : '' }}>{{ $unit->name}}</option>
                                                 @endforeach
                                             @endif
                                         </select>
