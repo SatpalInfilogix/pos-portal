@@ -57,10 +57,11 @@ class ThermalPrinterService
         }
 
         // Print total
-        $this->printer->text("\n" . str_pad("Subtotal", 39) . $order->TotalAmount - $order->TaxAmount);
-        $this->printer->text("\n" . str_pad("Tax (GCT 15%)", 39) . $order->TaxAmount);
-        $this->printer->text("\n" . str_pad("Total", 39) . $order->TotalAmount);
-
+        $this->printer->text("\n" . str_pad("Payment Method", 39) . $order->PaymentMethod);
+        $this->printer->text("\n" . str_pad("Subtotal", 39) . '$' . $order->TotalAmount - $order->TaxAmount);
+        $this->printer->text("\n" . str_pad("Tax (GCT 15%)", 39) . '$' . $order->TaxAmount);
+        $this->printer->text("\n" . str_pad("Total", 39) . '$' . $order->TotalAmount);
+        $this->printer->text("\n\n");
         // Cut the paper and close the printer
         $this->printer->cut();
         $this->printer->close();
@@ -71,6 +72,6 @@ class ThermalPrinterService
         $name = str_pad(substr($name, 0, 24), 26);
         $quantity = str_pad($quantity, 3, ' ', STR_PAD_LEFT);
         $price = str_pad($price, 5, ' ', STR_PAD_LEFT); // Add padding to align prices
-        $this->printer->text($name . $quantity . str_pad("", 10) . $price . "\n");
+        $this->printer->text($name . $quantity . str_pad("", 10) . '$'.$price . "\n");
     }
 }
