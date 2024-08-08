@@ -315,7 +315,7 @@
                                         @php
                                             $payable = isset($cart['payable']) ? $cart['payable'] : 0;
                                         @endphp
-                                        ${{ number_format($payable, 2) }}
+                                        ${{ $payable }}
                                     </td>
                                 </tr>
                             </table>
@@ -472,14 +472,17 @@
                     qty: quantity
                 },
                 success: function(response) {
+                    console.log(response.cart.payable);
+                    console.log(response.cart.tax);
+
                     if (response.success) {
                         if (quantity > 0) {
                             let cart = response.cart.formatted_sub_total;
                             let amount = '<b>' + cart + '</b>';
                             $('.totalAmount').html(amount);
                             $('.grandTotal').html(response.cart.formatted_grand_total);
-                            $('.tax').html(response.cart.tax);
-                            $('.payable').html(response.cart.payable);
+                            $('.tax').html('$' + response.cart.tax);
+                            $('.payable').html('$' + response.cart.payable);
                             $('.discount-option').html(response.discountOptions);
                             $('.count-products').html(response.cart.count);
 
@@ -501,7 +504,7 @@
             var currentValue = parseInt(quantityInput.val());
 
             if (currentValue < productQuantity) {
-                var newQty = currentValue + 1;
+                var newQty = currentValue;
 
                 if ($('body').hasClass('updated-cart')) {
                     newQty = currentValue + 1;
