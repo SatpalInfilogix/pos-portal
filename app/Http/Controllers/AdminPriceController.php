@@ -7,6 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Models\PriceMaster;
 use App\Models\Product;
+use App\Models\Unit;
+use App\Imports\PriceMasterImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Gate;
 
 class AdminPriceController extends Controller
@@ -82,7 +85,8 @@ class AdminPriceController extends Controller
         if($units) {
             foreach($units as $unit)
             {
-                $options .= '<option value="'.  $unit .'">'. $unit .'</option>';
+                $productUnits = Unit::where('id', $unit)->first();
+                $options .= '<option value="'.  $productUnits->name .'">'. $productUnits->name .'</option>';
             }
         }
 
@@ -121,7 +125,8 @@ class AdminPriceController extends Controller
 
         $price = PriceMaster::with('product')->where('id', $id)->first(); // Fetch the product by ID
         $product = Product::where('id', $price->product_id)->first();
-        $units = json_decode($product->units, true) ?? [];
+        $productUnits = json_decode($product->units, true) ?? [];
+        $units = Unit::whereIn('id', $productUnits)->get();
 
         return view('admin.prices.edit', compact('price', 'units'));
     }
@@ -161,5 +166,16 @@ class AdminPriceController extends Controller
         } else {
             return response()->json(['status' => 'error', 'message' => 'Price not found.'], 404);
         }
+    }
+
+    public function import_price_masters(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:csv,xlsx',
+        ]);
+
+        Excel::import(new PriceMasterImport, $request->file('file'));
+        
+        return redirect()->route('prices.index')->with('success', 'Price master imported successfully.');
     }
 }

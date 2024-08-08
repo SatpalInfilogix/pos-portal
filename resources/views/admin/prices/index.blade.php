@@ -11,7 +11,38 @@
             </div>
 
             @canany(['create prices'])
-                <div class="page-btn">
+                <div class="page-btn d-flex gap-2">
+                    <form id="importForm" action="{{ route('import-price-master') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <button type="button" class="btn btn-added" id="importButton">
+                            <i data-feather="upload" class="me-2"></i>
+                            Import Price Master
+                        </button>
+                        <input type="file" id="fileInput" name="file" accept=".csv" style="display:none;">
+                    </form>
+
+                    <script>
+                        $(document).ready(function() {
+                            $('#importButton').on('click', function() {
+                                $('#fileInput').click();
+                            });
+
+                            $('#fileInput').on('change', function(event) {
+                                var file = $(this).prop('files')[0];
+                                if (file && file.type === 'text/csv') {
+                                    $('#importForm').submit();
+                                } else {
+                                    alert('Please select a valid CSV file.');
+                                }
+                            });
+                        });
+                    </script>
+
+                    <a href="{{ url('price-master.csv') }}" class="btn btn-added">
+                        <i data-feather="download" class="me-2"></i>
+                        Download Sample CSV
+                    </a>
+
                     <a href="{{ route('prices.create') }}" class="btn btn-added">
                         <i data-feather="plus-circle" class="me-2"></i>
                         Add New Price
@@ -106,7 +137,7 @@
                                     `<a class="me-2 p-2 delete-btn" id="restore-price" data-id="${row.id}" href="#">Restore</a>`;
                                 actions +=
                                     `<a class="me-2 p-2 delete-btn" id="delete-price" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
-                            } else if(can_delete){
+                            } else if (can_delete) {
                                 actions +=
                                     `<a class="me-2 p-2 delete-btn" id="delete-price" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
                                 actions +=
