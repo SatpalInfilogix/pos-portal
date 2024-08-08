@@ -182,3 +182,6 @@ select#sales-store {
 a#generate-gatepass {
     width: 100px;
 }
+[name="rec-qauntity"] {
+    width: 25%;
+}

@@ -66,6 +66,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
         Route::get('/sales/{id}',[AdminSalesController::class,'show'])->name('sales.view');
+        Route::post('/update-received-inventory/{inventory_id}',[InventoryTransferController::class,'updateRecievedInventory'])->name('update.received.inventory');
 
         /********************** Sales Routes Ends Here  **********************/
          
