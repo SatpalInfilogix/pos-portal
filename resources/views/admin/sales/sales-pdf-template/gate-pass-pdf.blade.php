@@ -17,12 +17,12 @@
                     <td class="right"></td>
                 </tr>
                 <tr>
-                    <td class="left">Sales Receipt No. {{ $invoice_id }}</td>
-                    <td class="right" style="float: inline-end;">Date of Sale {{ date('d-m-Y') }}</td>
+                    <td class="left">Store : {{ $transferedInventory->store->name }}</td>
+                    <td class="right" style="float: inline-end;">Date of Sale {{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('d F Y') }}</td>
                 </tr>
                 <tr>
                     <td class="left"></td>
-                    <td class="right" style="float: inline-end;">Time: {{ date('H:i:s') }}</td>
+                    <td class="right" style="float: inline-end;">Time: {{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('h:i:s A') }}</td>
                 </tr>
             </table>
             {{-- <p class="main-content">TRN</p>
@@ -34,27 +34,18 @@
             <table class="receipt-table" style="margin-bottom: 200px;">
                 {{-- Table Heading --}}
                 <tr>
-                    <th width="48%">Description</th>
-                    <th width="16%">Qty</th>
-                    <th width="16%">Rate Per Unit</th>
-                    <th width="16%">Amount (JMD)</th>
+                    <th>#</th>
+                    <th>Product</th>
+                    <th>Qty</th>
                 </tr>
                 {{-- Table Data --}}
-                @foreach($productDetails as $key => $productDetail)
+                @foreach ($transferedInventory->deliveredItems as $key => $delivered_item)
                 <tr>
-                    <td>{{ $key+1 }}. {{ $productDetail->name }}</td>
-                    <td>{{ $productDetail->quantity }}</td>
-                    <td></td>
-                    <td>{{ $productDetail->product_total_amount }}</td>
+                    <td>{{ ++$key }}</td>
+                    <td>{{ $delivered_item->product->name }}</td>
+                    <td>{{ $delivered_item->quantity }}</td>
                 </tr>
                 @endforeach
-                <tr>
-                    <td>Total Quantity</td>
-                    <td>{{ $totalQuantity }}</td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                
             </table>
         </div>
     </div>

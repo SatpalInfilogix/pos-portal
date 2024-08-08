@@ -176,3 +176,9 @@ a.chosen-single.chosen-default {
     display: flex;
     align-items: center;
 }
+select#sales-store {
+    width: 50%;
+}
+a#generate-gatepass {
+    width: 100px;
+}
