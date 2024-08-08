@@ -472,9 +472,6 @@
                     qty: quantity
                 },
                 success: function(response) {
-                    console.log(response.cart.payable);
-                    console.log(response.cart.tax);
-
                     if (response.success) {
                         if (quantity > 0) {
                             let cart = response.cart.formatted_sub_total;
@@ -528,7 +525,6 @@
             var quantityInput = $(this).parent().find('.quantity__number');
             var currentValue = parseInt(quantityInput.val());
             var qty = currentValue;
-            console.log(quantityInput);
 
             if ($('body').hasClass('updated-cart')) {
                 qty = currentValue - 1;
@@ -541,19 +537,19 @@
         });
 
         // Select payment method
-        $(document).on('click', 'div.default-cover.method', function() {
-            var payment_method = $(this).data('method');
-            $('div.default-cover.method').removeClass('active');
-            $(this).addClass('active');
-            $('#payment-method').val(payment_method);
-            if (payment_method == 'cash') {
-                $('#method-cash').css('display', 'flex');
-                $('[name="tender_amount"]').attr('required', '');
-            } else {
-                $('#method-cash').hide();
-                $('[name="tender_amount"]').removeAttr('required');
-            }
-        });
+        // $(document).on('click', 'div.default-cover.method', function() {
+        //     var payment_method = $(this).data('method');
+        //     $('div.default-cover.method').removeClass('active');
+        //     $(this).addClass('active');
+        //     $('#payment-method').val(payment_method);
+        //     if (payment_method == 'cash') {
+        //         $('#method-cash').css('display', 'flex');
+        //         $('[name="tender_amount"]').attr('required', '');
+        //     } else {
+        //         $('#method-cash').hide();
+        //         $('[name="tender_amount"]').removeAttr('required');
+        //     }
+        // });
 
         $(document).ready(function() {
             $('[name="order_customer_id"]').chosen({
@@ -711,6 +707,8 @@
                         $('[name="order_customer_id"]').val('').trigger('chosen:updated');
                         $("#place-order").modal("hide");
                         $('#place-order').find('form').trigger('reset');
+                        $('div.default-cover.method').removeClass('active');
+                        $('#method-cash').hide();
                         emptyCart();
                         var completedOrder = `<div class="default-cover p-4 search-order-box" data-invoice-id="${ response.orderId }">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #${ response.orderId }</span>
