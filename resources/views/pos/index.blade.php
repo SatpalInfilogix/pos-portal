@@ -322,42 +322,22 @@
                         </div>
                     </div>
                     <div @class(['cart-indicator', 'd-none' => $isCartEmpty])>
-                        {{-- <div class="d-grid btn-block">
-                            <a class="btn btn-secondary" href="javascript:void(0);">
-                                Grand Total :
-                                @php
-                                    $payable = isset($cart['payable']) ? $cart['payable'] : 0;
-                                @endphp
-                                <span class="payable">${{ number_format($payable, 2) }}</span>
-                            </a>
-                        </div> --}}
-                        <div class="d-grid btn-block">
-                            <a class="btn btn-secondary" href="javascript:void(0);" data-bs-toggle="modal"
-                                data-bs-target="#place-order">
-                                Place Order
-                            </a>
-                        </div>
-                        <div class="btn-row d-sm-flex align-items-center justify-content-between">
-                            <a href="javascript:void(0);" class="btn btn-info btn-icon flex-fill" data-bs-toggle="modal"
-                                data-bs-target="#hold-order">
-                                <span class="me-1 d-flex align-items-center">
-                                    <i data-feather="pause" class="feather-16"></i>
-                                </span>
-                                Hold
-                            </a>
-                            <a href="javascript:void(0);" class="btn btn-danger btn-icon flex-fill">
-                                <span class="me-1 d-flex align-items-center">
-                                    <i data-feather="trash-2" class="feather-16"></i>
-                                </span>
-                                Void
-                            </a>
-                            <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill"
-                                data-bs-toggle="modal" data-bs-target="#payment-completed">
-                                <span class="me-1 d-flex align-items-center">
-                                    <i data-feather="credit-card" class="feather-16"></i>
-                                </span>
-                                Payment
-                            </a>
+                        <div class="row">
+                            {{-- <div class="col-sm-6">
+                                <a href="javascript:void(0);" class="btn btn-info btn-icon w-100"
+                                    data-bs-toggle="modal" data-bs-target="#hold-order">
+                                    <span class="me-1 d-flex align-items-center">
+                                        <i data-feather="pause" class="feather-16"></i>
+                                    </span>
+                                    Hold
+                                </a>
+                            </div> --}}
+                            <div class="col-sm-12">
+                                <a href="javascript:void(0);" class="btn btn-secondary w-100" data-bs-toggle="modal"
+                                    data-bs-target="#place-order">
+                                    Place Order
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </aside>
@@ -522,7 +502,7 @@
 
             if (currentValue < productQuantity) {
                 var newQty = currentValue + 1;
-                
+
                 if ($('body').hasClass('updated-cart')) {
                     newQty = currentValue + 1;
                 }
@@ -605,7 +585,8 @@
 
             if (tender_amount > payable) {
                 var total_change = tender_amount - payable;
-                $('[name="order_change_amount"]').val(total_change.toFixed(2)); // toFixed(2) to ensure two decimal places
+                $('[name="order_change_amount"]').val(total_change.toFixed(
+                    2)); // toFixed(2) to ensure two decimal places
             } else {
                 $('[name="order_change_amount"]').val(0);
             }
@@ -678,10 +659,10 @@
             let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
             let tender_amount = $('[name="tender_amount"]').val();
             let order_change_amount = $('[name="order_change_amount"]').val();
-            $('#order-submission').prop('disabled',true).text('Please Wait...');
+            $('#order-submission').prop('disabled', true).text('Placing Order...');
 
             $.ajax({
-                url: "{{ url('admin/pos-sale-submission') }}",
+                url: "{{ route('sale.submission') }}",
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
@@ -695,27 +676,27 @@
                     billing_address_pin_code: billing_address_pin_code,
                 },
                 success: function(response) {
-                    
-                    $.each(response.returnProductDetails, function (key, val) {
+                    $.each(response.returnProductDetails, function(key, val) {
                         var targetCls = $(`.products-${val.product_id}`);
                         var currentQty = targetCls.find('#up-quantity').text();
                         var updatedQty = parseInt(currentQty) - parseInt(val.quantity);
-                        if(parseInt(updatedQty) <= 0){
+                        if (parseInt(updatedQty) <= 0) {
                             targetCls.find('#up-quantity').text(0);
                             targetCls.addClass('disabled');
-                            targetCls.find('div.img-bg').append('<div class="out-of-stock">Out Of Stock</div>');
-                        }else{
+                            targetCls.find('div.img-bg').append(
+                                '<div class="out-of-stock">Out Of Stock</div>');
+                        } else {
                             targetCls.find('#up-quantity').text(updatedQty);
                         }
                     });
-                    
+
                     if (response.success) {
-                        $('#order-submission').prop('disabled',false).text('Place');
+                        $('#order-submission').prop('disabled', false).html('Place');
                         Swal.fire({
                             title: "Order Placed!",
                             text: "Your Order Placed " + response.orderId,
                             icon: "success",
-                            timer: 2000
+                            timer: 5000
                         });
                         $('#invoice-id').text(response.orderId);
                         const newWindow = window.open(response.pdfUrl, '_blank', 'noopener,noreferrer');

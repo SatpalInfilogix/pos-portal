@@ -15,29 +15,31 @@ class ThermalPrinterService
         $this->printer = new Printer($connector);
     }
 
-    public function printOrderReceipt($order)
+    public function printOrderReceipt($order, $items)
     {
-         // Print shop name
-         $this->printer->setJustification(Printer::JUSTIFY_CENTER);
-         $this->printer->text("Your Shop Name\n");
- 
-         // Print order details
-         $this->printer->setJustification(Printer::JUSTIFY_LEFT);
-         $this->printer->text("Order #: {$order['order_number']}\n");
-         $this->printer->text("Date: " . now()->format('Y-m-d H:i') . "\n");
- 
-         // Print header
-         $this->printer->text("\n" . str_pad("Product", 28) . str_pad("Qty", 10) . "Amount\n");
-         $this->printer->text(str_repeat('-', 48) . "\n"); // Separator
- 
-         // Print items
-         foreach ($order['items'] as $item) {
-             $this->printLine($item['name'], $item['quantity'], $item['price']);
-         }
- 
-         // Print total
-         $this->printer->text("\n" . str_pad("Total", 39) . $order['total'] . "\n");
- 
+        // Print shop name
+        $this->printer->setJustification(Printer::JUSTIFY_CENTER);
+        $this->printer->text("Your Shop Name\n");
+
+        // Print order details
+        $this->printer->setJustification(Printer::JUSTIFY_LEFT);
+        $this->printer->text("Order #: {$order->OrderID}\n");
+        $this->printer->text("Date: " . now()->format('Y-m-d H:i') . "\n");
+
+        // Print header
+        $this->printer->text("\n" . str_pad("Product", 28) . str_pad("Qty", 10) . "Amount\n");
+        $this->printer->text(str_repeat('-', 48) . "\n"); // Separator
+
+        // Print items
+        foreach ($items as $item) {
+            $this->printLine($item['name'], $item['quantity'], $item['price']);
+        }
+
+        // Print total
+        $this->printer->text("\n" . str_pad("Subtotal", 39) . $order->TotalAmount - $order->TaxAmount);
+        $this->printer->text("\n" . str_pad("Tax (GCT 15%)", 39) . $order->TaxAmount);
+        $this->printer->text("\n" . str_pad("Total", 39) . $order->TotalAmount);
+
         // Cut the paper and close the printer
         $this->printer->cut();
         $this->printer->close();
