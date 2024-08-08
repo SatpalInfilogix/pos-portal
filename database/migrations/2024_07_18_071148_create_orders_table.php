@@ -28,6 +28,7 @@ return new class extends Migration
             $table->integer('TaxAmount')->nullable();
             $table->integer('DiscountAmount')->nullable();
             $table->text('OrderNotes')->nullable();
+            $table->integer('card_digits')->nullable();
             $table->integer('CreatedBy')->nullable();
             $table->integer('store_id')->nullable();
             $table->timestamps();
