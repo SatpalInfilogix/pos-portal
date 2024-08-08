@@ -151,7 +151,11 @@ class InventoryTransferController extends Controller
 
             ])
             ->join('stores', 'inventories.store_id', '=', 'stores.id'); // Join with products table
-    
+        
+        $store_id = Auth::user()->store_id; 
+        if($store_id){
+            $transferQuery->where('store_id',$store_id);
+        }    
         // Add search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
@@ -208,5 +212,23 @@ class InventoryTransferController extends Controller
             $transferedInventory->save();
             return response()->json(["gatepassPath" => $publicUrl]);
 
+    }
+    public function updateRecievedInventory(Request $request, $inventory_id){
+
+        $store_id = Auth::user()->store_id;
+
+        $inventory = Inventory::where('id',$inventory_id)->where('store_id',$store_id)->first();
+        if($request->totalDelivered != $request->totalReceived){
+            $inventory->status = 'Delivered';
+        }else{
+            $inventory->status = 'Received';
+        }
+        $inventory->save();
+        foreach($request->productData as $productData){
+            $inventoryProduct =  InventoryProduct::where('inventory_id',$inventory_id)->where('product_id',$productData['product_id'])->first();
+            $inventoryProduct->received_quantity = $productData['receivedQty'];
+            $inventoryProduct->save();
+        }
+        return response()->json(['success' => true]);
     }
 }
