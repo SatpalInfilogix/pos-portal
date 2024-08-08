@@ -61,9 +61,18 @@
                             </div>
                         </div>
 
+                        <?php
+                            $productUnits = json_decode($product->units);
+                        ?>
                         <div class="row mb-3">
                             <div class="col-md-6 add-product">
-                                <div class="input-blocks add-product list">
+                                <label class="form-label">Unit</label>
+                                <select class="select2-multiple form-control" name="units[]" multiple="multiple"id="select2Multiple">
+                                    @foreach($units as $key => $unit)
+                                        <option value="{{ $unit->id }}" {{ in_array($unit->id, $productUnits) ? 'selected' : '' }}>{{ $unit->name }}</option>
+                                    @endforeach
+                                </select>
+                                {{-- <div class="input-blocks add-product list">
                                     <label class="form-label">Units</label>
                                     <input type="text" id="unit" class="form-control">
                                     <button type="button" id="add-units" class="btn btn-primaryadd">Add Units</button>
@@ -81,18 +90,18 @@
                                         </div>
                                         @endforeach
                                     @endif
-                                </div>
+                                </div> --}}
                             </div>
                             <div class="col-md-6 add-product">
                                 <label class="form-label">Manufacture Date</label>
                                 <input type="text" name="manufacture_date" id="manufacture_date" class="form-control" value="{{ old('manufacture_date', $product->manufacture_date) }}">
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="mb-3 add-product">
+                        <div class="row mb-3">
+                            <div class="col-md-12 add-product">
                                 <label class="form-label">Image</label>
                                 <input type="file" name="image" id="product-image" class="form-control" value="{{ old('image')}}">
-                        </div>
+                            </div>
                         <div id="imagePreview">
                             @if ($product->image)
                                 <img src="{{ asset($product->image) }}" id="preview-Img" class="img-preview" width="50" height="50">
@@ -115,10 +124,17 @@
 @endsection
 
 @section('script')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script>
+    $(document).ready(function() {
+        // Select2 Multiple
+        $('.select2-multiple').select2({
+            placeholder: "Select",
+            allowClear: true
+        });
+    });
+
     $(document).ready(function () {
         // product image preview
         $('#product-image').change(function() {

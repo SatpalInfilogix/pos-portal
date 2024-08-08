@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Unit;
 use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
@@ -121,9 +122,10 @@ class AdminProductController extends Controller
             abort(403);
         }
 
+        $units = Unit::latest()->get();
         $categories = Category::latest()->where('status', 0)->get();
 
-        return view('admin.products.create', compact('categories'));
+        return view('admin.products.create', compact('categories', 'units'));
     }
 
     public function store(Request $request)
@@ -182,10 +184,11 @@ class AdminProductController extends Controller
             abort(403);
         }
 
+        $units = Unit::latest()->get();
         $categories  = Category::where('status', 0)->latest()->get();
         $product = Product::where('id', $id)->first(); // Fetch the product by ID
 
-        return view('admin.products.edit', compact('product', 'categories'));
+        return view('admin.products.edit', compact('product', 'categories', 'units'));
     }
 
     public function update(Request $request, $id)
