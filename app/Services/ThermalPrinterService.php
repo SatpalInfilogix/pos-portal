@@ -15,6 +15,27 @@ class ThermalPrinterService
         $this->printer = new Printer($connector);
     }
 
+    public function testPrint()
+    {
+        $this->printer->text("Testing Printer (line 1)\n");
+        $this->printer->text("Testing Printer (line 2)\n");
+        $this->printer->text("Testing Printer (line 3)\n");
+        $this->printer->text("Testing Printer (line 4)\n");
+        $this->printer->text("Testing Printer (line 5)\n");
+        // Cut the paper and close the printer
+        $this->printer->cut();
+        $this->printer->close();
+    }
+
+    public function openCashDrawer()
+    {
+        $this->printer->pulse();
+        $this->printer->close();
+
+        return response()->json(['message' => 'Cash drawer opened']);
+    }
+
+
     public function printOrderReceipt($order, $items)
     {
         // Print shop name

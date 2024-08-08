@@ -15,17 +15,13 @@ class PrintController extends Controller
 
     public function printReceipt()
     {
-        $order = [
-            'order_number' => '12345',
-            'items' => [
-                ['name' => 'Product A', 'quantity' => 1, 'price' => '10.00'],
-                ['name' => 'Long Product Name Example B Testing', 'quantity' => 2, 'price' => '200000.00'],
-                ['name' => 'Another Product C', 'quantity' => 1, 'price' => '15.00'],
-            ],
-            'total' => '45.00',
-        ];        
-        
-        $this->printerService->printOrderReceipt($order);
-        return response()->json(['status' => 'success']);
+        $this->printerService->testPrint();
+        return response()->json(['success' => true]);
+    }
+
+    public function openCashDrawer()
+    {
+        $this->printerService->openCashDrawer();
+        return response()->json(['success' => true]);
     }
 }

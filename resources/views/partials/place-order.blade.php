@@ -61,25 +61,18 @@ $customers = DB::table('customers')->get();
                     <div class="block-section payment-method">
                         <h6>Payment Method <small style="color:red;">*</small></h6>
                         <div class="row d-flex align-items-center justify-content-center methods">
-                            <div class="col-md-6 col-lg-4 item">
+                            <div class="col-md-6">
                                 <div class="default-cover method" data-method="cash">
                                     <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/cash-pay.svg"
                                         alt="Payment Method">
                                     <span>Cash</span>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-lg-4 item">
+                            <div class="col-md-6">
                                 <div class="default-cover method" data-method="debit-card">
                                     <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/credit-card.svg"
                                         alt="Payment Method">
-                                    <span>Debit Card</span>
-                                </div>
-                            </div>
-                            <div class="col-md-6 col-lg-4 item">
-                                <div class="default-cover method" data-method="credit">
-                                    <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/credit-card.svg"
-                                        alt="Payment Method">
-                                    <span>credit</span>
+                                    <span>Debit/ Credit Card</span>
                                 </div>
                             </div>
                             <input type="hidden" name="payment-method" id="payment-method">
@@ -115,4 +108,15 @@ $customers = DB::table('customers')->get();
         </div>
     </div>
 </div>
+
+<script>
+    $(function(){
+        $('[data-method="cash"]').click(function(){
+            $.ajax({
+                url: "{{ route('open-cash-drawer') }}",
+                method: 'GET'
+            })
+        })
+    })
+</script>
 {{-- Place Order End --}}
