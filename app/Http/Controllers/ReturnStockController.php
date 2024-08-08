@@ -8,9 +8,9 @@ use App\Models\Store;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\ReturnStockProduct;
-use App\Models\InventoryProduct;
 use App\Models\PriceMaster;
 use App\Models\StoreProduct;
+use Illuminate\Support\Facades\Gate;
 
 class ReturnStockController extends Controller
 {
@@ -19,6 +19,10 @@ class ReturnStockController extends Controller
      */
     public function index()
     {
+        if (!Gate::allows('view return stocks')) {
+            abort(403);
+        }
+
         return view('admin.stocks.return-stock.index');
     }
 
@@ -27,6 +31,10 @@ class ReturnStockController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('create return stocks')) {
+            abort(403);
+        }
+
         $stores = Store::latest()->get();
         return view('admin.stocks.return-stock.create', compact('stores'));
     }

@@ -11,7 +11,7 @@ use App\Models\StoreProduct;
 use App\Models\Store;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon; 
+use Illuminate\Support\Facades\Gate;
 
 class InventoryTransferController extends Controller
 {
@@ -20,6 +20,10 @@ class InventoryTransferController extends Controller
      */
     public function index()
     {
+        if (!Gate::allows('view inventory transfers')) {
+            abort(403);
+        }
+
         return view('admin.inventory-transfer.index');
     }
 
@@ -28,6 +32,10 @@ class InventoryTransferController extends Controller
      */
     public function create()
     {
+        if (!Gate::allows('create inventory transfers')) {
+            abort(403);
+        }
+
         $stores = Store::latest()->get();
         return view('admin.inventory-transfer.create', compact('stores'));
     }

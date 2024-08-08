@@ -98,8 +98,8 @@
                         @canany(['view return stocks'])
                             <li @class([
                                 'active' => Request::is(
-                                    'admin/return-stocks',
-                                    'admin/return-stocks/*'),
+                                    'admin/return-stock',
+                                    'admin/return-stock/*'),
                             ])>
                                 <a href="{{ route('return-stock.index') }}">
                                     <i data-feather="box"></i>

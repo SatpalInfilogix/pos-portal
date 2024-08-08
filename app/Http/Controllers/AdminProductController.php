@@ -8,18 +8,19 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
 use App\Models\Category;
 use App\Imports\ProductsImport;
-use Picqer\Barcode\BarcodeGeneratorHTML;
 use Maatwebsite\Excel\Facades\Excel;
+use DB;
+use Illuminate\Support\Facades\Gate;
 
 class AdminProductController extends Controller
 {
     public function index()
     {
+        if (!Gate::allows('view product')) {
+            abort(403);
+        }
+
         $products = Product::with('category')->latest()->get();
-        // foreach($products as $key=> $product) {
-        //     $genertorHTML = new BarcodeGeneratorHTML();
-        //     $products[$key]['barcode'] = $genertorHTML->getBarcode($product->product_code. ' ' .$product->product_name, $genertorHTML::TYPE_CODE_128,2);
-        // }
 
         return view('admin.products.index', compact('products'));
     }
@@ -27,13 +28,22 @@ class AdminProductController extends Controller
     public function getProducts(Request $request)
     {
         $maxItemsPerPage = 10;
-   
-        if(isset($request->store_id)){
-            $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'store_products.quantity as available_quantity', 'categories.name as category_name'])
+        $store_id = Auth::user()->store_id;
+        if(isset($store_id)){
+            $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code',
+                DB::raw('COALESCE(MAX(store_products.quantity), 0) as available_quantity'), // Aggregate to handle multiple store_products entries
+                'categories.name as category_name'
+            ])
             ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->join('price_masters', 'products.id', '=', 'price_masters.product_id')
-            ->join('store_products', 'products.id', '=', 'store_products.product_id')
-            ->where('store_products.store_id', '=', $request->store_id);
+            ->join('store_products', function($join) use ($store_id) {
+                $join->on('products.id', '=', 'store_products.product_id')
+                     ->where('store_products.store_id', '=', $store_id);
+            })
+            ->leftJoin('price_masters', 'products.id', '=', 'price_masters.product_id')
+            ->groupBy([
+                'products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'categories.name'
+            ]);
+
                     // Apply search filter
             if ($request->has('search') && !empty($request->search['value'])) {
                 $searchValue = $request->search['value'];
@@ -45,9 +55,19 @@ class AdminProductController extends Controller
                 });
             }
         }else{
-            $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'price_masters.quantity as available_quantity', 'categories.name as category_name'])
+            // $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'price_masters.quantity as available_quantity', 'categories.name as category_name'])
+            // ->join('categories', 'products.category_id', '=', 'categories.id')
+            // ->join('price_masters', 'products.id', '=', 'price_masters.product_id');
+
+            $productsQuery = Product::select([
+                'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 
+                DB::raw('MAX(price_masters.quantity) as available_quantity'), // Aggregate to get the maximum quantity
+                'categories.name as category_name'
+            ])
             ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->join('price_masters', 'products.id', '=', 'price_masters.product_id');
+            ->leftJoin('price_masters', 'products.id', '=', 'price_masters.product_id')
+            ->groupBy([ 'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status',  'products.product_code', 'categories.name'
+            ]);
 
             // Apply search filter
             if ($request->has('search') && !empty($request->search['value'])) {
@@ -60,7 +80,6 @@ class AdminProductController extends Controller
                 });
             }
         }
-
  
         if($request->is_deleted=='false'){
             $productsQuery->where('products.status', 0);
@@ -88,17 +107,6 @@ class AdminProductController extends Controller
         $currentPage = max((int) ($request->input('start', 0) / $perPage), 0);
         $products = $productsQuery->skip($currentPage * $perPage)->take($perPage)->get();
 
-        // foreach ($products as $product) {
-        //     $barcodeData = $product->product_code . ' ' . $product->name;
-        //     $barcodeHTML = $generatorHTML->getBarcode(
-        //         $barcodeData, $generatorHTML::TYPE_CODE_128, 2, 60
-        //     );
-        //     $product->barcode = '<div style="text-align: center;">' .
-        //                         '<div>' . $barcodeHTML . '</div>' .
-        //                         '<div>P- ' . $product->product_code .' ' .$product->name  . '</div>' .
-        //                     '</div>';
-        // }
-
         return response()->json([
             "draw" => intval($request->input('draw')),
             "recordsTotal" => $totalRecords,
@@ -109,6 +117,10 @@ class AdminProductController extends Controller
 
     public function create()
     {
+        if (!Gate::allows('create product')) {
+            abort(403);
+        }
+
         $categories = Category::latest()->where('status', 0)->get();
 
         return view('admin.products.create', compact('categories'));
@@ -166,6 +178,10 @@ class AdminProductController extends Controller
 
     public function edit($id) 
     {
+        if (!Gate::allows('edit product')) {
+            abort(403);
+        }
+
         $categories  = Category::where('status', 0)->latest()->get();
         $product = Product::where('id', $id)->first(); // Fetch the product by ID
 
@@ -187,6 +203,10 @@ class AdminProductController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('delete product')) {
+            abort(403);
+        }
+
         $product = Product::where('id',$id)->first();
 
         if ($product) {

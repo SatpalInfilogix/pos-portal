@@ -9,43 +9,46 @@
                     <h6>Manage your products</h6>
                 </div>
             </div>
-            <div class="page-btn d-flex gap-2">
-                <form id="importForm" action="{{ route('import-products') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <button type="button" class="btn btn-added" id="importButton">
-                        <i data-feather="upload" class="me-2"></i>
-                        Import Products
-                    </button>
-                    <input type="file" id="fileInput" name="file" accept=".csv" style="display:none;">
-                </form>
 
-                <script>
-                    $(document).ready(function() {
-                        $('#importButton').on('click', function() {
-                            $('#fileInput').click();
+            @canany(['create product'])
+                <div class="page-btn d-flex gap-2">
+                    <form id="importForm" action="{{ route('import-products') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <button type="button" class="btn btn-added" id="importButton">
+                            <i data-feather="upload" class="me-2"></i>
+                            Import Products
+                        </button>
+                        <input type="file" id="fileInput" name="file" accept=".csv" style="display:none;">
+                    </form>
+
+                    <script>
+                        $(document).ready(function() {
+                            $('#importButton').on('click', function() {
+                                $('#fileInput').click();
+                            });
+
+                            $('#fileInput').on('change', function(event) {
+                                var file = $(this).prop('files')[0];
+                                if (file && file.type === 'text/csv') {
+                                    $('#importForm').submit();
+                                } else {
+                                    alert('Please select a valid CSV file.');
+                                }
+                            });
                         });
+                    </script>
 
-                        $('#fileInput').on('change', function(event) {
-                            var file = $(this).prop('files')[0];
-                            if (file && file.type === 'text/csv') {
-                                $('#importForm').submit();
-                            } else {
-                                alert('Please select a valid CSV file.');
-                            }
-                        });
-                    });
-                </script>
+                    <a href="{{ url('sample-products.csv') }}" class="btn btn-added">
+                        <i data-feather="download" class="me-2"></i>
+                        Download Sample CSV
+                    </a>
 
-                <a href="{{ url('sample-products.csv') }}" class="btn btn-added">
-                    <i data-feather="download" class="me-2"></i>
-                    Download Sample CSV
-                </a>
-
-                <a href="{{ route('products.create') }}" class="btn btn-added">
-                    <i data-feather="plus-circle" class="me-2"></i>
-                    Add New Product
-                </a>
-            </div>
+                    <a href="{{ route('products.create') }}" class="btn btn-added">
+                        <i data-feather="plus-circle" class="me-2"></i>
+                        Add New Product
+                    </a>
+                </div>
+            @endcanany
         </div>
         @if (session('success'))
             <div class="alert alert-success">
@@ -64,7 +67,11 @@
                                 <th>Product</th>
                                 <th>Manufactured Date</th>
                                 <th>Image</th>
-                                <th class="no-sort">Action</th>
+                                <th>
+                                    @canany(['edit product', 'delete product'])
+                                        Action
+                                    @endcanany
+                                </th>
                             </tr>
                         </thead>
                         <tbody></tbody>
@@ -73,8 +80,15 @@
             </div>
         </div>
     </div>
+
+    <input type="hidden" name="can_edit" value="{{ Auth::user()->can('edit product') }}">
+    <input type="hidden" name="can_delete" value="{{ Auth::user()->can('delete product') }}">
+
     <script>
-      $(function() {
+        $(function() {
+            let can_edit = $('[name="can_edit"]').val();
+            let can_delete = $('[name="can_delete"]').val();
+
             $('.products-table').DataTable({
                 processing: true,
                 serverSide: true,
@@ -86,16 +100,28 @@
                         return d;
                     }
                 },
-                columns: [
-                    { data: "id" },
-                    { data: "category_name" },
-                    { data: "name" },
-                    { data: "manufacture_date" },
+                columns: [{
+                    data: null,
+                        render: function(data, type, row, meta) {
+                            return meta.row + meta.settings._iDisplayStart + 1;
+                        },
+                        title: '#'
+                    },
+                    {
+                        data: "category_name"
+                    },
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "manufacture_date"
+                    },
                     {
                         data: "image",
                         render: function(data, type, row) {
                             const defaultImageUrl = '{{ asset('path/to/default-image.jpg') }}';
-                            const imageUrl = data ? '{{ url('') }}' + '/' + data : defaultImageUrl;
+                            const imageUrl = data ? '{{ url('') }}' + '/' + data :
+                                defaultImageUrl;
                             return `<img src="${imageUrl}" alt="${row.name}" style="width: 50px; height: 50px;">`;
                         }
                     },
@@ -103,31 +129,38 @@
                         data: null,
                         render: function(data, type, row) {
                             var actions = '<div class="edit-delete-action">';
-                            actions += `<a class="me-2 p-2 edit-btn" href="./products/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
+                            if (can_edit) {
+                                actions +=
+                                    `<a class="me-2 p-2 edit-btn" href="./products/${row.id}/edit"><i class="fa fa-edit"></i></a>`;
+                            }
 
-                            if (row.status == 1) {
-                                actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
-                                actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
-                            } else {
-                                actions += `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
-                                actions += `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" style="display: none;">Restore</a>`;
+                            if (row.status == 1 && can_delete) {
+                                actions +=
+                                    `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
+                                actions +=
+                                    `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
+                            } else if(can_delete){
+                                actions +=
+                                    `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
+                                actions +=
+                                    `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" style="display: none;">Restore</a>`;
                             }
                             actions += '</div>';
                             return actions;
                         }
                     }
                 ],
-                columnDefs: [
-                    {
-                        orderable: false,
-                        targets: 5, // Ensure this index is correct based on your column order
-                        className: "action-table-data"
-                    }
-                ],
+                columnDefs: [{
+                    orderable: false,
+                    targets: 5, // Ensure this index is correct based on your column order
+                    className: "action-table-data"
+                }],
                 paging: true,
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100],
-                order: [[0, 'asc']]
+                order: [
+                    [0, 'asc']
+                ]
             });
         });
 

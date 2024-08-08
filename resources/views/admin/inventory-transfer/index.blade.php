@@ -10,12 +10,14 @@
                 </div>
             </div>
 
-            <div class="page-btn">
-                <a href="{{ route('inventory-transfer.create') }}" class="btn btn-added">
-                    <i data-feather="truck" class="me-2"></i>
-                    Transfer new items
-                </a>
-            </div>
+            @canany(['create inventory transfers'])
+                <div class="page-btn">
+                    <a href="{{ route('inventory-transfer.create') }}" class="btn btn-added">
+                        <i data-feather="truck" class="me-2"></i>
+                        Transfer new items
+                    </a>
+                </div>
+            @endcanany
         </div>
         @if (session('success'))
             <div class="alert alert-success">
