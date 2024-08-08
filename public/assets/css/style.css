@@ -37133,3 +37133,10 @@ label span {
 .text-default {
     color: #5b6670
 }
+.btn.btn-default {
+    background: #ff9f43!important;
+    color: white;
+}
+.btn.btn-default:hover {
+    background: #1b2850!important;
+}

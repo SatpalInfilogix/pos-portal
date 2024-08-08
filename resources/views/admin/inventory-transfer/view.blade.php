@@ -40,21 +40,86 @@
                                     <td>#</td>
                                     <td>Product Name</td>
                                     <td>Delivered Quantity</td>
+                                    <td>Received Quantity</td>
                                 </tr>
                             </thead>
+                            @php
+                                $totalDelivered = 0;    
+                            @endphp
                             <tbody>
                                @foreach ($transferedInventory->deliveredItems as $key => $delivered_item)
+                                    @php
+                                        $totalDelivered += $delivered_item->quantity;    
+                                    @endphp
                                     <tr>
                                         <td>{{++$key}}</td>
                                         <td>{{$delivered_item->product->name}}</td>
                                         <td>{{$delivered_item->quantity}}</td>
+                                        <td><input type="number" name="rec-qauntity" class="form-control" data-product-id="{{ $delivered_item->product->id }}" data-delivered-qty="{{ $delivered_item->quantity }}" value="{{ $delivered_item->quantity }}"></td>
                                     </tr>
                                 @endforeach
+                                <tr>
+                                    <td></td>
+                                    <td><b>Total</b></td>
+                                    <td>{{ $totalDelivered }}</td>
+                                    <td></td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
+                <div class="page-btn">
+                    <a href="#" class="btn btn-default" id="update-status">
+                        Update Status
+                    </a>
+                </div>
             </div>
         </div>
+        
     </div>
+    <script>
+        $(document).on('keyup','[name="rec-qauntity"]',function(){
+            var deliveredQty = $(this).data('delivered-qty');
+            var receivedQty = $(this).val();
+            if(receivedQty > deliveredQty){
+                $(this).val(deliveredQty);
+            }
+            if(receivedQty < 0){
+                $(this).val(0);
+            }
+        });
+        $(document).on('click','#update-status',function(e){
+            e.preventDefault();
+            var productData = [];
+            let totalDelivered = 0;
+            let totalReceived = 0;
+            $('[name="rec-qauntity"]').each(function() {
+                var product_id = $(this).data('product-id');
+                var deliveredQty = $(this).data('delivered-qty');
+                totalDelivered += deliveredQty;
+                var receivedQty = $(this).val();
+                totalReceived += parseInt(receivedQty);
+                productData.push({ deliveredQty : deliveredQty, receivedQty : receivedQty, product_id : product_id }); 
+            });
+            var token = "{{ csrf_token() }}";
+            $.ajax({
+                url: "{{ route('update.received.inventory','') }}/"+"{{ $transferedInventory->id }}",
+                type: 'POST',
+                data: {
+                    "_token": token,
+                    productData : productData,
+                    totalDelivered,
+                    totalReceived
+                },
+                success: function(response) {
+                    if(response.success){
+                        $('.card-body').prepend('<div class="alert alert-success">Updated Successfully</div>');
+                    }
+                },
+                error: function(xhr) {
+                    console.log(xhr);
+                }
+            });
+        });
+    </script>
 @endsection
