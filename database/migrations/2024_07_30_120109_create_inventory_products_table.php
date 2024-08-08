@@ -17,6 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('store_id')->nullable();
             $table->unsignedBigInteger('product_id');
             $table->string('quantity')->nullable();
+            $table->string('received_quantity')->nullable();
             $table->unsignedBigInteger('sent_by')->nullable();
             $table->timestamps();
 
