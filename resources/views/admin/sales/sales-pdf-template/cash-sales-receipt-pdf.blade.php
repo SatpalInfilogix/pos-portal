@@ -8,7 +8,7 @@
 <body>
     <div class="main-card">
         <div class="sales-card">
-            <h5 class="main-title">SAMPLE MANUFACTURING LIMITED</h5>
+            @include('partials.letter-head')
             <h3 class="receipt-title">SALE RECEIPT</h3>
             <p class="main-content">TRN</p>
             <div class="content-details">

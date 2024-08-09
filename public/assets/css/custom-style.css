@@ -196,3 +196,15 @@ div#method-card {
     margin-top: 15px;
     display: none;
 }
+
+.address-info {
+    display: flex;
+    justify-content: center;
+    gap: 10rem;
+}
+.letter-heading {
+    text-align: center;
+}
+.letter-heading h1 {
+    margin-bottom: 0px;
+}

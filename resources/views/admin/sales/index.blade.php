@@ -20,12 +20,14 @@
         <div class="row">
             <div class="col-md-6 mb-3">
                 <label class="form-label">Store</label>
-                <select name="store" id="sales-store" class="form-control">
+                @hasanyrole('Super Admin')
+                <select name="store" id="sales-store" class="form-control" >
                     <option value="">select store</option>
                     @foreach ($stores as $store)
                         <option value="{{ $store->id }}" @selected($store->id == auth()->user()->store_id)>{{ $store->name }}</option>
                     @endforeach
                 </select>
+                @endhasanyrole
             </div>
         </div>
         <div class="card table-list-card">
