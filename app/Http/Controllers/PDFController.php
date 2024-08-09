@@ -7,10 +7,17 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use App\Models\Discount; 
 use App\Models\Product; 
+use App\Models\Order; 
 use App\Models\Customer; 
 use App\Models\ProductOrderHistory; 
 class PDFController extends Controller
 {
+    public function generateOrderPDF($invoice_id){
+
+        $orderDetail = Order::with('productDetails')->with('customerDetail')->where('OrderID',$invoice_id)->first();
+
+        return view('admin.sales.sales-pdf-template.cash-sales-receipt-pdf',compact('orderDetail'));
+    }
     public function download() {
        // $pdf = PDF::loadView('admin.sales.sales-pdf-template.cash-sales-receipt-pdf');
         //return $pdf->download('invoice.pdf');
@@ -47,4 +54,6 @@ class PDFController extends Controller
 
         return view('admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf',compact('customer','totalProduct'));
     }
+
+    
 }

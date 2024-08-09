@@ -24,10 +24,12 @@ return new class extends Migration
             $table->string('OrderStatus')->nullable();
             $table->string('PaymentMethod')->nullable();
             $table->string('PaymentStatus')->nullable();
-            $table->integer('TotalAmount')->nullable();
-            $table->integer('TaxAmount')->nullable();
-            $table->integer('DiscountAmount')->nullable();
+            $table->float('TotalAmount')->nullable();
+            $table->float('TaxAmount')->nullable();
+            $table->float('DiscountAmount')->nullable();
             $table->text('OrderNotes')->nullable();
+            $table->float('tender_amount')->nullable();
+            $table->float('change_amount', 8, 1)->nullable();
             $table->integer('card_digits')->nullable();
             $table->integer('CreatedBy')->nullable();
             $table->integer('store_id')->nullable();

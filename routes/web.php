@@ -133,7 +133,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     });
 
     //sales receipt
-    Route::view('cash-sales-receipt-pdf','admin.sales.sales-pdf-template.cash-sales-receipt-pdf');
+    Route::get('generate-order-pdf/{invoice_id}',[PDFController::class, 'generateOrderPDF'])->name('generate.order.pdf');
+    //Route::view('cash-sales-receipt-pdf','admin.sales.sales-pdf-template.cash-sales-receipt-pdf');
     Route::view('card-sales-receipt-pdf','admin.sales.sales-pdf-template.card-sales-receipt-pdf');
     Route::view('gift-card-sales-receipt-pdf','admin.sales.sales-pdf-template.gift-card-sales-receipt-pdf');
     Route::view('credit-customer-sales-receipt-pdf','admin.sales.sales-pdf-template.credit-customer-sales-receipt-pdf');

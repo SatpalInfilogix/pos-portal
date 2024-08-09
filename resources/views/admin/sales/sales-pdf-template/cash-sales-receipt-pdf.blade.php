@@ -1,22 +1,21 @@
 <html>
 
 <head>
-    <title>Customers with Tender type cash</title>
+    <title>Customers with Tender</title>
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
 </head>
 
 <body>
     <div class="main-card">
-        <h3>Customers with Tender type cash</h3>
         <div class="sales-card">
             <h5 class="main-title">SAMPLE MANUFACTURING LIMITED</h5>
             <h3 class="receipt-title">SALE RECEIPT</h3>
             <p class="main-content">TRN</p>
             <div class="content-details">
-                <p class="main-content">Sales Receipt No. {{ $invoice_id }} </p>
-                <p class="main-content">Date of Sale {{ date('d-m-Y') }}</p>
+                <p class="main-content">Sales Receipt No. {{ $orderDetail->OrderID }} </p>
+                <p class="main-content">Date of Sale {{ \Carbon\Carbon::parse($orderDetail->created_at)->format('d-m-Y') }}</p>
             </div>
-            <p class="receipt-time">Time: {{ date('H:i:s') }}</p>
+            <p class="receipt-time">Time: {{ \Carbon\Carbon::parse($orderDetail->created_at)->format('h:i:s A') }}</p>
             <table class="receipt-table">
                 {{-- Table Heading --}}
                 <tr>
@@ -26,77 +25,61 @@
                     <th width="16%">Amount (JMD)</th>
                 </tr>
                 {{-- Table Data --}}
-                @foreach($cart['products'] as $key => $products)
+                @php
+                $grossTotal = 0;    
+                @endphp
+                @foreach($orderDetail->productDetails as $key => $products)
                     <tr>
-                        <td>{{ $key+1 }}. {{ $products['name'] }} </td>
-                        <td>{{ $products['quantity'] }} </td>
-                        <td>${{ $products['price'] }}</td>
-                        <td>${{ $products['product_total_amount'] }}</td>
+                        <td>{{ $key+1 }}. {{ $products->name }} </td>
+                        <td>{{ $products->quantity }} </td>
+                        <td>${{ $products->price }}</td>
+                        <td>${{ $products->product_total_amount }}</td>
                     </tr>
+                    @php
+                    $grossTotal += $products->product_total_amount;    
+                    @endphp
                 @endforeach
-                @if(isset($discountDetails) && !empty($discountDetails))
-                <tr>
-                    <td>Discount {{ $discountDetails['discount_percentage'] }}%</td>
-                    <td></td>
-                    <td></td>
-                    <td>(${{ $discountDetails['discount_amount'] }})</td>
-                </tr>
-                @endif
-               
-
                 <tr>
                     <td rowspan="7"></td>
                     <td colspan="2" class="g-total">Gross Sale Amount</td>
-                    <td>{{ $cart['formatted_sub_total'] }}</td>
+                    <td>${{ $grossTotal }}</td>
                 </tr>
-                @if(isset($discountDetails) && !empty($discountDetails))
-                    <tr>
-                        <td colspan="2">Total Discount</td>
-                        <td>${{$discountDetails['discount_amount'] ?? '0' }}</td>
-                    </tr>
-                @else
-                    <tr>
-                        <td colspan="2">Total Discount</td>
-                        <td>($0)</td>
-                    </tr>
-                @endif
+
                 <tr>
-                    <td colspan="2">Net Sales Amount</td>
-                    <td>{{ $cart['formatted_grand_total'] }}</td>
+                    <td colspan="2">Total Discount</td>
+                    <td>(${{ $orderDetail->DiscountAmount ?? '0'}})</td>
                 </tr>
                 <tr>
                     <td colspan="2">GCT @15%</td>
-                    <td>${{ $cart['tax'] }}</td>
+                    <td>${{ $orderDetail->TaxAmount }}</td>
                 </tr>
                 <tr>
                     <td colspan="2">Total Payable</td>
-                    <td>${{ $cart['payable'] }} </td>
+                    <td>${{ $orderDetail->TotalAmount }} </td>
                 </tr>
                 <tr>
                     <td colspan="2">Tendered Amount</td>
-                    <td>${{ $customerDetails->tender_amount }}</td>
+                    <td>${{ $orderDetail->tender_amount ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="2">Change</td>
-                    <td>${{ $customerDetails->order_change_amount ?? '0'}}</td>
+                    <td>${{ $orderDetail->change_amount ?? '0'}}</td>
                 </tr>
                 <tr class="empty-row">
-                    <td></td>
+                    <td colspan="3"></td>
+                </tr>
+                <tr>
+                    <td>Customer Name: {{ $orderDetail->customerDetail->customer_name }}</td>
                     <td colspan="2"></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Customer Name: {{ $customerDetails->customer_name }}</td>
+                    <td>Customer Contact: {{ $orderDetail->customerDetail->contact_number }}</td>
                     <td colspan="2"></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Customer Contact: {{ $customerDetails->contact_number }}</td>
-                    <td colspan="2"></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>Tender type: Cash</td>
+                    <td>Tender type: {{ $orderDetail->PaymentMethod }}</td>
                     <td colspan="2"></td>
                     <td></td>
                 </tr>

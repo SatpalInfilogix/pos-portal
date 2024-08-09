@@ -58,11 +58,13 @@ class OrderController extends Controller
 
         // Payment Process
         if ($request->payment_method == 'cash') {
-            $status = $this->typeCash($cart, $invoice_id, $discountDetails, $customerDetails);
+
+            $status = ["payment" => "success"];
+
         } elseif ($request->payment_method == 'debit-card') {
-            $status = $this->typeDebitCard($cart, $invoice_id, $discountDetails, $customerDetails);
-        } elseif ($request->payment_method == 'credit') {
-            $status = $this->typeCredit($cart, $invoice_id, $discountDetails, $customerDetails);
+
+            $status = $this->typeDebitCard();
+
         }
 
         // Payment Success
@@ -83,6 +85,8 @@ class OrderController extends Controller
                 'TotalAmount' => $cart['payable'],
                 'TaxAmount' => $cart['tax'],
                 'DiscountAmount' => $cart['discount_amount'],
+                'tender_amount' => $request->tender_amount,
+                'change_amount' => $request->order_change_amount,
                 'card_digits' => $request->card_digits,
                 'CreatedBy' => Auth::id(),
                 'store_id' => $store_id,
@@ -135,12 +139,10 @@ class OrderController extends Controller
                 }
             }
 
-
             return response()->json([
                 'success' => true,
                 'message' => 'Order Placed',
-                'orderId' => $this->generateInvoice(),
-                'pdfUrl' => $status['invoicePath'],
+                'orderId' => $invoice_id,
                 'totalAmount' => $cart['payable'],
                 'orderDate' => now(),
                 'customerName' => $request->customer_name,
@@ -149,77 +151,10 @@ class OrderController extends Controller
         }
     }
 
-    public function typeCash($cart, $invoice_id, $discountDetails, $customerDetails)
+    public function typeDebitCard()
     {
-
         $payment = 'success';
-
-        if ($payment == 'success') {
-            $pdfDirectory = 'invoices';
-            if (!Storage::disk('public')->exists($pdfDirectory)) {
-                Storage::disk('public')->makeDirectory($pdfDirectory);
-            }
-
-            // Generate PDF
-            $pdf = PDF::loadView('admin.sales.sales-pdf-template.cash-sales-receipt-pdf', compact('cart', 'invoice_id', 'discountDetails', 'customerDetails'));
-            $pdfContent = $pdf->output();
-            $pdfFileName = $invoice_id . '.pdf';
-            $invoicePath = $pdfDirectory . '/' . $pdfFileName;
-
-            // Save PDF to public disk
-            Storage::disk('public')->put($invoicePath, $pdfContent);
-
-            $publicUrl = Storage::disk('public')->url($invoicePath);
-        }
-        return ["payment" => $payment, "invoicePath" => $publicUrl];
-    }
-    public function typeDebitCard($cart, $invoice_id, $discountDetails, $customerDetails)
-    {
-
-        $payment = 'success';
-
-        if ($payment == 'success') {
-            $pdfDirectory = 'invoices';
-            if (!Storage::disk('public')->exists($pdfDirectory)) {
-                Storage::disk('public')->makeDirectory($pdfDirectory);
-            }
-
-            // Generate PDF
-            $pdf = PDF::loadView('admin.sales.sales-pdf-template.card-sales-receipt-pdf', compact('cart', 'invoice_id', 'discountDetails', 'customerDetails'));
-            $pdfContent = $pdf->output();
-            $pdfFileName = $invoice_id . '.pdf';
-            $invoicePath = $pdfDirectory . '/' . $pdfFileName;
-
-            // Save PDF to public disk
-            Storage::disk('public')->put($invoicePath, $pdfContent);
-
-            $publicUrl = Storage::disk('public')->url($invoicePath);
-        }
-        return ["payment" => $payment, "invoicePath" => $publicUrl];
-    }
-    public function typeCredit($cart, $invoice_id, $discountDetails, $customerDetails)
-    {
-
-        $payment = 'success';
-
-        if ($payment == 'success') {
-            $pdfDirectory = 'invoices';
-            if (!Storage::disk('public')->exists($pdfDirectory)) {
-                Storage::disk('public')->makeDirectory($pdfDirectory);
-            }
-
-            // Generate PDF
-            $pdf = PDF::loadView('admin.sales.sales-pdf-template.card-sales-receipt-pdf', compact('cart', 'invoice_id', 'discountDetails', 'customerDetails'));
-            $pdfContent = $pdf->output();
-            $pdfFileName = $invoice_id . '.pdf';
-            $invoicePath = $pdfDirectory . '/' . $pdfFileName;
-
-            // Save PDF to public disk
-            Storage::disk('public')->put($invoicePath, $pdfContent);
-
-            $publicUrl = Storage::disk('public')->url($invoicePath);
-        }
-        return ["payment" => $payment, "invoicePath" => $publicUrl];
+        return ["payment" => $payment];
     }
 
     public function generateInvoice()
