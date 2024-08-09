@@ -536,21 +536,6 @@
             $(`.increase_${productId}`).removeClass('disabled-link');
         });
 
-        // Select payment method
-        // $(document).on('click', 'div.default-cover.method', function() {
-        //     var payment_method = $(this).data('method');
-        //     $('div.default-cover.method').removeClass('active');
-        //     $(this).addClass('active');
-        //     $('#payment-method').val(payment_method);
-        //     if (payment_method == 'cash') {
-        //         $('#method-cash').css('display', 'flex');
-        //         $('[name="tender_amount"]').attr('required', '');
-        //     } else {
-        //         $('#method-cash').hide();
-        //         $('[name="tender_amount"]').removeAttr('required');
-        //     }
-        // });
-
         $(document).ready(function() {
             $('[name="order_customer_id"]').chosen({
                 placeholder_text_single: 'Enter Name',

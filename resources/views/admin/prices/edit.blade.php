@@ -51,7 +51,7 @@
                                     <label class="form-label">Product Name</label>
                                     <select name="product" id="product-dropdown" class="form-control chosen-select"
                                         required>
-                                        {{-- <option value="{{ $price->product->id }}">{{ $price->product->name }}</option> --}}
+                                        <option value=""></option>
                                     </select>
                                 </div>
                             </div>
@@ -137,6 +137,10 @@
                 allow_single_deselect: true,
                 no_results_text: 'No results matched'
             });
+
+            setTimeout(()=>{
+                $('[name="product"]').val(`{{ $price->product->id }}`).trigger('chosen:updated');
+            },1500);
 
             updateProductSearch('');
 
