@@ -91,6 +91,12 @@ $customers = DB::table('customers')->get();
 
                         </div>
                     </div>
+                    <div class="row" id="method-card">
+                        <div class="col-md-6 col-lg-4 item">
+                            <input type="number" name="card_digits" class="form-control"
+                                placeholder="Enter Card Last 4 Digits">
+                        </div>
+                    </div>
                     <p class="grand-total"> Grand Total :
                         @php
                             $cart = session('cart');

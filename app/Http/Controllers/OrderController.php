@@ -83,6 +83,7 @@ class OrderController extends Controller
                 'TotalAmount' => $cart['payable'],
                 'TaxAmount' => $cart['tax'],
                 'DiscountAmount' => $cart['discount_amount'],
+                'card_digits' => $request->card_digits,
                 'CreatedBy' => Auth::id(),
                 'store_id' => $store_id,
             ]);
