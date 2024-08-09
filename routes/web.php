@@ -24,6 +24,7 @@ use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ReturnStockController;
 use App\Http\Controllers\InventoryReturnController;
+use App\Http\Controllers\PosProfileController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
@@ -152,6 +153,9 @@ Route::post('remove-from-cart', [PosCartController::class, 'remove'])->name('rem
 Route::post('update-cart', [PosCartController::class, 'update'])->name('update-cart');
 Route::post('discount', [PosCartController::class, 'discountApply'])->name('discount');
 Route::post('clear-cart', [PosCartController::class, 'clearCart'])->name('clear-cart');
+
+Route::get('pos-dashboard/profile', [PosProfileController::class, 'index'])->name('pos-dashboard.profile');
+Route::patch('/pos-dashboard/profile/{id}', [PosProfileController::class, 'update'])->name('pos-dashboard.profile.update');
 
 /************************* DataTables Routes ************************/
 Route::post('/get-users', [AdminUserController::class, 'getUsers'])->name('get-users');
