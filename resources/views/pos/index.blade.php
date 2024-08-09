@@ -714,6 +714,7 @@
                         $('div.default-cover.method').removeClass('active');
                         $('#method-cash').hide();
                         emptyCart();
+                        window.open("{{ route('generate.order.pdf','') }}/"+response.orderId,'_blank');
                         var completedOrder = `<div class="default-cover p-4 search-order-box" data-invoice-id="${ response.orderId }">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #${ response.orderId }</span>
                                     <div class="row">

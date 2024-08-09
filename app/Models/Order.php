@@ -13,5 +13,8 @@ class Order extends Model
     public function productDetails(){
         return $this->hasMany(ProductOrderHistory::class,'order_id','OrderID');
     }
+    public function customerDetail(){
+        return $this->hasOne(Customer::class,'id','CustomerID');
+    }
 
 }
