@@ -176,3 +176,4 @@ Route::get('/product-units/{productId}', [AdminPriceController::class, 'getUnits
 /* Test print */
 Route::get('/test-print', [PrintController::class, 'printReceipt']);
 Route::get('/open-cash-drawer', [PrintController::class, 'openCashDrawer'])->name('open-cash-drawer');
+Route::post('/get-transaction', [PosDashboardController::class, 'getTransaction'])->name('get-transaction');

@@ -134,25 +134,34 @@
                                 <th>Product</th>
                                 <th>SKU</th>
                                 <th>Manufactured Date</th>
-                                <th class="no-sort">Action</th>
+                                @canany(['edit product', 'delete product'])
+                                    <th>Action</th>
+                                @endcanany
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($products as $product)
                                 <tr>
-                                    <td><a href="{{ route('products.edit',$product->id) }}">{{ $product->name }}</a></td>
+                                    <td><a href="{{ route('products.edit', $product->id) }}">{{ $product->name }}</a></td>
                                     <td>{{ $product->product_code ?? '' }}</td>
                                     <td>{{ $product->manufacture_date }}</td>
-                                    <td class="action-table-data">
-                                        <div class="edit-delete-action">
-                                            <a class="me-2 p-2" href="{{ route('products.edit',$product->id) }}">
-                                                <i data-feather="edit" class="feather-edit"></i>
-                                            </a>
-                                            <a class="p-2 delete-products" id="delete-products" data-id="{{ $product->id}}" href="#">
-                                                <i data-feather="trash-2" class="feather-trash-2"></i>
-                                            </a>
-                                        </div>
-                                    </td>
+                                    @canany(['edit product', 'delete product'])
+                                        <td class="action-table-data">
+                                            <div class="edit-delete-action">
+                                                @canany(['edit product'])
+                                                    <a class="me-2 p-2" href="{{ route('products.edit', $product->id) }}">
+                                                        <i data-feather="edit" class="feather-edit"></i>
+                                                    </a>
+                                                @endcanany
+                                                @canany(['delete product'])
+                                                    <a class="p-2 delete-products" id="delete-products"
+                                                        data-id="{{ $product->id }}" href="#">
+                                                        <i data-feather="trash-2" class="feather-trash-2"></i>
+                                                    </a>
+                                                @endcanany
+                                            </div>
+                                        </td>
+                                    @endcanany
                                 </tr>
                             @endforeach
                         </tbody>
@@ -167,8 +176,8 @@
                 e.preventDefault();
                 var productId = $(this).data('id');
                 var token = "{{ csrf_token() }}";
-                var url = "{{route('products.destroy','')}}/" + productId;
-        
+                var url = "{{ route('products.destroy', '') }}/" + productId;
+
                 if (confirm('Are you sure you want to delete this product?')) {
                     $.ajax({
                         url: url,
@@ -177,8 +186,8 @@
                             "_token": token,
                         },
                         success: function(response) {
-                            if(response.status == 'success') {
-                                if(response.product == 1) {
+                            if (response.status == 'success') {
+                                if (response.product == 1) {
                                     $('#restore-products[data-id="' + productId + '"]').show();
                                     $('#delete-products[data-id="' + productId + '"]').hide();
                                 } else {
@@ -200,5 +209,5 @@
                 }
             });
         });
-        </script>
+    </script>
 @endsection

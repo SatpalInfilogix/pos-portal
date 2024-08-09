@@ -91,4 +91,46 @@ class PosDashboardController extends Controller
         return view('pos.index', compact('categories', 'totalProducts', 'products','invoiceId', 'discount', 'customers','completedOrders','holdOrders','unPaidOrders'));
     }
 
+    public function getTransaction(Request $request)
+{
+    $maxItemsPerPage = 10;
+
+    // Base query
+    $recentTransaction = Order::select(['created_at', 'OrderID', 'CustomerName', 'TotalAmount'])->where('CreatedBy',Auth::user()->id);
+
+    // Search filter
+    if ($request->has('search') && !empty($request->search['value'])) {
+        $searchValue = $request->search['value'];
+        $recentTransaction->where(function ($query) use ($searchValue) {
+            $query->where('OrderID', 'like', '%' . $searchValue . '%')
+                  ->orWhere('created_at', 'like', '%' . $searchValue . '%')
+                  ->orWhere('CustomerName', 'like', '%' . $searchValue . '%')
+                  ->orWhere('TotalAmount', 'like', '%' . $searchValue . '%');
+        });
+    }
+
+    // Ordering
+    if ($request->has('order')) {
+        $orderColumn = $request->order[0]['column'];
+        $orderDirection = $request->order[0]['dir'];
+        $column = $request->columns[$orderColumn]['data'];
+        $recentTransaction->orderBy($column, $orderDirection);
+    }
+
+    // Pagination
+    $totalRecords = $recentTransaction->count(); // Total records before pagination
+    $perPage = $request->input('length', $maxItemsPerPage);
+    $currentPage = $request->input('start', 0) / $perPage;
+    $recentTransactions = $recentTransaction->skip($currentPage * $perPage)->take($perPage)->get();
+
+    // Respond with data
+    return response()->json([
+        "draw" => intval($request->input('draw')),
+        "recordsTotal" => $totalRecords,
+        "recordsFiltered" => $totalRecords, // This should reflect the filtered count if filtering is applied
+        "data" => $recentTransactions
+    ]);
+}
+
+
 }
