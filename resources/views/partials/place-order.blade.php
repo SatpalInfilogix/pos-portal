@@ -93,9 +93,11 @@ $customers = DB::table('customers')->get();
                     </div>
                     <div class="row" id="method-card">
                         <div class="col-md-6 col-lg-4 item">
-                            <input type="number" name="card_digits" class="form-control"
-                                placeholder="Enter Card Last 4 Digits">
-                        </div>
+                            <input type="text" name="card_digits" class="form-control" placeholder="Enter Card Last 4 Digits" maxlength="4" 
+                            pattern="\d{4}"  title="Enter card last 4 digits"  oninput="validateCardDigits(this)" required>
+                            {{-- <input type="number" name="card_digits" class="form-control" min= 
+                                placeholder="Enter Card Last 4 Digits">--}}
+                        </div> 
                     </div>
                     <p class="grand-total"> Grand Total :
                         @php
@@ -124,5 +126,16 @@ $customers = DB::table('customers')->get();
             })
         })
     })
+    function validateCardDigits(input) {
+    let value = input.value;
+    // Remove non-numeric characters
+    value = value.replace(/\D/g, '');
+    // Limit to 4 digits
+    if (value.length > 4) {
+        value = value.slice(0, 4);
+    }
+    // Update the input field with the valid value
+    input.value = value;
+}
 </script>
 {{-- Place Order End --}}

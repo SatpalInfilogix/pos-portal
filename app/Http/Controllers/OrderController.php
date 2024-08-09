@@ -90,7 +90,11 @@ class OrderController extends Controller
                 'store_id' => $store_id,
             ]);
 
-            $this->printerService->printOrderReceipt($order, $cart['products']);
+            try {
+                $this->printerService->printOrderReceipt($order, $cart['products']);
+            } catch (\Exception $e) {
+                // Handle priter communication failure
+            }
 
             $returnProductDetails = [];
             foreach ($cart['products'] as $product) {
