@@ -692,13 +692,9 @@
                             icon: "success",
                             timer: 5000
                         });
+
                         $('#invoice-id').text(response.orderId);
-                        const newWindow = window.open(response.pdfUrl, '_blank', 'noopener,noreferrer');
-                        if (newWindow) {
-                            setTimeout(() => {
-                                window.focus();
-                            }, 100);
-                        }
+                        
                         $('[name="order_customer_id"]').val('').trigger('chosen:updated');
                         $("#place-order").modal("hide");
                         $('div.default-cover.method').removeClass('active');

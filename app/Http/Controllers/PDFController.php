@@ -47,4 +47,5 @@ class PDFController extends Controller
 
         return view('admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf',compact('customer','totalProduct'));
     }
+    
 }
