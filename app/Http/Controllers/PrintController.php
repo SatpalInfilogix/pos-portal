@@ -21,7 +21,11 @@ class PrintController extends Controller
 
     public function openCashDrawer()
     {
-        $this->printerService->openCashDrawer();
-        return response()->json(['success' => true]);
+        try {
+            $this->printerService->openCashDrawer();
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'error' => 'Failed to open cash drawer.']);
+        }
     }
 }
