@@ -9,7 +9,7 @@
     <div class="main-card">
         <h3>Gate Pass</h3>
         <div class="sales-card">
-            <h5 class="main-title">SAMPLE MANUFACTURING LIMITED</h5>
+            @include('partials.letter-head')
             <h3 class="receipt-title">GATE PASS</h3>
             <table class="head-table">
                 <tr>
