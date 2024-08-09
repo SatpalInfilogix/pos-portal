@@ -121,7 +121,7 @@
                                 </div>
                             </div>
                             <hr class="m-0">
-                            <a class="dropdown-item" href="javascript:void(0)">
+                            <a class="dropdown-item" href="{{ route('pos-dashboard.profile')}}">
                                 <i class="me-2" data-feather="user"></i>
                                 My Profile
                             </a>
