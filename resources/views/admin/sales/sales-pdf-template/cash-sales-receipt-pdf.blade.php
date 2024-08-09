@@ -66,9 +66,7 @@
                     <td>${{ $orderDetail->change_amount ?? '0'}}</td>
                 </tr>
                 <tr class="empty-row">
-                    <td></td>
-                    <td colspan="2"></td>
-                    <td></td>
+                    <td colspan="3"></td>
                 </tr>
                 <tr>
                     <td>Customer Name: {{ $orderDetail->customerDetail->customer_name }}</td>
