@@ -192,3 +192,7 @@ a#generate-gatepass {
 [name="rec-qauntity"] {
     width: 25%;
 }
+div#method-card {
+    margin-top: 15px;
+    display: none;
+}

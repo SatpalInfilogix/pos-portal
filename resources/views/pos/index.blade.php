@@ -600,9 +600,13 @@
             if (payment_method == 'cash') {
                 $('#method-cash').css('display', 'flex');
                 $('[name="tender_amount"]').attr('required', '');
+                $('[name="card_digits"]').removeAttr('required');
+                $('#method-card').hide();
             } else {
                 $('#method-cash').hide();
+                $('#method-card').show();
                 $('[name="tender_amount"]').removeAttr('required');
+                $('[name="card_digits"]').attr('required', '');
             }
         });
 
@@ -657,6 +661,7 @@
             let billing_address = $('[name="billing_address"]').val();
             let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
             let tender_amount = $('[name="tender_amount"]').val();
+            let card_digits = $('[name="card_digits"]').val();
             let order_change_amount = $('[name="order_change_amount"]').val();
             $('#order-submission').prop('disabled', true).text('Placing Order...');
 
@@ -670,6 +675,7 @@
                     contact_number: contact_number,
                     billing_address: billing_address,
                     payment_method: payment_method,
+                    card_digits: card_digits,
                     tender_amount: tender_amount,
                     order_change_amount: order_change_amount,
                     billing_address_pin_code: billing_address_pin_code,
@@ -706,6 +712,8 @@
                         }
                         $('[name="order_customer_id"]').val('').trigger('chosen:updated');
                         $("#place-order").modal("hide");
+                        $('div.default-cover.method').removeClass('active');
+                        $('#method-card,#method-cash').hide();
                         $('#place-order').find('form').trigger('reset');
                         $('div.default-cover.method').removeClass('active');
                         $('#method-cash').hide();
