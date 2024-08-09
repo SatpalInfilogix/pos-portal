@@ -9,7 +9,7 @@
     <div class="main-card">
         <h3> Customer with Tender type Card Gift Card</h3>
         <div class="sales-card">
-            <h5 class="main-title">SAMPLE MANUFACTURING LIMITED</h5>
+            @include('partials.letter-head')
             <h3 class="receipt-title">SALE RECEIPT</h3>
             <p class="main-content">TRN</p>
             <div class="content-details">
