@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 /* Library Imports Starts Here */
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB; 
+use Illuminate\Support\Facades\Auth; 
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\PriceMaster;
@@ -34,15 +36,17 @@ class AdminDashboardController extends Controller
         $totalInventoryReturn = 0;
         $totalSaleAmount = Order::get()->sum('TotalAmount');
         $products = $this->getLatestProducts();
-        return view('admin.index')->with([
-            'userDetails'      => $adminUser,
-            'products'         => $products,
-            'totalCustomers'   => $totalCustomers,
-            'totalProducts'    => $totalProducts,
-            'totalSaleInvoices'=> $totalSaleInvoices,
-            'totalInventoryReturn' => $totalInventoryReturn,
-            'totalSaleAmount' => $totalSaleAmount
-        ]);
+
+            return view('admin.index')->with([
+                'userDetails'      => $adminUser,
+                'products'         => $products,
+                'totalCustomers'   => $totalCustomers,
+                'totalProducts'    => $totalProducts,
+                'totalSaleInvoices'=> $totalSaleInvoices,
+                'totalInventoryReturn' => $totalInventoryReturn,
+                'totalSaleAmount' => $totalSaleAmount
+            ]);
+
     }
     
     private function getLatestProducts()
@@ -57,6 +61,45 @@ class AdminDashboardController extends Controller
             $products[$proKey]['price'] = $price;
         }
         return $products;
+    }
+
+    public function chartDetails(){
+
+        $store_id = Auth::user()->store_id;
+        if($store_id){
+            $monthlySums = Order::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(TotalAmount) as total_amount')
+            ->where('store_id', $store_id)
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+            ->orderBy(DB::raw('YEAR(created_at)'))
+            ->orderBy(DB::raw('MONTH(created_at)'))
+            ->get();
+        }else{
+            $monthlySums = Order::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, SUM(TotalAmount) as total_amount')
+            ->groupBy(DB::raw('YEAR(created_at)'), DB::raw('MONTH(created_at)'))
+            ->orderBy('year')
+            ->orderBy('month')
+            ->get();
+        }
+
+
+        $months = [];
+        $sales = [];
+
+        $allMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+        foreach ($allMonths as $monthName) {
+            $months[] = $monthName;
+            $sales[] = 0; 
+        }
+
+        foreach ($monthlySums as $data) {
+            $monthIndex = $data->month - 1;
+            $sales[$monthIndex] = number_format($data->total_amount, 2);
+        }
+        return response()->json([
+            'months' => $months,
+            'sales' => $sales
+        ]);
     }
 
 }
