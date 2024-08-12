@@ -114,7 +114,7 @@
                                         alt="img"></span>
                             </div>
                             <div class="dash-widgetcontent">
-                                <h5>$<span class="counters" data-count="385656.50">$385,656.50</span></h5>
+                                <h5>$<span class="counters" data-count="{{ $totalSaleAmount }}">${{ $totalSaleAmount }}</span></h5>
                                 <h6>Total Sale Amount</h6>
                             </div>
                         </div>

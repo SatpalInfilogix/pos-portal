@@ -9,9 +9,11 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth; 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\StoreProduct;
 use App\Models\PriceMaster;
 use App\Models\Customer;
 use App\Models\Order;
+use App\Models\ReturnStockProduct;
 /* Library Imports Stops Here */
 
 /* Controller Imports Imports Starts Here */
@@ -28,13 +30,24 @@ class AdminDashboardController extends Controller
             return redirect()->route('pos-dashboard');
         }
 
+        $store_id = Auth::user()->store_id;
+        if($store_id){
+            $totalProducts =  StoreProduct::where('store_id',$store_id)->get()->count();
+            $totalSaleInvoices = Order::where('store_id',$store_id)->get()->count();
+            $totalSaleAmount = Order::where('store_id',$store_id)->get()->sum('TotalAmount');
+            $totalInventoryReturn = ReturnStockProduct::where('store_id',$store_id)->get()->count();
+        }else{
+            $totalProducts = Product::get()->count();
+            $totalSaleInvoices = Order::get()->count();
+            $totalSaleAmount = Order::get()->sum('TotalAmount');
+            $totalInventoryReturn = ReturnStockProduct::get()->count();
+        }
+
         $adminUserobject = new AdminUserController();
         $adminUser = $adminUserobject->getAdminUserDetail();
         $totalCustomers = Customer::get()->count();
-        $totalProducts = Product::get()->count();
-        $totalSaleInvoices = Order::get()->count();
-        $totalInventoryReturn = 0;
-        $totalSaleAmount = Order::get()->sum('TotalAmount');
+        
+        
         $products = $this->getLatestProducts();
 
             return view('admin.index')->with([
