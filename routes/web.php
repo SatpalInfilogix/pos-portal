@@ -54,6 +54,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     //Backend dashboard Access.
     /***************** Backend routes ****************/
     Route::get('/admin-dashboard',[AdminDashboardController::class,'showAdminDashboard'])->name('backend-dashboard');
+    Route::get('/chart-details',[AdminDashboardController::class,'chartDetails'])->name('chart.details');
 
     Route::prefix('admin')->group(function () {
         Route::resources([
