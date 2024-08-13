@@ -9,7 +9,8 @@ use App\Models\Discount;
 use App\Models\Product; 
 use App\Models\Order; 
 use App\Models\Customer; 
-use App\Models\ProductOrderHistory; 
+use App\Models\ProductOrderHistory;
+use Illuminate\Support\Facades\DB; 
 class PDFController extends Controller
 {
     public function generateOrderPDF($invoice_id){
@@ -48,11 +49,13 @@ class PDFController extends Controller
         // }else{
         //     $discountDetails = '';
         // }
-        
-        $invoice_id = 'INV-000037';
-        $customer = Customer::where('id','=',37)->first();
 
-        return view('admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf',compact('customer','totalProduct'));
+
+            
+       // $invoice_id = 'INV-000037';
+        //$customer = Customer::where('id','=',37)->first();
+
+        //return view('admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf',compact('customer','totalProduct'));
     }
 
     
