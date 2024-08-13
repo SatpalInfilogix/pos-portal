@@ -66,6 +66,9 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="{{ asset('assets/js/summernote-bs4.min.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
+    <script src="{{ asset('assets/js/theia-sticky-sidebar/ResizeSensor.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
+    <script src="{{ asset('assets/js/theia-sticky-sidebar/theia-sticky-sidebar.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
 
     <script>
         function formatDate(data) {

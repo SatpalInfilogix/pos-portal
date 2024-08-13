@@ -38,6 +38,15 @@
 </head>
 
 <body>
+    <?php 
+        $logo_url= DB::table('settings')->where('key','logo')->first();
+        if($logo_url)
+        {
+            $logo_url = $logo_url->value;}
+        else{
+            $logo_url = '';
+        }
+    ?>
     <div id="global-loader">
         <div class="whirly-loader"> </div>
     </div>
@@ -48,13 +57,13 @@
 
             <div class="header-left active">
                 <a href="{{ route('backend-dashboard') }}" class="logo logo-normal">
-                    <img src="{{ asset('assets/img/logo.png') }}" alt>
+                    <img src="@if($logo_url) {{env('BASE_IMAGE_PATH')}}{{ $logo_url }} @else {{ asset('assets/img/logo.png') }} @endif" alt>
                 </a>
                 <a href="{{ route('backend-dashboard') }}" class="logo logo-white">
-                    <img src="{{ asset('assets/img/logo-white.png') }}" alt>
+                    <img src="@if($logo_url) {{env('BASE_IMAGE_PATH')}}{{ $logo_url }} @else {{ asset('assets/img/logo-white.png') }} @endif" alt>
                 </a>
                 <a href="{{ route('backend-dashboard') }}" class="logo-small">
-                    <img src="{{ asset('assets/img/logo-small.png') }}" alt>
+                    <img src="@if($logo_url) {{env('BASE_IMAGE_PATH')}}{{ $logo_url }} @else {{ asset('assets/img/logo-small.png') }} @endif" alt>
                 </a>
             </div>
 

@@ -24,14 +24,14 @@ use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ReturnStockController;
 use App\Http\Controllers\InventoryReturnController;
-use App\Http\Controllers\PosProfileController;
+use App\Http\Controllers\SettingController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
 use App\Http\Controllers\PosDashboardController;
 use App\Http\Controllers\PosCartController;
 use App\Http\Controllers\PrintController;
-
+use App\Http\Controllers\PosProfileController;
 /* End Frontend Controller Import */
 /* Controller Imports ends Here */
 
@@ -156,6 +156,9 @@ Route::post('clear-cart', [PosCartController::class, 'clearCart'])->name('clear-
 
 Route::get('pos-dashboard/profile', [PosProfileController::class, 'index'])->name('pos-dashboard.profile');
 Route::patch('/pos-dashboard/profile/{id}', [PosProfileController::class, 'update'])->name('pos-dashboard.profile.update');
+
+Route::get('admin/settings', [SettingController::class, 'index'])->name('admin.settings');
+Route::post('admin/settings/general-setting',[SettingController::class, 'generalSetting'])->name('admin.settings.general-setting');
 
 /************************* DataTables Routes ************************/
 Route::post('/get-users', [AdminUserController::class, 'getUsers'])->name('get-users');
