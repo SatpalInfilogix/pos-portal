@@ -32,6 +32,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+
+    <!-- DataTables CSS -->
+    {{-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css"> --}}
 </head>
 
 <body>
@@ -70,6 +75,10 @@
     <script src="{{ asset('assets/js/theia-sticky-sidebar/ResizeSensor.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
     <script src="{{ asset('assets/js/theia-sticky-sidebar/theia-sticky-sidebar.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
 
+      <!-- DataTables JS -->
+      {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+      <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script> --}}
     <script>
         function formatDate(data) {
             var date = new Date(data);

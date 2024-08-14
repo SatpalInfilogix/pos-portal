@@ -29,9 +29,16 @@
 
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="invoice-title">
-                            <h2>Invoice</h2><h3 class="pull-right">Order # {{ $orders->OrderID  ?? ''}}</h3>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="invoice-title">
+                                    <h2>Invoice</h2><h3 class="pull-right">Order # {{ $orders->OrderID  ?? ''}}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <a href="{{ route('generate.order.pdf', ['invoice_id' => $orders->OrderID]) }}" class="btn btn-submit float-end">Print</a>
+                            </div>
+                        <div>
                         <hr>
                         <h3 class="customer-name">{{ $orders->CustomerName ?? 'Guest' }}</h3>
                         <div class="row">
@@ -55,6 +62,7 @@
                                     Contact Number : {{ $orders->CustomerPhone ?? '' }}<br>
                                     Payment Status : {{ $orders->PaymentStatus ?? ''}}<br>
                                     Payment Mode : {{ $orders->PaymentMethod ?? ''}}<br>
+                                    Card number : {{ $orders->card_digits ?? ''}}<br>
                                 </address>
                             </div>
                             <div class="col-md-6 text-right">

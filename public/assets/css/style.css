@@ -37141,3 +37141,8 @@ label span {
 .btn.btn-default:hover {
     background: #1b2850!important;
 }
+
+table.dataTable tbody th, table.dataTable tbody td {
+    /* padding: 8px 10px; */
+    border-bottom: 1px solid #dee2e6 !important;
+}

@@ -76,18 +76,24 @@
                     {
                         "data": "created_at",
                         "render": function(data, type, row) {
-                            // Format the date using JavaScript
                             var date = new Date(data);
-                            var options = {
-                                year: 'numeric',
-                                month: '2-digit',
-                                day: '2-digit',
-                                hour: '2-digit',
-                                minute: '2-digit',
-                                second: '2-digit'
-                            };
-                            return date.toLocaleDateString('en-US', options).replace(',',
-                            ''); // Customize format as needed
+
+                            var day = ('0' + date.getDate()).slice(-2); // Ensure two-digit day
+                            var month = date.toLocaleString('en-US', { month: 'long' }); // Full month name
+                            var year = date.getFullYear();
+
+                            var hours = date.getHours();
+                            var minutes = ('0' + date.getMinutes()).slice(-2);
+                            var seconds = ('0' + date.getSeconds()).slice(-2);
+
+                            var ampm = hours >= 12 ? 'PM' : 'AM';
+                            hours = hours % 12;
+                            hours = hours ? hours : 12; // the hour '0' should be '12'
+                            
+                            var dateString = `${day} ${month} ${year}`;
+                            var timeString = `${hours}:${minutes}:${seconds} ${ampm}`;
+
+                            return `${dateString} ${timeString}`;
                         }
                     },
                     {
