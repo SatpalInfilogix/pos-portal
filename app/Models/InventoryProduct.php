@@ -14,4 +14,8 @@ class InventoryProduct extends Model
     {
         return $this->belongsTo(Product::class, 'product_id');
     }
+    public function priceMaster()
+    {
+        return $this->belongsTo(PriceMaster::class, 'product_id', 'id');
+    }
 }

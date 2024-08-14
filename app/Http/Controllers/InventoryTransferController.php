@@ -23,8 +23,8 @@ class InventoryTransferController extends Controller
         if (!Gate::allows('view inventory transfers')) {
             abort(403);
         }
-
-        return view('admin.inventory-transfer.index');
+        $stores = Store::where('is_deleted',0)->latest()->get();
+        return view('admin.inventory-transfer.index',compact('stores'));
     }
 
     /**
@@ -108,6 +108,7 @@ class InventoryTransferController extends Controller
         $inventoryTransfer->load('store');
         $inventoryTransfer->load('deliveredItems');
         $transferedInventory = $inventoryTransfer;
+        
         return view('admin.inventory-transfer.view', compact('transferedInventory'));
     }
 
@@ -145,17 +146,22 @@ class InventoryTransferController extends Controller
                 'inventories.store_id', 
                 'inventories.vehicle_number', 
                 'inventories.sent_by', 
+                'inventories.status',
                 'inventories.created_at',
                 'stores.contact_number as store_contact', 
                 'stores.name as store_name',
 
             ])
-            ->join('stores', 'inventories.store_id', '=', 'stores.id'); // Join with products table
-        
-        $store_id = Auth::user()->store_id; 
-        if($store_id){
-            $transferQuery->where('store_id',$store_id);
-        }    
+            ->join('stores', 'inventories.store_id', '=', 'stores.id')
+            ->orderBy('inventories.id', 'desc'); // Join with products table
+        if($request->store_id){
+            $transferQuery->where('store_id',$request->store_id);
+        }else{
+            $store_id = Auth::user()->store_id; 
+            if($store_id){
+                $transferQuery->where('store_id',$store_id);
+            }  
+        }      
         // Add search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
@@ -189,11 +195,17 @@ class InventoryTransferController extends Controller
             "data" => $returnTransfers
         ]);
     }
-
+    public function viewGatePass($transfer_id){
+        $transferedInventory = Inventory::with('store')->with('deliveredItems')->where('id',$transfer_id)->first();
+       // dd($transferedInventory);
+        return view('admin.sales.sales-pdf-template.gate-pass-pdf',compact('transferedInventory'));
+    }
     public function printGatePass(Request $request, $transfer_id){
         $transferedInventory = Inventory::with('store')->with('deliveredItems')->where('id',$transfer_id)->first();
-       
-            $pdfDirectory = 'inventory-gate-pass';
+        $transferedInventory->vehicle_number = $request->vehicle_number;
+        $transferedInventory->save();
+        return response()->json(["success" => true]);
+        /*    $pdfDirectory = 'inventory-gate-pass';
             if (!Storage::disk('public')->exists($pdfDirectory)) {                 
                 Storage::disk('public')->makeDirectory($pdfDirectory);
             }
@@ -210,7 +222,7 @@ class InventoryTransferController extends Controller
             $publicUrl = Storage::disk('public')->url($invoicePath);
             $transferedInventory->vehicle_number = $request->vehicle_number;
             $transferedInventory->save();
-            return response()->json(["gatepassPath" => $publicUrl]);
+            return response()->json(["gatepassPath" => $publicUrl]);*/
 
     }
     public function updateRecievedInventory(Request $request, $inventory_id){

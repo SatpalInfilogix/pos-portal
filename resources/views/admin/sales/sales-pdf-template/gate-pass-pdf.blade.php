@@ -7,7 +7,6 @@
 
 <body>
     <div class="main-card">
-        <h3>Gate Pass</h3>
         <div class="sales-card">
             @include('partials.letter-head')
             <h3 class="receipt-title">GATE PASS</h3>
@@ -17,8 +16,16 @@
                     <td class="right"></td>
                 </tr>
                 <tr>
+                    <td class="left">Sales Receipt No. {{ $transferedInventory->id}}</td>
+                    <td class="right"></td>
+                </tr>
+                <tr>
                     <td class="left">Store : {{ $transferedInventory->store->name }}</td>
                     <td class="right" style="float: inline-end;">Date of Sale {{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('d F Y') }}</td>
+                </tr>
+                <tr>
+                    <td class="left">Vehicle No. {{ $transferedInventory->vehicle_number}}</td>
+                    <td class="right"></td>
                 </tr>
                 <tr>
                     <td class="left"></td>
@@ -34,18 +41,32 @@
             <table class="receipt-table" style="margin-bottom: 200px;">
                 {{-- Table Heading --}}
                 <tr>
-                    <th>#</th>
-                    <th>Product</th>
+                    <th>Description</th>
                     <th>Qty</th>
+                    <th>Checked</th>
+                    <th>Amount (JMD)</th>
                 </tr>
                 {{-- Table Data --}}
+                @php
+                    $totalProducts = 0;    
+                @endphp
                 @foreach ($transferedInventory->deliveredItems as $key => $delivered_item)
+                @php
+                    $totalProducts += $delivered_item->quantity;    
+                @endphp
                 <tr>
-                    <td>{{ ++$key }}</td>
-                    <td>{{ $delivered_item->product->name }}</td>
+                    <td>{{ ++$key.". ".$delivered_item->product->name }}</td>
                     <td>{{ $delivered_item->quantity }}</td>
+                    <td></td>
+                    <td>{{ $delivered_item->priceMaster->price * $delivered_item->quantity}}</td>
                 </tr>
                 @endforeach
+                <tr>
+                    <td>Total Quantity</td>
+                    <td>{{ $totalProducts }}</td>
+                    <td></td>
+                    <td></td>
+                </tr>
             </table>
         </div>
     </div>
