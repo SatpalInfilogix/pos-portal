@@ -51,7 +51,7 @@
 
 @section('script')
 <script>
-var userRole = "{{  auth()->user()->getRoleNames()->first() }}";
+var userRole = "{{ auth()->user()->getRoleNames()->first() }}";
 $(function() {
     $('.inventory-transfer').DataTable({
             processing: true,
