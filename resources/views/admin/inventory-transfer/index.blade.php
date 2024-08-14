@@ -80,7 +80,7 @@ $(function() {
                         actions += `<a class="me-2 p-2 edit-btn" href="{{ route('inventory-transfer.show','') }}/${data.id}">`;
                         actions += '<i class="fa fa-eye"></i>';
                         actions += '</a>';
-                        actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-transfer-id="${data.id}">`;
+                        actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-transfer-id="${data.id}" data-vehicle-number="${data.vehicle_number}">`;
                         actions += '<i class="fa fa-download"></i>&nbsp;Generate Gate Pass';
                         actions += '</a>';
                         actions += '</div>';
@@ -102,9 +102,32 @@ $(function() {
     });
     $(document).on('click','#open-gatepass-model',function(e){
         e.preventDefault();
-        $('#gate-pass-modal').modal('show');
         var transfer_id = $(this).data('transfer-id');
+        var vehicle_number = $(this).data('vehicle-number');
         $('[name="transfer-id"]').val(transfer_id);
+        if(vehicle_number){
+            var _token = "{{ csrf_token() }}";
+            $.ajax({
+                url : "{{ route('print.gatepass','') }}/"+transfer_id,
+                type : 'POST',
+                data : {
+                    _token,
+                    vehicle_number
+                },
+                success : function(resp){
+                    const newWindow = window.open(resp.gatepassPath, '_blank', 'noopener,noreferrer');
+                    if (newWindow) {
+                        setTimeout(() => {
+                            window.focus();
+                        }, 100);
+                    }
+                    location.reload();
+                    $('#gate-pass-modal').modal('hide');
+                }
+            });
+        }else{
+            $('#gate-pass-modal').modal('show');
+        }
     });
 
     $(document).on('click','#generate-gatepass',function(){

@@ -36,7 +36,7 @@ class InventoryTransferController extends Controller
             abort(403);
         }
 
-        $stores = Store::latest()->get();
+        $stores = Store::where('is_deleted',0)->latest()->get();
         return view('admin.inventory-transfer.create', compact('stores'));
     }
 
