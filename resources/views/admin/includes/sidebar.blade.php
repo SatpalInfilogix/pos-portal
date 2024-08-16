@@ -26,6 +26,16 @@
                         <h6 class="submenu-hdr">Inventory</h6>
                     @endcanany
                     <ul>
+                        @canany(['view units'])
+                            <li @class([
+                                'active' => Request::is('admin/units', 'admin/units/*'),
+                            ])>
+                                <a href="{{ route('units.index') }}">
+                                    <i data-feather="file-text"></i>
+                                    <span>Units</span>
+                                </a>
+                            </li>
+                        @endcanany
                         @canany(['view categories'])
                             <li @class([
                                 'active' => Request::is('admin/categories', 'admin/categories/*'),

@@ -50,7 +50,8 @@
 @include('partials.gate-pass')
 
 @section('script')
-    <script>
+<script>
+var userRole = "{{ auth()->user()->getRoleNames()->first() }}";
 $(function() {
     $('.inventory-transfer').DataTable({
             processing: true,
@@ -80,9 +81,11 @@ $(function() {
                         actions += `<a class="me-2 p-2 edit-btn" href="{{ route('inventory-transfer.show','') }}/${data.id}">`;
                         actions += '<i class="fa fa-eye"></i>';
                         actions += '</a>';
-                        actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-transfer-id="${data.id}">`;
-                        actions += '<i class="fa fa-download"></i>&nbsp;Generate Gate Pass';
-                        actions += '</a>';
+                        if (userRole === 'Super Admin' || userRole === 'Admin') {
+                            actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-transfer-id="${data.id}">`;
+                            actions += '<i class="fa fa-download"></i>&nbsp;Generate Gate Pass';
+                            actions += '</a>';
+                        }
                         actions += '</div>';
                         return actions;
                     }

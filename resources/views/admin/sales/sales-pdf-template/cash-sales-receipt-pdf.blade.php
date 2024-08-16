@@ -83,6 +83,11 @@
                     <td colspan="2"></td>
                     <td></td>
                 </tr>
+                <tr>
+                    <td>Card ending: {{ $orderDetail->card_digits }}</td>
+                    <td colspan="2"></td>
+                    <td></td>
+                </tr>
 
                 <tr class="single-data">
                     <td colspan="4">Terms and Conditions:</td>

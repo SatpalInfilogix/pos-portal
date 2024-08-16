@@ -25,6 +25,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\ReturnStockController;
 use App\Http\Controllers\InventoryReturnController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\AdminUnitController;
 /* End Backend Controller Import */
 
 /* Frontend Controller Import */
@@ -63,6 +64,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             'roles-and-permissions' => AdminRoleAndPermissionController::class,
             'inventory-transfer' => InventoryTransferController::class,
             'stores' => StoreController::class,
+            'units' => AdminUnitController::class,
             'return-stock' => ReturnStockController::class,
         ]);
         /********************** Sales Routes Start Here  **********************/
@@ -87,6 +89,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
           Route::get('/products/{id}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
           Route::post('/products/{id}', [AdminProductController::class, 'update'])->name('products.update');
           Route::delete('/products/{id}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+          Route::post('/products/status/{id}', [AdminProductController::class, 'status'])->name('products.status');
           /********************** End Products Routes  **********************/
 
           /********************** Prices Routes  **********************/

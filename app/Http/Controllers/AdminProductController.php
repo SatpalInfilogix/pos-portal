@@ -41,6 +41,7 @@ class AdminProductController extends Controller
                      ->where('store_products.store_id', '=', $store_id);
             })
             ->leftJoin('price_masters', 'products.id', '=', 'price_masters.product_id')
+            ->where('categories.status', '=', 0)
             ->groupBy([
                 'products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'categories.name'
             ]);
@@ -56,18 +57,15 @@ class AdminProductController extends Controller
                 });
             }
         }else{
-            // $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'price_masters.quantity as available_quantity', 'categories.name as category_name'])
-            // ->join('categories', 'products.category_id', '=', 'categories.id')
-            // ->join('price_masters', 'products.id', '=', 'price_masters.product_id');
-
             $productsQuery = Product::select([
-                'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 
+                'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'products.is_active',
                 DB::raw('MAX(price_masters.quantity) as available_quantity'), // Aggregate to get the maximum quantity
                 'categories.name as category_name'
             ])
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->leftJoin('price_masters', 'products.id', '=', 'price_masters.product_id')
-            ->groupBy([ 'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status',  'products.product_code', 'categories.name'
+            ->where('categories.status', '=', 0)
+            ->groupBy([ 'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status',  'products.product_code', 'products.is_active', 'categories.name'
             ]);
 
             // Apply search filter
@@ -91,7 +89,7 @@ class AdminProductController extends Controller
             $orderDirection = $request->order[0]['dir'];
             $column = $request->columns[$orderColumnIndex]['data'];
 
-            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status', 'category_name', 'available_quantity'];
+            $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status', 'is_active', 'category_name', 'available_quantity'];
             if (in_array($column, $validColumns)) {
                 if ($column === 'category_name') {
                     $productsQuery->orderBy('categories.name', $orderDirection);
@@ -122,7 +120,7 @@ class AdminProductController extends Controller
             abort(403);
         }
 
-        $units = Unit::latest()->get();
+        $units = Unit::latest()->where('status', 0)->get();
         $categories = Category::latest()->where('status', 0)->get();
 
         return view('admin.products.create', compact('categories', 'units'));
@@ -164,7 +162,10 @@ class AdminProductController extends Controller
     public function searchProducts(Request $request)
     {
         $searchTerm = $request->input('input');
-        $products = Product::where('status', 0)->where('name', 'like', '%' . $searchTerm . '%')->get(['id', 'name']);
+        $products = Product::where('status', 0)->where('name', 'like', '%' . $searchTerm . '%')
+                            ->whereHas('category', function ($query) {
+                                $query->where('status', 0); // Ensure that the category status is 0
+                            })->get(['id', 'name']);
 
         foreach($products as $key => $product){
             $products[$key]['units'] = json_decode($product->units, true) ?: [];
@@ -184,7 +185,7 @@ class AdminProductController extends Controller
             abort(403);
         }
 
-        $units = Unit::latest()->get();
+        $units = Unit::latest()->where('status', 0)->get();
         $categories  = Category::where('status', 0)->latest()->get();
         $product = Product::where('id', $id)->first(); // Fetch the product by ID
 
@@ -244,6 +245,27 @@ class AdminProductController extends Controller
             }else{
                 return response()->json(["error" => true]);
             }
+        }
+    }
+
+    public function status($id)
+    {
+        $product = Product::where('id',$id)->first();
+
+        if ($product) {
+            if($product->is_active == 1) {
+                $status = 0;
+            } else {
+                $status = 1;
+            }
+            // $category->status = 1; // Assuming this marks the category as "deleted"
+            $product->update([
+                'is_active' => $status
+            ]);
+
+            return response()->json(['status' => 'success', 'product' => $status, 'message' => 'Product status changed successfully.'], 200);
+        } else {
+            return response()->json(['status' => 'error', 'Product' => 'Category not found.'], 404);
         }
     }
 }

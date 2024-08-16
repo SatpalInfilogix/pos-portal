@@ -26,6 +26,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'view prices', 'create prices', 'edit prices', 'delete prices',
             'view discounts', 'create discounts', 'edit discounts', 'delete discounts',
             'view sales', 'create sales', 'edit sales', 'delete sales',
+            'view units', 'create units', 'edit units', 'delete units',
             'view return stocks', 'create return stocks', 'edit return stocks', 'delete return stocks',
             'view inventory transfers', 'create inventory transfers', 'edit inventory transfers', 'delete inventory transfers',
             'view customers', 'create customers', 'edit customers', 'delete customers',

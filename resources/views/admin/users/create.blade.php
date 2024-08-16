@@ -67,6 +67,13 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Password</label>
+                                    <div class="pass-group">
+                                        <input type="password" name="password" class="pass-input form-control">
+                                        <span class="fas toggle-password fa-eye-slash"></span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -84,6 +91,15 @@
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
     <script>
         $(document).ready(function() {
+            $.validator.addMethod("complexPassword", function(value, element) {
+                return this.optional(element) || 
+                    /[a-z]/.test(value) &&  // Contains at least one lowercase letter
+                    /[A-Z]/.test(value) &&  // Contains at least one uppercase letter
+                    /\d/.test(value) &&     // Contains at least one digit
+                    /[@$!%*#?&]/.test(value) && // Contains at least one special character
+                    value.length >= 8;      // Minimum length of 8 characters
+            }, "Password must be at least 8 characters long and include a mix of letters, numbers, and special characters.");
+
             $("#user-form").validate({
                 rules: {
                     first_name: "required",
@@ -91,7 +107,11 @@
                     email: "required",
                     phone_number: "required",
                     role: "required",
-                    store_id: "required"
+                    store_id: "required",
+                    password: {
+                        required: true,
+                        complexPassword: true // Use the custom validation method
+                    }
                 },
                 messages: {
                     first_name: "Please enter the first name",
@@ -99,7 +119,11 @@
                     email: "Please enter the email",
                     phone_number: "Please enter phone number",
                     role: "Please select role",
-                    store_id: "Please select store"
+                    store_id: "Please select store",
+                    password: {
+                        required: "Please enter a password",
+                        complexPassword: "Password must be at least 8 characters long and include a mix of letters, numbers, and special characters."
+                    }
                 },
                 errorClass: "invalid-feedback",
                 errorElement: "span",

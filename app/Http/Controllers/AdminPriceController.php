@@ -31,8 +31,10 @@ class AdminPriceController extends Controller
     
         // Base query
         $pricesQuery = PriceMaster::select(['price_masters.id', 'price_masters.price', 'price_masters.quantity', 'price_masters.product_id', 'price_masters.status', 'products.product_code', 'products.name as product_name'])
-            ->join('products', 'price_masters.product_id', '=', 'products.id'); // Join the products table
-    
+            ->join('products', 'price_masters.product_id', '=', 'products.id') // Join the products table
+            ->join('categories', 'products.category_id', '=', 'categories.id') // Join the categories table
+            ->where('categories.status', 0);
+
         // Search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
