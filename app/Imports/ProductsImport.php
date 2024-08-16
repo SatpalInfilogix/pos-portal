@@ -68,7 +68,7 @@ class ProductsImport implements ToModel, WithHeadingRow
                 'category_id' => $category->id,
                 'image' => $this->uploadImageFromUrl('products', $row['image']),
                 'created_by' => Auth::id(),
-                'is_active'  => $row['is_active']
+                'is_active'  => $row['is_active'] ?? 1
             ]
         );        
 
