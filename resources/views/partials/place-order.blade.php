@@ -41,7 +41,7 @@
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
                                 <label>Vehicle No. <small style="color:red;">*</small></label>
-                                <input type="number" name="vehicle_number" class="form-control" required>
+                                <input type="text" name="vehicle_number" class="form-control" required>
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-12">
@@ -68,14 +68,14 @@
                         <h6>Payment Method <small style="color:red;">*</small></h6>
                         <div class="row d-flex align-items-center justify-content-center methods">
                             <div class="col-md-6">
-                                <div class="default-cover method" data-method="cash">
+                                <div class="default-cover method" data-method="Cash">
                                     <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/cash-pay.svg"
                                         alt="Payment Method">
                                     <span>Cash</span>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="default-cover method" data-method="debit-card">
+                                <div class="default-cover method" data-method="Debit Card">
                                     <img src="https://dreamspos.dreamstechnologies.com/html/template/assets/img/icons/credit-card.svg"
                                         alt="Payment Method">
                                     <span>Debit/ Credit Card</span>

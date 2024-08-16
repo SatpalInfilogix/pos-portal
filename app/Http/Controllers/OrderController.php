@@ -57,14 +57,10 @@ class OrderController extends Controller
         }
 
         // Payment Process
-        if ($request->payment_method == 'cash') {
-
+        if ($request->payment_method == 'Cash') {
             $status = ["payment" => "success"];
-
-        } elseif ($request->payment_method == 'debit-card') {
-
+        } elseif ($request->payment_method == 'Debit Card') {
             $status = $this->typeDebitCard();
-
         }
 
         // Payment Success

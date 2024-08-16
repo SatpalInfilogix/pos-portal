@@ -40,38 +40,55 @@ class ThermalPrinterService
     {
         // Print shop name
         $this->printer->setJustification(Printer::JUSTIFY_CENTER);
-        $this->printer->text("Your Shop Name\n");
+        $this->printer->text("Receipt\n");
+        $this->printer->setEmphasis(true);
+        $this->printer->text("Value Mfg. - Factory\n");
+        $this->printer->setEmphasis(false);
+        $this->printer->text("12 Eastwood Avenue\n");
+        $this->printer->text("Kingston 10, St. And, Ja\n");
+        $this->printer->text("(876)929-2211\n");
 
         // Print order details
         $this->printer->setJustification(Printer::JUSTIFY_LEFT);
-        $this->printer->text("Order #: {$order->OrderID}\n");
+        $this->printer->text("\n" . str_pad("Order Id: {$order->OrderID}", 38) . "Cashier\n");
+        $this->printer->text(str_repeat('=', 48) . "\n");
+
         $this->printer->text("Date: " . now()->format('Y-m-d H:i') . "\n");
 
-        // Print header
-        $this->printer->text("\n" . str_pad("Product", 28) . str_pad("Qty", 10) . "Amount\n");
-        $this->printer->text(str_repeat('-', 48) . "\n"); // Separator
+        $this->printer->text(str_repeat('=', 48) . "\n");
 
         // Print items
         foreach ($items as $item) {
-            $this->printLine($item['name'], $item['quantity'], $item['price']);
+            $this->printOrderItem($item);
         }
 
+        $this->printer->text(str_repeat('=', 48) . "\n");
+
+        $items_total = count($items);
+
         // Print total
-        $this->printer->text("\n" . str_pad("Payment Method", 39) . $order->PaymentMethod);
-        $this->printer->text("\n" . str_pad("Subtotal", 39) . '$' . $order->TotalAmount - $order->TaxAmount);
-        $this->printer->text("\n" . str_pad("Tax (GCT 15%)", 39) . '$' . $order->TaxAmount);
-        $this->printer->text("\n" . str_pad("Total", 39) . '$' . $order->TotalAmount);
+        $this->printer->text("\n" . str_pad("Item Count: {$items_total}", 26) . 'Subtotal: $'.$order->TotalAmount - $order->TaxAmount);
+        $this->printer->text("\n" . str_pad("", 19) . 'Sales Tax Total: $' . $order->TaxAmount);
+        $this->printer->text(str_pad("", 26) . str_repeat('=', 24) . "\n");
+
+        $this->printer->text("\n" . str_pad("", 24) . $order->PaymentMethod.': $'.$order->TotalAmount);
+        $this->printer->text("\n\n");
+        $this->printer->text("\n\n");
+        $this->printer->text(str_repeat('=', 48) . "\n");
         $this->printer->text("\n\n");
         // Cut the paper and close the printer
         $this->printer->cut();
         $this->printer->close();
     }
 
-    protected function printLine($name, $quantity, $price)
+    protected function printOrderItem($item)
     {
-        $name = str_pad(substr($name, 0, 24), 26);
-        $quantity = str_pad($quantity, 3, ' ', STR_PAD_LEFT);
-        $price = str_pad($price, 5, ' ', STR_PAD_LEFT); // Add padding to align prices
-        $this->printer->text($name . $quantity . str_pad("", 10) . '$'.$price . "\n");
+        $name = str_pad(substr($item['name'], 0, 29), 31);
+        $quantity = str_pad($item['quantity'], 1, ' ', STR_PAD_LEFT);
+        $price = str_pad($item['price'], 5, ' ', STR_PAD_LEFT);
+        $item_total = str_pad($item['product_total_amount'], 5, ' ', STR_PAD_LEFT); 
+
+        $this->printer->text($name. str_pad("", 5) . '$'.$item_total . "\n");
+        $this->printer->text($quantity.' @  $'.$price . "\n\n");
     }
 }
