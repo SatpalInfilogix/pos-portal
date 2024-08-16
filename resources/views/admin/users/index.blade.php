@@ -25,7 +25,19 @@
                 {{ session('success') }}
             </div>
         @endif
-
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Store</label>
+                @hasanyrole('Super Admin')
+                <select name="store" id="users-store" class="form-control" >
+                    <option value="">select store</option>
+                    @foreach ($stores as $store)
+                        <option value="{{ $store->id }}" @selected($store->id == auth()->user()->store_id)>{{ $store->name }}</option>
+                    @endforeach
+                </select>
+                @endhasanyrole
+            </div>
+        </div>
         <div class="card table-list-card">
             <div class="card-body">
                 <div class="table-responsive p-0 m-0">
@@ -63,14 +75,16 @@
             let can_edit = $('[name="can_edit"]').val();
             let can_delete = $('[name="can_delete"]').val();
 
-            $('.users-table').DataTable({
+            let usersTable = $('.users-table').DataTable({
                 processing: true,
                 serverSide: true,
                 ajax: {
                     "url": "{{ route('get-users') }}",
                     "type": "POST",
-                    "data": {
-                        _token: "{{ csrf_token() }}"
+                    "data": function(d) {
+                        d._token = "{{ csrf_token() }}";
+                        d.store_id = $('[name="store"]').val();
+                        return d;
                     }
                 },
                 columns: [{
@@ -135,7 +149,12 @@
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100]
             });
-        })
+            $(document).on('change', '#users-store', function() {
+                usersTable.ajax.reload();
+            });
+        });
+
+
     </script>
 
     <script>

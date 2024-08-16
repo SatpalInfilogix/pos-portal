@@ -30,8 +30,8 @@ class AdminUserController extends Controller
         if (!Gate::allows('view users')) {
             abort(403);
         }
-
-        return view('admin.users.index');
+        $stores = Store::where('is_deleted',0)->get();
+        return view('admin.users.index',compact('stores'));
     }
 
     public function getUsers(Request $request)
@@ -43,6 +43,9 @@ class AdminUserController extends Controller
                 $query->where('role_id', 1);
             })
             ->with('roles');
+        if($request->store_id){
+            $usersQuery->where('store_id',$request->store_id);
+        }
 
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];

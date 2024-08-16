@@ -55,7 +55,7 @@
                                         <td>{{++$key}}</td>
                                         <td>{{$delivered_item->product->name}}</td>
                                         <td>{{$delivered_item->quantity}}</td>
-                                        <td><input type="number" name="rec-qauntity" class="form-control" data-product-id="{{ $delivered_item->product->id }}" data-delivered-qty="{{ $delivered_item->quantity }}" value="{{ $delivered_item->quantity }}"></td>
+                                        <td><input type="number" name="rec-qauntity" class="form-control" data-product-id="{{ $delivered_item->product->id }}" data-delivered-qty="{{ $delivered_item->quantity }}" value="{{ ($delivered_item->received_quantity) ?  $delivered_item->received_quantity : $delivered_item->quantity}}"></td>
                                     </tr>
                                 @endforeach
                                 <tr>
