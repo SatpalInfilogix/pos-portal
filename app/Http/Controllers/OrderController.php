@@ -85,6 +85,7 @@ class OrderController extends Controller
                 'TotalAmount' => $cart['payable'],
                 'TaxAmount' => $cart['tax'],
                 'DiscountAmount' => $cart['discount_amount'],
+                'VehicleNumber' => $request->vehicle_number,
                 'tender_amount' => $request->tender_amount,
                 'change_amount' => $request->order_change_amount,
                 'card_digits' => $request->card_digits,

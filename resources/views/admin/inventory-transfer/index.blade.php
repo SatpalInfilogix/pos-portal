@@ -118,8 +118,9 @@ $(function() {
                         actions += `<a class="me-2 p-2 edit-btn" href="{{ route('inventory-transfer.show','') }}/${data.id}">`;
                         actions += '<i class="fa fa-eye"></i>';
                         actions += '</a>';
+                        console
                         if (userRole === 'Super Admin' || userRole === 'Admin') {
-                            actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-transfer-id="${data.id}">`;
+                            actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-vehicle-number="${data.vehicle_number}" data-transfer-id="${data.id}">`;
                             actions += '<i class="fa fa-download"></i>&nbsp;Generate Gate Pass';
                             actions += '</a>';
                         }
@@ -150,7 +151,6 @@ $(function() {
         $('[name="transfer-id"]').val(transfer_id);
         $('#vehicle-number').val(vehicle_number);
         $('#gate-pass-modal').modal('show');
-        
     });
 
     $(document).on('click','#generate-gatepass',function(){

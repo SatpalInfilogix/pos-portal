@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('CustomerPhone')->nullable();
             $table->text('ShippingAddress')->nullable();
             $table->text('BillingAddress')->nullable();
+            $table->string('VehicleNumber', 25)->nullable();
             $table->string('OrderStatus')->nullable();
             $table->string('PaymentMethod')->nullable();
             $table->string('PaymentStatus')->nullable();

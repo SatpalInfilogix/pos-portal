@@ -642,6 +642,7 @@
             }
             let customer_name = $('[name="order_customer_id"]').find(':selected').val();
             let email = $('[name="email"]').val();
+            let vehicle_number = $('[name="vehicle_number"]').val();
             let contact_number = $('[name="contact_number"]').val();
             let billing_address = $('[name="billing_address"]').val();
             let billing_address_pin_code = $('[name="billing_address_pin_code"]').val();
@@ -657,6 +658,7 @@
                     _token: '{{ csrf_token() }}',
                     customer_name: customer_name,
                     email: email,
+                    vehicle_number: vehicle_number,
                     contact_number: contact_number,
                     billing_address: billing_address,
                     payment_method: payment_method,
