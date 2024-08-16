@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Gate;
 
 class AdminUserController extends Controller
 {
-
     // Method to get admin user details
     public function getAdminUserDetail()
     {
@@ -83,8 +82,6 @@ class AdminUserController extends Controller
         ]);
     }
 
-
-
     public function create()
     {
         if (!Gate::allows('create users')) {
@@ -105,12 +102,11 @@ class AdminUserController extends Controller
             'email'         => $request->email,
             'phone_number'  => $request->phone_number,
             'store_id'      => $request->store_id,
-            'password'      => Hash::make('Admin@12345'),
+            'password'      => Hash::make($request->password),
         ])->assignRole($request->role);
 
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
-
 
     public function edit($id)
     {

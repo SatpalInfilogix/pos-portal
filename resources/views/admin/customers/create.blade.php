@@ -26,17 +26,17 @@
                         <div class="accordion-item">
                             <div class="row mb-3">
                                 <div class="add-product">
-                                    <label class="form-label">Name</label>
+                                    <label class="form-label">Name <span class="text-danger">*</span></label>
                                     <input type="text" name="name" class="form-control">
                                 </div>
                             </div>
                             <div class="row mb-3">
                                 <div class="col-md-6 add-product">
-                                    <label class="form-label">Phone Number</label>
+                                    <label class="form-label">Phone Number <span class="text-danger">*</span></label>
                                     <input type="text" name="phone_number" class="form-control">
                                 </div>
                                 <div class="col-md-6 add-product">
-                                    <label class="form-label">Email (Optional)</label>
+                                    <label class="form-label">Email</label>
                                     <input type="text" name="email" class="form-control">
                                 </div>
                             </div>
@@ -46,11 +46,11 @@
                                     <textarea rows="4" name="shipping_address" class="form-control"></textarea>
                                 </div> --}}
                                 <div class="col-md-6 add-product">
-                                    <label class="form-label"><b>Billing Address</b></label>
+                                    <label class="form-label"><b>Billing Address</b> <span class="text-danger">*</span></label>
                                     <textarea rows="4" name="billing_address" class="form-control"></textarea>
                                 </div>
                                 <div class="col-md-6 add-product">
-                                    <label class="form-label">Pincode</label>
+                                    <label class="form-label">Pincode  <span class="text-danger">*</span></label>
                                     <input type="text" name="billing_address_pin_code" class="form-control">
                                 </div>
                             </div>

@@ -37,7 +37,9 @@ class AdminDashboardController extends Controller
             $totalSaleAmount = Order::where('store_id',$store_id)->get()->sum('TotalAmount');
             $totalInventoryReturn = ReturnStockProduct::where('store_id',$store_id)->get()->count();
         }else{
-            $totalProducts = Product::get()->count();
+            $totalProducts = Product::whereHas('category', function ($query) {
+                                    $query->where('status', 0); // Ensure that the category status is 0
+                                })->get()->count();
             $totalSaleInvoices = Order::get()->count();
             $totalSaleAmount = Order::get()->sum('TotalAmount');
             $totalInventoryReturn = ReturnStockProduct::get()->count();
@@ -64,7 +66,10 @@ class AdminDashboardController extends Controller
     
     private function getLatestProducts()
     {
-        $products = Product::where('status', 0)->latest()->limit(4)->get();
+        $products = Product::where('status', 0)
+                            ->whereHas('category', function ($query) {
+                                $query->where('status', 0); // Ensure that the category status is 0
+                            })->latest()->limit(4)->get();
 
         foreach ($products as $proKey => $product) {
             $categoryName = $product->category ? $product->category->name : null;

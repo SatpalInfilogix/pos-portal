@@ -67,6 +67,7 @@
                                 <th>Product</th>
                                 <th>Manufactured Date</th>
                                 <th>Image</th>
+                                <th>Status</th>
                                 <th>
                                     @canany(['edit product', 'delete product'])
                                         Action
@@ -100,29 +101,42 @@
                         return d;
                     }
                 },
-                columns: [{
-                    data: null,
+                columns: [
+                    {
+                        data: null,
                         render: function(data, type, row, meta) {
                             return meta.row + meta.settings._iDisplayStart + 1;
                         },
                         title: '#'
                     },
-                    {
-                        data: "category_name"
-                    },
-                    {
-                        data: "name"
-                    },
-                    {
-                        data: "manufacture_date"
-                    },
+                    { data: "category_name" },
+                    { data: "name" },
+                    { data: "manufacture_date" },
                     {
                         data: "image",
                         render: function(data, type, row) {
                             const defaultImageUrl = '{{ asset('path/to/default-image.jpg') }}';
-                            const imageUrl = data ? '{{ url('') }}' + '/' + data :
-                                defaultImageUrl;
+                            const imageUrl = data ? '{{ url('') }}' + '/' + data : defaultImageUrl;
                             return `<img src="${imageUrl}" alt="${row.name}" style="width: 50px; height: 50px;">`;
+                        }
+                    },
+                    {
+                        data: null,
+                        render: function(data, type, row) {
+                            var actions = '<div class="edit-delete-action">';
+                            if (row.is_active == 1) {
+                                actions +=
+                                    `<a class="me-2 p-2 status-btn" id="active" data-id="${row.id}" href="#">Inactive</a>`;
+                                actions +=
+                                    `<a class="me-2 p-2 status-btn" id="in-active" data-id="${row.id}" style="display: none;">Active</a>`;
+                            } else {
+                                actions +=
+                                    `<a class="me-2 p-2 status-btn" id="in-active" data-id="${row.id}" href="#">Active</a>`;
+                                actions +=
+                                    `<a class="me-2 p-2 status-btn" id="active" data-id="${row.id}" style="display: none;">Inactive</a>`;
+                            }
+                            actions += '</div>';
+                            return actions;
                         }
                     },
                     {
@@ -139,7 +153,7 @@
                                     `<a class="me-2 p-2 delete-btn" id="restore-product" data-id="${row.id}" href="#">Restore</a>`;
                                 actions +=
                                     `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" style="display: none;"><i class="fa fa-trash"></i></a>`;
-                            } else if(can_delete){
+                            } else if (can_delete) {
                                 actions +=
                                     `<a class="me-2 p-2 delete-btn" id="delete-product" data-id="${row.id}" href="#"><i class="fa fa-trash"></i></a>`;
                                 actions +=
@@ -158,9 +172,7 @@
                 paging: true,
                 pageLength: 10,
                 lengthMenu: [10, 25, 50, 100],
-                order: [
-                    [0, 'asc']
-                ]
+                order: [[0, 'asc']]
             });
         });
 
@@ -199,6 +211,37 @@
                     });
                 }
             });
+
+            $(document).on('click', '.status-btn', function(e) {
+                var productId = $(this).data('id');
+                var token = "{{ csrf_token() }}";
+                var url = "{{ route('products.status', '') }}/" + productId;
+                $.ajax({
+                        url: url,
+                        type: 'POST',
+                        data: {
+                            "_token": token,
+                        },
+                        success: function(response) {
+                            console.log(response.status);
+                            if (response.status == 'success') {
+                                if (response.product == 1) {
+                                    $('#active[data-id="' + productId + '"]').show();
+                                    $('#in-active[data-id="' + productId + '"]').hide();
+                                } else {
+                                    $('#active[data-id="' + productId + '"]').hide();
+                                    $('#in-active[data-id="' + productId + '"]').show();
+                                }
+                            } else {
+                                alert('Something went wrong. Please try again.');
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                            alert('Something went wrong. Please try again.');
+                        }
+                    });
+            }) 
         });
     </script>
 @endsection

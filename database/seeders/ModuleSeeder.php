@@ -57,5 +57,9 @@ class ModuleSeeder extends Seeder
             'name' => 'Roles & Permissions',
             'slug' => 'roles & permissions'
         ]);
+        Module::create([
+            'name' => 'Units',
+            'slug' => 'unit'
+        ]);
     }
 }

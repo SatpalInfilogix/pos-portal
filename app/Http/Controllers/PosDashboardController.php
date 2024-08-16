@@ -28,7 +28,11 @@ class PosDashboardController extends Controller
 
         $selectedCategoryId = $request->input('category_id');
 
-        $productsQuery  = Product::where('status', 0)->latest();
+        $productsQuery = Product::where('status', 0)
+                            ->whereHas('category', function ($query) {
+                                $query->where('status', 0); // Ensure the category status is 0
+                            })->latest();
+
         if ($selectedCategoryId) {
             $productsQuery->where('category_id', $selectedCategoryId);
         }

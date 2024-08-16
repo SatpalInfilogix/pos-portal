@@ -41,7 +41,7 @@
                                 <th>Price</th>
                                 <th>Customer Name</th>
                                 <th>Customer Address</th>
-                                <th>Transit Status</th>
+                                {{-- <th>Transit Status</th> --}}
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -80,9 +80,9 @@
                     {
                         data: "ShippingAddress"
                     },
-                    {
-                        data: "transit_status"
-                    },
+                    // {
+                    //     data: "transit_status"
+                    // },
                     {
                         data: null,
                         render: function(data, type, row) {
@@ -98,7 +98,7 @@
                 ],
                 columnDefs: [{
                     orderable: false,
-                    targets: 6 // Index for the actions column
+                    targets: 5 // Index for the actions column
                 }],
                 paging: true,
                 pageLength: 10,
