@@ -17,7 +17,7 @@ class Inventory extends Model
 
     public function deliveredItems()
     {
-        return $this->hasMany(InventoryProduct::class)->with('product');
+        return $this->hasMany(InventoryProduct::class)->with('product')->with('priceMaster');
     }
 
 

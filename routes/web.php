@@ -134,6 +134,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::get('/search-invoice/{invoice_id}', [OrderController::class, 'searchInvoice'])->name('search.invoice');
         Route::get('/view-invoice/{invoice_id}', [OrderController::class, 'viewInvoice'])->name('view.invoice');
         Route::post('/print-gatepass/{transfer_id}', [InventoryTransferController::class, 'printGatePass'])->name('print.gatepass');
+        Route::get('/view-gatepass/{transfer_id}', [InventoryTransferController::class, 'viewGatePass'])->name('view.gatepass');
         /********************** Invoice Routes End**********************/
     });
 

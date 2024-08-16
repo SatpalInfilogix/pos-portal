@@ -164,5 +164,10 @@
                 });
             }
         });
+
+        document.getElementById('price').addEventListener('input', function (e) {
+            let value = e.target.value;
+            e.target.value = value.replace(/[^0-9.]/g, ''); // Remove any non-numeric and non-period characters
+        });
     </script>
 @endsection
