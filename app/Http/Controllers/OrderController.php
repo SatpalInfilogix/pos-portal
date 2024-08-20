@@ -136,16 +136,33 @@ class OrderController extends Controller
                 }
             }
 
+            $pdfUrl = route('gate-pass.view', ['orderId' => $order->order_id]);
+
             return response()->json([
                 'success' => true,
                 'message' => 'Order Placed',
                 'orderId' => $invoice_id,
+                'gatePass' => $pdfUrl,
                 'totalAmount' => $cart['payable'],
                 'orderDate' => now(),
                 'customerName' => $request->customer_name,
                 'returnProductDetails' => $returnProductDetails
             ]);
         }
+    }
+
+    public function renderGatePassView($orderId)
+    {
+        $gatePass = Order::with('productDetails')->where('OrderID', $orderId)->first();
+        if ($gatePass) {
+            $gatePass->update([
+                'transit_status' => 'gatepass generated'
+            ]);
+
+            return view('pos.gate-pass-pdf', compact('gatePass'));
+        }
+
+        abort(404, 'Gate pass not found');
     }
 
     public function typeDebitCard()
@@ -191,7 +208,7 @@ class OrderController extends Controller
             'OrderDate' => now(),
             'OrderID' => $invoice_id,
             'OrderStatus' => 'onhold',
-            'PaymentStatus' => 'success',
+            'PaymentStatus' => 'pending',
             'TotalAmount' => $cart['payable'],
             'TaxAmount' => $cart['tax'],
             'DiscountAmount' => $cart['discount_amount'],
@@ -221,7 +238,7 @@ class OrderController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Order On Hold',
-            'orderId' => $this->generateInvoice(),
+            'orderId' => $invoice_id,
             'totalAmount' => $cart['payable'],
             'orderDate' => now()
         ]);

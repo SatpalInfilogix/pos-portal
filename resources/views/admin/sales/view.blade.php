@@ -36,7 +36,8 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <a href="{{ route('generate.order.pdf', ['invoice_id' => $orders->OrderID]) }}" class="btn btn-submit float-end">Print</a>
+                                <button onclick="printPDF()" class="btn btn-submit float-end">Print</button>
+                                {{-- <a href="{{ route('generate.order.pdf', ['invoice_id' => $orders->OrderID]) }}" class="btn btn-submit float-end">Print</a> --}}
                             </div>
                         <div>
                         <hr>
@@ -136,5 +137,12 @@
         </div>
     </div>
 </div>
-
+ <script>
+        function printPDF() {
+            var printWindow = window.open('{{ route('generate.order.pdf', ['invoice_id' => $orders->OrderID]) }}', '_blank');
+            printWindow.onload = function () {
+                printWindow.print();
+            };
+        }
+    </script>
 @endsection

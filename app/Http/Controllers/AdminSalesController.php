@@ -32,7 +32,7 @@ class AdminSalesController extends Controller
         $maxItemsPerPage = 10;
     
         // Base query
-        $salesQuery = Order::select(['id', 'OrderId', 'TotalAmount', 'CustomerName', 'ShippingAddress', 'transit_status']);
+        $salesQuery = Order::where('OrderStatus', '!=', 'onhold')->select(['id', 'OrderId', 'TotalAmount', 'CustomerName', 'ShippingAddress', 'transit_status']);
         
         if($request->store_id){
             $salesQuery->where('store_id',$request->store_id);
@@ -85,7 +85,7 @@ class AdminSalesController extends Controller
     }
     //Get All Orders
     private function getAllOrders(){
-        return Order::get();
+        return Order::where('OrderStatus', '!=', 'onhold')->latest()->get();
     }
 
 }
