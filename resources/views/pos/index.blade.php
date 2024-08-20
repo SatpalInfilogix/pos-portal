@@ -65,6 +65,9 @@
             /* Optional: change the cursor to a "not-allowed" icon */
         }
 
+        .btn-row.d-sm-flex.justify-content-center.btn-block {
+                padding: 7px;
+            }
         [name="vehicle_number"] {
             text-transform: uppercase;
         }
@@ -338,6 +341,14 @@
                                     Place Order
                                 </a>
                             </div>
+                            <div class="btn-row d-sm-flex justify-content-center btn-block">
+                                <button type="submit" class="btn btn-secondary w-100 text-center" id="order-on-hold">
+                                    <span class="me-1 d-flex align-items-center justify-content-center">
+                                        <i data-feather="pause" class="feather-16"></i>
+                                        Hold
+                                    </span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </aside>
@@ -579,10 +590,11 @@
         // Select payment method
         $(document).on('click', 'div.default-cover.method', function() {
             var payment_method = $(this).data('method');
+            console.log(payment_method)
             $('div.default-cover.method').removeClass('active');
             $(this).addClass('active');
             $('#payment-method').val(payment_method);
-            if (payment_method == 'cash') {
+            if (payment_method == 'Cash') {
                 $('#method-cash').css('display', 'flex');
                 $('[name="tender_amount"]').attr('required', '');
                 $('[name="card_digits"]').removeAttr('required');
@@ -682,7 +694,7 @@
                         }
                     });
 
-                    return false;
+                    // return false;
 
                     if (response.success) {
                         $('#order-submission').prop('disabled', false).html('Place');
@@ -703,7 +715,22 @@
                         $('div.default-cover.method').removeClass('active');
                         $('#method-cash').hide();
                         emptyCart();
-                        window.open("{{ route('generate.order.pdf','') }}/"+response.orderId,'_blank');
+
+                        const orderUrl = "{{ route('generate.order.pdf','') }}/" + response.orderId;
+                        const gatePassUrl = response.gatePass;
+
+                        // Open the first URL
+                        window.open(orderUrl, '_blank');
+                        
+                        // Simple function to test opening gatePassUrl
+                        function openGatePass() {
+                            console.log('Opening gate pass URL:', gatePassUrl);
+                            window.open(gatePassUrl, '_blank');
+                        }
+
+                        // Delay to ensure orderUrl opens first
+                        setTimeout(openGatePass, 2000);
+
                         var completedOrder = `<div class="default-cover p-4 search-order-box" data-invoice-id="${ response.orderId }">
                                     <span class="badge bg-secondary d-inline-block mb-4">Order ID : #${ response.orderId }</span>
                                     <div class="row">
@@ -778,6 +805,7 @@
                 url: "{{ route('hold.order') }}",
                 type: 'GET',
                 success: function(response) {
+                    console.log(response.orderId);
                     if (response.success) {
 
                         $("#hold-order").modal("hide");
