@@ -63,12 +63,12 @@ class InventoryTransferController extends Controller
                         'inventory_id' => $inventory->id,
                         'store_id' => $store_id,
                         'product_id' => $product_id,
-                        'quantity' => $product->quantity,
+                        'transfer_quantity' => $product->quantity,
                         'sent_by' => Auth::id(),
                     ]);
 
                     #If product and store already exists
-                    $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$product_id)->first();
+                  /*  $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$product_id)->first();
                     if($recordExist){
                         $recordExist->update([
                             "quantity" => $recordExist->quantity + $product->quantity,
@@ -82,7 +82,7 @@ class InventoryTransferController extends Controller
                             "quantity" => $product->quantity,
                         ]);
 
-                    }
+                    }*/
 
                     #Price Master quantity update
                     $priceMasterUpdate = PriceMaster::where('product_id',$product_id)->first();
@@ -231,15 +231,42 @@ class InventoryTransferController extends Controller
 
         $inventory = Inventory::where('id',$inventory_id)->where('store_id',$store_id)->first();
         if($request->totalDelivered != $request->totalReceived){
-            $inventory->status = 'Delivered';
+            $inventory->status = 'recieved_not_all';
         }else{
-            $inventory->status = 'Received';
+            $inventory->status = 'received';
         }
         $inventory->save();
         foreach($request->productData as $productData){
+
             $inventoryProduct =  InventoryProduct::where('inventory_id',$inventory_id)->where('product_id',$productData['product_id'])->first();
+            if($inventoryProduct->transfer_quantity != $productData['receivedQty']){
+                $updateQty = $inventoryProduct->transfer_quantity - $productData['receivedQty'];
+                $priceMasterUpdate = PriceMaster::where('product_id',$productData['product_id'])->first();
+                $priceMasterUpdate->update([
+                    "quantity" => $priceMasterUpdate->quantity + $updateQty,
+                ]);
+            }else{
+
+                $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$productData['product_id'])->first();
+                    if($recordExist){
+                        $recordExist->update([
+                            "quantity" => $recordExist->quantity + $productData['receivedQty'],
+                        ]);
+
+                    }else{
+
+                        $storeProduct = StoreProduct::create([
+                            "store_id" => $store_id,
+                            "product_id" => $productData['product_id'],
+                            "quantity" => $productData['receivedQty'],
+                        ]);
+
+                    }
+            }
+            $inventoryProduct->quantity = $productData['receivedQty'];
             $inventoryProduct->received_quantity = $productData['receivedQty'];
             $inventoryProduct->save();
+
         }
         return response()->json(['success' => true]);
     }
