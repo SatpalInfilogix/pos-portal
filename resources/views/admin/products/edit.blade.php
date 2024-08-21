@@ -62,7 +62,7 @@
                         </div>
 
                         <?php
-                            $productUnits = json_decode($product->units);
+                           $productUnits = isset($product->units) ? json_decode($product->units, true) : [];
                         ?>
                         <div class="row mb-3">
                             <div class="col-md-6 add-product">

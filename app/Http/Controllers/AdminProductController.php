@@ -210,7 +210,6 @@ class AdminProductController extends Controller
         $units = Unit::latest()->where('status', 0)->get();
         $categories  = Category::where('status', 0)->latest()->get();
         $product = Product::where('id', $id)->first(); // Fetch the product by ID
-
         return view('admin.products.edit', compact('product', 'categories', 'units'));
     }
 
@@ -220,7 +219,7 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'units'              => json_encode($request->units),
+            'units'              => empty($request->units) ? null : json_encode($request->units),
             'manufacture_date'  => $request->manufacture_date,
         ]);
         
