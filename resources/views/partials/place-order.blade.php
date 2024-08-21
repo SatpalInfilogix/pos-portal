@@ -125,7 +125,7 @@
 
 <script>
     $(function() {
-        $('[data-method="cash"]').click(function() {
+        $('[data-method="Cash"]').click(function() {
             $.ajax({
                 url: "{{ route('open-cash-drawer') }}",
                 method: 'GET'

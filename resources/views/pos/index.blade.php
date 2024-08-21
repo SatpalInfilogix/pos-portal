@@ -661,7 +661,7 @@
             let tender_amount = $('[name="tender_amount"]').val();
             let card_digits = $('[name="card_digits"]').val();
             let order_change_amount = $('[name="order_change_amount"]').val();
-            //$('#order-submission').prop('disabled', true).text('Placing Order...');
+            $('#order-submission').prop('disabled', true).text('Placing Order...');
 
             $.ajax({
                 url: "{{ route('sale.submission') }}",
@@ -694,7 +694,7 @@
                         }
                     });
 
-                    // return false;
+                    //return false;
 
                     if (response.success) {
                         $('#order-submission').prop('disabled', false).html('Place');
@@ -724,7 +724,6 @@
                         
                         // Simple function to test opening gatePassUrl
                         function openGatePass() {
-                            console.log('Opening gate pass URL:', gatePassUrl);
                             window.open(gatePassUrl, '_blank');
                         }
 

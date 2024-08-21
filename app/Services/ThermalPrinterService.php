@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
-
+use Mike42\Escpos\EscposImage; 
 class ThermalPrinterService
 {
     protected $printer;
@@ -40,6 +40,10 @@ class ThermalPrinterService
     {
         // Print shop name
         $this->printer->setJustification(Printer::JUSTIFY_CENTER);
+        $imagePath = public_path('assets/img/PosLogo.png');
+        $image = EscposImage::load($imagePath);
+        $this->printer->bitImage($image);
+        $this->printer->text("\n\n");
         $this->printer->text("Receipt\n");
         $this->printer->setEmphasis(true);
         $this->printer->text("Value Mfg. - Factory\n");
@@ -54,17 +58,16 @@ class ThermalPrinterService
         $this->printer->text(str_repeat('=', 48) . "\n");
 
         $this->printer->text("Date: " . now()->format('Y-m-d H:i') . "\n");
-
         $this->printer->text(str_repeat('=', 48) . "\n");
 
+        $items_total = 0;
         // Print items
         foreach ($items as $item) {
+            $items_total += $item['quantity'];
             $this->printOrderItem($item);
         }
 
         $this->printer->text(str_repeat('=', 48) . "\n");
-
-        $items_total = count($items);
 
         // Print total
         $this->printer->text("\n" . str_pad("Item Count: {$items_total}", 26) . 'Subtotal: $'.$order->TotalAmount - $order->TaxAmount);
