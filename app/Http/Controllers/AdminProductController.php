@@ -30,13 +30,20 @@ class AdminProductController extends Controller
     {
         $maxItemsPerPage = 10;
         $store_id = Auth::user()->store_id;
-        if(isset($store_id)){
-            $productsQuery = Product::select(['products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code',
-                DB::raw('COALESCE(MAX(store_products.quantity), 0) as available_quantity'), // Aggregate to handle multiple store_products entries
+    
+        if (isset($store_id)) {
+            $productsQuery = Product::select([
+                'products.id',
+                'products.name',
+                'products.manufacture_date',
+                'products.image',
+                'products.status',
+                'products.product_code',
+                DB::raw('COALESCE(MAX(store_products.quantity), 0) as available_quantity'),
                 'categories.name as category_name'
             ])
             ->join('categories', 'products.category_id', '=', 'categories.id')
-            ->join('store_products', function($join) use ($store_id) {
+            ->leftJoin('store_products', function($join) use ($store_id) {
                 $join->on('products.id', '=', 'store_products.product_id')
                      ->where('store_products.store_id', '=', $store_id);
             })
@@ -45,74 +52,89 @@ class AdminProductController extends Controller
             ->groupBy([
                 'products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'categories.name'
             ]);
-
-                    // Apply search filter
+    
             if ($request->has('search') && !empty($request->search['value'])) {
                 $searchValue = $request->search['value'];
                 $productsQuery->where(function ($query) use ($searchValue) {
                     $query->where('products.name', 'like', '%' . $searchValue . '%')
                         ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
                         ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
-                        ->orWhere('store_products.quantity', 'like', '%' . $searchValue . '%');
+                        ->orWhere(DB::raw('COALESCE(store_products.quantity, 0)'), 'like', '%' . $searchValue . '%');
                 });
             }
-        }else{
+        } else {
             $productsQuery = Product::select([
-                'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'products.is_active',
-                DB::raw('MAX(price_masters.quantity) as available_quantity'), // Aggregate to get the maximum quantity
+                'products.id',
+                'products.name',
+                'products.manufacture_date',
+                'products.image',
+                'products.status',
+                'products.product_code',
+                'products.is_active',
+                DB::raw('MAX(price_masters.quantity) as available_quantity'),
                 'categories.name as category_name'
             ])
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->leftJoin('price_masters', 'products.id', '=', 'price_masters.product_id')
             ->where('categories.status', '=', 0)
-            ->groupBy([ 'products.id',  'products.name',  'products.manufacture_date', 'products.image', 'products.status',  'products.product_code', 'products.is_active', 'categories.name'
+            ->groupBy([
+                'products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'products.is_active', 'categories.name'
             ]);
 
-            // Apply search filter
             if ($request->has('search') && !empty($request->search['value'])) {
                 $searchValue = $request->search['value'];
                 $productsQuery->where(function ($query) use ($searchValue) {
                     $query->where('products.name', 'like', '%' . $searchValue . '%')
                         ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
                         ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
-                        ->orWhere('price_masters.quantity', 'like', '%' . $searchValue . '%');
+                        ->orWhere(DB::raw('COALESCE(price_masters.quantity, 0)'), 'like', '%' . $searchValue . '%');
                 });
             }
         }
- 
-        if($request->is_deleted=='false'){
+
+      
+    
+        if ($request->is_deleted == 'false') {
             $productsQuery->where('products.status', 0);
         }
-
+    
         if ($request->has('order')) {
             $orderColumnIndex = $request->order[0]['column'];
             $orderDirection = $request->order[0]['dir'];
             $column = $request->columns[$orderColumnIndex]['data'];
-
+    
             $validColumns = ['id', 'name', 'manufacture_date', 'image', 'status', 'is_active', 'category_name', 'available_quantity'];
             if (in_array($column, $validColumns)) {
                 if ($column === 'category_name') {
                     $productsQuery->orderBy('categories.name', $orderDirection);
                 } elseif ($column === 'available_quantity') {
-                    $productsQuery->orderBy('price_masters.quantity', $orderDirection);
+                    $productsQuery->orderBy(DB::raw('COALESCE(store_products.quantity, price_masters.quantity)'), $orderDirection);
                 } else {
                     $productsQuery->orderBy('products.' . $column, $orderDirection);
                 }
             }
         }
 
-        $totalRecords = $productsQuery->count();
+        // Total records
+        $totalRecords = count(json_decode($productsQuery->get()));
+
+        // Pagination
         $perPage = $request->input('length', $maxItemsPerPage);
         $currentPage = max((int) ($request->input('start', 0) / $perPage), 0);
         $products = $productsQuery->skip($currentPage * $perPage)->take($perPage)->get();
-
+        
+        // Debugging: Log SQL query and bindings
+        // Log::info($productsQuery->toSql());
+        // Log::info($productsQuery->getBindings());
+    
         return response()->json([
             "draw" => intval($request->input('draw')),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => $totalRecords,
+            "recordsFiltered" => $totalRecords, // You might want to adjust this if filters are applied
             "data" => $products
         ]);
     }
+    
 
     public function create()
     {
