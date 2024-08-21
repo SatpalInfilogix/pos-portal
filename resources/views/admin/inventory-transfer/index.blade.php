@@ -88,15 +88,17 @@ $(function() {
                         //return formatDate(data);
                         let color;
                         switch(data) {
-                            case 'Pending':
+                            case 'delivered':
                                 color = 'orange'; 
+                                data = 'Pending'; 
                                 break;
-                            case 'Delivered':
+                            case 'recieved_not_all':
                                 color = 'red';
-                                data = 'Not received all items' 
+                                data = 'Not received all items'; 
                                 break;
-                            case 'Received':
-                                color = 'green'; 
+                            case 'received':
+                                color = 'green';
+                                data = 'Received'; 
                                 break;
                             default:
                                 color = 'black'; 

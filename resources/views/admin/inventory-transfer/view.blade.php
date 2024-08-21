@@ -49,13 +49,13 @@
                             <tbody>
                                @foreach ($transferedInventory->deliveredItems as $key => $delivered_item)
                                     @php
-                                        $totalDelivered += $delivered_item->quantity;    
+                                        $totalDelivered += $delivered_item->transfer_quantity;    
                                     @endphp
                                     <tr>
                                         <td>{{++$key}}</td>
                                         <td>{{$delivered_item->product->name}}</td>
-                                        <td>{{$delivered_item->quantity}}</td>
-                                        <td><input type="number" name="rec-qauntity" class="form-control" data-product-id="{{ $delivered_item->product->id }}" data-delivered-qty="{{ $delivered_item->quantity }}" value="{{ ($delivered_item->received_quantity) ?  $delivered_item->received_quantity : $delivered_item->quantity}}"></td>
+                                        <td>{{$delivered_item->transfer_quantity}}</td>
+                                        <td><input @readonly($transferedInventory->status != 'delivered' || auth()->user()->store_id == null) type="number" name="rec-qauntity" class="form-control" data-product-id="{{ $delivered_item->product->id }}" data-delivered-qty="{{ $delivered_item->transfer_quantity }}" value="{{ ($delivered_item->received_quantity) ?  $delivered_item->received_quantity : $delivered_item->transfer_quantity}}"></td>
                                     </tr>
                                 @endforeach
                                 <tr>
@@ -68,11 +68,13 @@
                         </table>
                     </div>
                 </div>
-                <div class="page-btn">
-                    <a href="#" class="btn btn-default" id="update-status">
-                        Update Status
-                    </a>
-                </div>
+                @if ($transferedInventory->status == 'delivered' && isset(auth()->user()->store_id))
+                    <div class="page-btn">
+                        <a href="#" class="btn btn-default" id="update-status">
+                            Update Status
+                        </a>
+                    </div>
+                @endif
             </div>
         </div>
         
@@ -114,6 +116,9 @@
                 success: function(response) {
                     if(response.success){
                         $('.card-body').prepend('<div class="alert alert-success">Updated Successfully</div>');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 2000);
                     }
                 },
                 error: function(xhr) {

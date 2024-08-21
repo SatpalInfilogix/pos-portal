@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('store_id');
             $table->string('vehicle_number')->nullable();
             $table->unsignedBigInteger('sent_by');
-            $table->enum('status', ['Pending', 'Delivered', 'Received'])->default('Pending');
+            $table->enum('status', ['delivered', 'received', 'recieved_not_all'])->default('delivered');
             $table->timestamps();
 
             $table->foreign('store_id')->references('id')->on('stores');

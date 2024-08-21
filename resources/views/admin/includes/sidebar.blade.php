@@ -101,7 +101,11 @@
                                     'admin/inventory-transfer/*'),
                             ])>
                                 <a href="{{ route('inventory-transfer.index') }}"><i data-feather="tag"></i>
-                                    <span>Inventory Transfer</span>
+                                    @if(isset(auth()->user()->store_id))
+                                        <span>Inventories</span>
+                                    @else
+                                        <span>Inventory Transfer</span>
+                                    @endif
                                 </a>
                             </li>
                         @endcanany
