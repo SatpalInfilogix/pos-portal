@@ -94,6 +94,12 @@
                                 </a>
                             </li>
                         @endcanany
+                        <li @class(['active' => Request::is('admin/users-activities', 'admin/users-activities/*')])>
+                            <a href="{{ route('users-activities') }}">
+                                <i data-feather="user"></i>
+                                <span>Users Activities</span>
+                            </a>
+                        </li>
                         @canany(['view inventory transfers'])
                             <li @class([
                                 'active' => Request::is(
