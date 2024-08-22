@@ -40,7 +40,7 @@
             </ul>
         </div>
 
-        <form action="{{ route('prices.update', $price->id) }}" method="post" enctype="multipart/form-data">
+        <form action="{{ route('prices.update', $price->id) }}" method="post" id="price-form" enctype="multipart/form-data">
             @csrf
             <div class="card">
                 <div class="card-body add-product pb-0">
@@ -50,7 +50,7 @@
                                 <div class="mb-3 add-product">
                                     <label class="form-label">Product Name</label>
                                     <select name="product" id="product-dropdown" class="form-control chosen-select"
-                                        required>
+                                        required disabled>
                                         <option value=""></option>
                                     </select>
                                 </div>
@@ -61,14 +61,17 @@
                                         <label class="form-label">Units</label></label>
                                         <!-- <input type="text" name="quantity" id="quantity" class="form-control"
                                             value="{{ $price->quantity_type }}"> -->
-                                        <select name="quantity" id="unit-dropdown" class="form-control chosen-select" required>
+                                        {{-- <select name="quantity" id="unit-dropdown" class="form-control chosen-select" required>
                                             <option value="" selected disabled>Select Unit</option>
                                             @if($units)
                                                 @foreach($units as $unit)
                                                     <option value="{{$unit->name}}" {{ $price->quantity_type == $unit->name ? 'selected' : '' }}>{{ $unit->name}}</option>
                                                 @endforeach
                                             @endif
-                                        </select>
+                                        </select> --}}
+                                        <input type="text" name="unit" id="unit" value="{{ $price->unit }}" class="form-control" readonly>
+                                        <input type="hidden" name="unit_id" id="unit_id" value="{{$price->unit_id}}" class="form-control">
+
                                     </div>
                                 </div>
                                 <div class="col-md-6 add-product">
@@ -165,7 +168,10 @@
                     url: "{{ url('/product-units/') }}/" + productId,
                     type: 'GET',
                     success: function(result) {
-                        $('#unit-dropdown').html(result.options);
+                        $('#unit').val(result.data.unit);
+                        $('#quantityValue').val(result.data.quantity);
+                        $('#price').val(result.data.price);
+                        $('#unit_id').val(result.data.unitId);
                     },
                     error: function(err) {
                         console.error('Error fetching units:', err);
@@ -176,6 +182,32 @@
         document.getElementById('price').addEventListener('input', function (e) {
             let value = e.target.value;
             e.target.value = value.replace(/[^0-9.]/g, ''); // Remove any non-numeric and non-period characters
+        });
+
+        $(document).ready(function () {    
+            $("#price-form").validate({
+                rules: {
+                    product: "required",
+                    quantityValue: "required",
+                    price: "required",
+                },
+                messages: {
+                    product: "Please enter the product",
+                    quantityValue: "Please enter the quantity",
+                    price: "Please enter the price",
+                },
+                errorClass: "invalid-feedback",
+                errorElement: "span",
+                highlight: function(element, errorClass, validClass) {
+                    $(element).addClass("is-invalid");
+                },
+                unhighlight: function(element, errorClass, validClass) {
+                    $(element).removeClass("is-invalid");
+                },
+                submitHandler: function(form) {
+                    form.submit();
+                }
+            });
         });
     </script>
 @endsection

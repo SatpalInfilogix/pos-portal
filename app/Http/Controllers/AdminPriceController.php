@@ -79,22 +79,47 @@ class AdminPriceController extends Controller
         ]);
     }
 
+    // public function getUnits($id)
+    // {
+    //     $product = Product::where('status', 0)->where('id', $id)->first();
+    //     $units = json_decode($product->units, true) ?: [];
+    //     $options='<option value="" selected disabled>Select Unit</option>';
+    //     if($units) {
+    //         foreach($units as $unit)
+    //         {
+    //             $productUnits = Unit::where('id', $unit)->first();
+    //             $options .= '<option value="'.  $productUnits->name .'">'. $productUnits->name .'</option>';
+    //         }
+    //     }
+
+    //     return response()->json([
+    //         'options' => $options,
+    //     ]);
+    // }
+
     public function getUnits($id)
     {
         $product = Product::where('status', 0)->where('id', $id)->first();
-        $units = json_decode($product->units, true) ?: [];
-        $options='<option value="" selected disabled>Select Unit</option>';
-        if($units) {
-            foreach($units as $unit)
-            {
-                $productUnits = Unit::where('id', $unit)->first();
-                $options .= '<option value="'.  $productUnits->name .'">'. $productUnits->name .'</option>';
-            }
-        }
+        if($product) {
+            $unit = Unit::where('id', $product->units)->first();
+            $unitName = optional($unit)->name;
+            $unitId = optional($unit)->id;
 
-        return response()->json([
-            'options' => $options,
-        ]);
+            $priceMaster = PriceMaster::where('product_id', $id)->first();
+            $quantity = $priceMaster ? $priceMaster->quantity : '';
+            $price = $priceMaster ? $priceMaster->price : '';
+
+            $data = [
+                'unit' => $unitName,
+                'quantity' => $quantity,
+                'price' => $price,
+                'unitId' => $unitId
+            ];
+
+            return response()->json([
+                'data' => $data,
+            ]);
+        }
     }
 
     public function create()
@@ -108,10 +133,12 @@ class AdminPriceController extends Controller
 
     public function store(Request $request)
     {
-        PriceMaster::create([
+        PriceMaster::updateOrCreate([
             'product_id'        => $request->product,
+        ],
+        [
             'quantity'          => $request->quantityValue,
-            'quantity_type'     => $request->quantity ?? 0,
+            'quantity_type'     => $request->unit_id ?? 0,
             'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
         ]);
@@ -127,10 +154,13 @@ class AdminPriceController extends Controller
 
         $price = PriceMaster::with('product')->where('id', $id)->first(); // Fetch the product by ID
         $product = Product::where('id', $price->product_id)->first();
-        $productUnits = json_decode($product->units, true) ?? [];
-        $units = Unit::whereIn('id', $productUnits)->get();
+        // $productUnits = json_decode($product->units, true) ?? [];
 
-        return view('admin.prices.edit', compact('price', 'units'));
+        $unit = Unit::where('id', $product->units)->first();
+        $price['unit'] = optional($unit)->name;
+        $price['unit_id'] = optional($unit)->id;
+
+        return view('admin.prices.edit', compact('price'));
     }
 
     public function update(Request $request, $id)
@@ -138,7 +168,7 @@ class AdminPriceController extends Controller
         PriceMaster::where('id', $id)->update([
             'product_id'        => $request->product,
             'quantity'          => $request->quantityValue,
-            'quantity_type'     => $request->quantity ?? 0,
+            'quantity_type'     => $request->unit_id ?? NULL,
             'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
         ]);

@@ -32,7 +32,7 @@ class AdminProductController extends Controller
         $store_id = Auth::user()->store_id;
     
         if (isset($store_id)) {
-            $productsQuery = Product::select([
+            $productsQuery = Product::where('is_active', 0)->select([
                 'products.id',
                 'products.name',
                 'products.manufacture_date',
@@ -92,7 +92,9 @@ class AdminProductController extends Controller
             }
         }
 
-      
+        if($request->is_active == 'true') {
+            $productsQuery->where('products.is_active', 0);  
+        }
     
         if ($request->is_deleted == 'false') {
             $productsQuery->where('products.status', 0);
@@ -134,7 +136,6 @@ class AdminProductController extends Controller
             "data" => $products
         ]);
     }
-    
 
     public function create()
     {
@@ -161,7 +162,8 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'units'              => json_encode($request->units),
+            // 'units'              => json_encode($request->units),
+            'units'             => $request->units,
             'manufacture_date'  => $request->manufacture_date,
             'created_by'        => Auth::id(),
             'image'             => 'uploads/products/'. $filename,
@@ -219,7 +221,8 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'units'              => empty($request->units) ? null : json_encode($request->units),
+            'units'             => $request->units,
+            // 'units'              => empty($request->units) ? null : json_encode($request->units),
             'manufacture_date'  => $request->manufacture_date,
         ]);
         

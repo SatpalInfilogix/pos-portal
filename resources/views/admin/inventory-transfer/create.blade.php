@@ -92,6 +92,7 @@
                     data: function(d) {
                         d._token = "{{ csrf_token() }}";
                         d.is_deleted = false;
+                        d.is_active  = true;
                         return d;
                     }
                 },

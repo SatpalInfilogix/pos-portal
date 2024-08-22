@@ -43,17 +43,17 @@ class ProductsImport implements ToModel, WithHeadingRow
 
         $product_units = null;
         if(isset($row['unit'])){
-            $product_units = explode(',', $row['unit']);
-            $unitIds = [];
-            foreach($product_units as $key => $unitValue) {
-                $unitValue = trim($unitValue);
+            // $product_units = explode(',', $row['unit']);
+            // $unitIds = [];
+            // foreach($product_units as $key => $unitValue) {
+            //     $unitValue = trim($unitValue);
                 $unitData = Unit::firstOrCreate(
-                    ['name' => $unitValue]
+                    ['name' => $row['unit']]
                 );
 
-                $unitIds[] = (string)$unitData->id;
-            }
-            $product_units = json_encode($unitIds);
+                // $unitIds = $unitData->id;
+            // }
+            $product_units = $unitData->id;
         }
 
         if(!empty($row['product_code'])){

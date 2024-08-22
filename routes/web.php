@@ -118,6 +118,8 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::get('/users/{id}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
         Route::post('/users/{id}', [AdminUserController::class, 'update'])->name('users.update');
         Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
+
+        Route::get('/users-activities', [AdminUserController::class, 'userActivity'])->name('users-activities');
         /********************** End Users Routes  **********************/
 
         /********************** Admin Customers Routes  **********************/
@@ -178,6 +180,7 @@ Route::post('/get-customers', [AdminCustomerController::class, 'getCustomers'])-
 Route::post('/get-sales', [AdminSalesController::class, 'getSalesOrder'])->name('get-sales');
 Route::post('/get-transfer-stock-inventory', [InventoryTransferController::class, 'getTransferStockInventory'])->name('get-transfer-stock-inventory');
 Route::post('/get-return-stock-inventory', [ReturnStockController::class, 'getReturnStockInventory'])->name('get-return-stock-inventory');
+Route::post('/get-users-activity', [AdminUserController::class, 'getUsersActivity'])->name('get-users-activity');
 /************************* End DataTables Routes ************************/
 
 Route::post('/products/check-product-code', [AdminProductController::class, 'checkProductCode'])->name('products.check_code');

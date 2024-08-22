@@ -62,20 +62,27 @@
                         </div>
 
                         <?php
-                            $productUnits = isset($product->units) ? json_decode($product->units, true) : [];
+                            // $productUnits = isset($product->units) ? json_decode($product->units, true) : [];
                             
-                            if (!is_array($productUnits)) {
-                                $productUnits = [];
-                            }
+                            // if (!is_array($productUnits)) {
+                            //     $productUnits = [];
+                            // }
                         ?>
                         <div class="row mb-3">
                             <div class="col-md-6 add-product">
                                 <label class="form-label">Unit</label>
-                                <select class="select2-multiple form-control" name="units[]" multiple="multiple"id="select2Multiple">
-                                    @foreach($units as $key => $unit)
-                                        <option value="{{ $unit->id }}" {{ in_array($unit->id, $productUnits) ? 'selected' : '' }}>{{ $unit->name }}</option>
+                                {{-- <select class="select2-multiple form-control" name="units[]" multiple="multiple"id="select2Multiple"> --}}
+                                <select class="select2-multiple form-control" name="units" id="select2Multiple">
+                                    <option value="" selected disabled>Select Unit</option>
+                                    @foreach($units as $unit)
+                                        <option value="{{ $unit->id }}" {{ $unit->id == $product->units ? 'selected' : '' }}>
+                                            {{ $unit->name }}
+                                        </option>
+                                        {{-- <option value="{{ $unit->id }}" {{ in_array($unit->id, $productUnits) ? 'selected' : '' }}>{{ $unit->name }}</option> --}}
+
                                     @endforeach
                                 </select>
+
                                 {{-- <div class="input-blocks add-product list">
                                     <label class="form-label">Units</label>
                                     <input type="text" id="unit" class="form-control">
@@ -134,7 +141,7 @@
     $(document).ready(function() {
         // Select2 Multiple
         $('.select2-multiple').select2({
-            placeholder: "Select",
+            placeholder: "Select Unit",
             allowClear: true
         });
     });
@@ -233,12 +240,14 @@
                 product_name: "required",
                 product_code: "required",
                 manufacture_date: "required",
+                units: "required"
             },
             messages: {
                 category_id: "Please enter category",
                 product_name: "Please enter the product name",
                 product_code: "Please enter the product code",
                 manufacture_date: "Please enter the manufacture date",
+                units: "Please enter the unit"
             },
             errorClass: "invalid-feedback",
             errorElement: "span",
