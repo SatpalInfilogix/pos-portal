@@ -32,7 +32,7 @@ class AdminProductController extends Controller
         $store_id = Auth::user()->store_id;
     
         if (isset($store_id)) {
-            $productsQuery = Product::select([
+            $productsQuery = Product::where('is_active', 0)->select([
                 'products.id',
                 'products.name',
                 'products.manufacture_date',
@@ -92,7 +92,9 @@ class AdminProductController extends Controller
             }
         }
 
-      
+        if($request->is_active == 'true') {
+            $productsQuery->where('products.is_active', 0);  
+        }
     
         if ($request->is_deleted == 'false') {
             $productsQuery->where('products.status', 0);
