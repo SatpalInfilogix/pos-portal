@@ -71,6 +71,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
         Route::get('/sales/{id}',[AdminSalesController::class,'show'])->name('sales.view');
         Route::post('/update-received-inventory/{inventory_id}',[InventoryTransferController::class,'updateRecievedInventory'])->name('update.received.inventory');
+        Route::post('/update-return-inventory/{return_id}',[ReturnStockController::class,'updateReturnInventory'])->name('update.return.inventory');
 
         /********************** Sales Routes Ends Here  **********************/
          
@@ -134,7 +135,10 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
         Route::get('/search-invoice/{invoice_id}', [OrderController::class, 'searchInvoice'])->name('search.invoice');
         Route::get('/view-invoice/{invoice_id}', [OrderController::class, 'viewInvoice'])->name('view.invoice');
         Route::post('/print-gatepass/{transfer_id}', [InventoryTransferController::class, 'printGatePass'])->name('print.gatepass');
+        Route::post('/return-stock-gatepass/{return_id}', [ReturnStockController::class, 'updateGatePassStatus'])->name('return.stock.gatepass');
+       
         Route::get('/view-gatepass/{transfer_id}', [InventoryTransferController::class, 'viewGatePass'])->name('view.gatepass');
+        Route::get('/view-return-gatepass/{return_id}', [ReturnStockController::class, 'viewReturnGatePass'])->name('view.return.gatepass');
         /********************** Invoice Routes End**********************/
     });
 

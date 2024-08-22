@@ -11,12 +11,14 @@
             </div>
 
             @canany(['create return stocks'])
-                <div class="page-btn">
-                    <a href="{{ route('return-stock.create') }}" class="btn btn-added">
-                        <i data-feather="truck" class="me-2"></i>
-                        Return stock items
-                    </a>
-                </div>
+                @if(auth()->user()->store_id != null)
+                    <div class="page-btn">
+                        <a href="{{ route('return-stock.create') }}" class="btn btn-added">
+                            <i data-feather="truck" class="me-2"></i>
+                            Return stock items
+                        </a>
+                    </div>
+                @endif    
             @endcanany
         </div>
         @if (session('success'))
@@ -35,6 +37,7 @@
                                 <th>Store</th>
                                 <th>Store Contact</th>
                                 <th>Vehicle Number</th>
+                                <th>Status</th>
                                 <th>Date & Time</th>
                                 <th class="no-sort">Action</th>
                             </tr>
@@ -47,10 +50,11 @@
     </div>
 @endsection
 
-
+@include('partials.gate-pass')
 @section('script')
     <script>
         $(function() {
+            var store_id = '{{ auth()->user()->store_id }}';
             $('.return-stock-inventory').DataTable({
                 processing: true,
                 serverSide: true,
@@ -72,6 +76,30 @@
                     },
                     {
                         "data": "vehicle_number"
+                    },
+                    { "data": "status",
+                        "render" : function(data, type, row) {
+                            //return formatDate(data);
+                            let color;
+                            switch(data) {
+                                case 'delivered':
+                                    color = 'orange'; 
+                                    data = 'Pending'; 
+                                    break;
+                                case 'recieved_not_all':
+                                    color = 'red';
+                                    data = 'Not received all items'; 
+                                    break;
+                                case 'received':
+                                    color = 'green';
+                                    data = 'Received'; 
+                                    break;
+                                default:
+                                    color = 'black'; 
+                                    break;
+                            }
+                            return `<span style="color: ${color};">${data}</span>`;
+                        }
                     },
                     {
                         "data": "created_at",
@@ -104,6 +132,11 @@
                                 `<a class="me-2 p-2 edit-btn" href="{{ route('return-stock.show', '') }}/${data.id}">`;
                             actions += '<i class="fa fa-eye"></i>';
                             actions += '</a>';
+                            if (store_id){
+                                actions += `<a class="me-2 p-2" href="#" id="open-return-gatepass-model" data-vehicle-number="${data.vehicle_number}" data-return-id="${data.id}">`;
+                                actions += '<i class="fa fa-download"></i>&nbsp;Generate Gate Pass';
+                                actions += '</a>';
+                            }
                             actions += '</div>';
                             return actions;
                         }
@@ -120,5 +153,42 @@
                 lengthMenu: [10, 25, 50, 100]
             });
         });
+
+    $(document).on('click','#open-return-gatepass-model',function(e){
+        e.preventDefault();
+        var return_id = $(this).data('return-id');
+        var vehicle_number = $(this).data('vehicle-number');
+        $('[name="transfer-id"]').val(return_id);
+        $('#vehicle-number').val(vehicle_number);
+        $('#gate-pass-modal').modal('show');
+    });
+
+    $(document).on('click','#generate-gatepass',function(){
+        
+        var return_id = $('[name="transfer-id"]').val();
+        var vehicle_number = $('[name="vehicle-number"]').val();
+        if(!vehicle_number){
+            alert('Please Enter Vehicle Number');
+            return false;
+        }
+        var _token = "{{ csrf_token() }}";
+        $.ajax({
+            url : "{{ route('return.stock.gatepass','') }}/"+return_id,
+            type : 'POST',
+            data : {
+                _token,
+                vehicle_number
+            },
+            success : function(resp){
+                if(resp.success){
+                    window.open(`{{ route('view.return.gatepass', '') }}/${return_id}`);
+                    location.reload();
+                    $('#gate-pass-modal').modal('hide');
+                }
+            }
+        });
+    }); 
+
     </script>
+    
 @endsection

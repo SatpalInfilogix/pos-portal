@@ -17,6 +17,9 @@ return new class extends Migration
             $table->unsignedBigInteger('store_id');
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('quantity')->nullable();
+            $table->unsignedBigInteger('transfer_quantity')->nullable();
+            $table->unsignedBigInteger('received_quantity')->nullable();
+            $table->integer('received_by')->nullable();
             $table->timestamps();
 
             $table->foreign('return_stock_id')->references('id')->on('return_stocks');

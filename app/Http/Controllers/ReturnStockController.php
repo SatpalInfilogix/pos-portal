@@ -57,11 +57,6 @@ class ReturnStockController extends Controller
                 $product_id = $product->id;
                 
                 if($product->quantity && $product->quantity > 0){
-                    $priceMaster = PriceMaster::where('product_id',$product_id)->first();
-
-                    $priceMaster->update([
-                        "quantity" => $priceMaster->quantity + $product->quantity
-                    ]);
 
                     $storeProduct = StoreProduct::where('store_id',$store_id)->where('product_id',$product_id)->first();
                     $storeProduct->update([
@@ -72,7 +67,7 @@ class ReturnStockController extends Controller
                         "return_stock_id" => $returnStock->id,
                         "store_id" => $store_id,
                         "product_id" => $product_id,
-                        "quantity" => $product->quantity
+                        "transfer_quantity" => $product->quantity
                     ]);
 
                 }
@@ -132,6 +127,7 @@ class ReturnStockController extends Controller
                 'return_stocks.id', 
                 'return_stocks.store_id', 
                 'return_stocks.vehicle_number', 
+                'return_stocks.status', 
                 'return_stocks.returned_by', 
                 'return_stocks.created_at',
                 'stores.contact_number as store_contact', 
@@ -145,6 +141,7 @@ class ReturnStockController extends Controller
                 'return_stocks.id', 
                 'return_stocks.store_id', 
                 'return_stocks.vehicle_number', 
+                'return_stocks.status', 
                 'return_stocks.returned_by', 
                 'return_stocks.created_at',
                 'stores.contact_number as store_contact', 
@@ -187,5 +184,54 @@ class ReturnStockController extends Controller
             "recordsFiltered" => $totalRecords,
             "data" => $returnTransfers
         ]);
+    }
+    public function updateReturnInventory(Request $request, $return_id){
+        //print_r($request);
+        $returnInventory = ReturnStock::where('id',$return_id)->first();
+        if($request->totalDelivered != $request->totalReceived){
+            $returnInventory->status = 'recieved_not_all';
+        }else{
+            $returnInventory->status = 'received';
+        }
+        $returnInventory->save();
+
+        foreach($request->productData as $productData)
+        {
+            $returnStockProduct =  ReturnStockProduct::where('return_stock_id',$return_id)->where('product_id',$productData['product_id'])->first();
+            if($returnStockProduct->transfer_quantity != $productData['receivedQty'])
+            {
+                $updateQty = $returnStockProduct->transfer_quantity - $productData['receivedQty'];
+                $storeProduct = StoreProduct::where('store_id',$returnInventory->store_id)->where('product_id',$productData['product_id'])->first();
+                $storeProduct->update([
+                    "quantity" => $storeProduct->quantity + $updateQty,
+                ]);
+            }
+            $priceMasterUpdate = PriceMaster::where('product_id',$productData['product_id'])->first();
+            if($priceMasterUpdate){
+                $priceMasterUpdate->update([
+                    "quantity" => $priceMasterUpdate->quantity + $productData['receivedQty'],
+                ]);
+            }
+            $returnStockProduct->quantity = $productData['receivedQty'];
+            $returnStockProduct->received_quantity = $productData['receivedQty'];
+            $returnStockProduct->save();
+        }
+        return response()->json(['success' => true]);
+    }
+    public function viewReturnGatePass($return_id){
+     
+        $returStocks = ReturnStock::with('store')->with('deliveredItems')->where('id',$return_id)->first();
+        //dd($returStocks);
+       // $transferedInventory = Inventory::with('store')->with('deliveredItems')->where('id',$transfer_id)->first();
+       // dd($transferedInventory);
+       return view('admin.stocks.return-stock.pdf.return-gate-pass',compact('returStocks'));
+    }
+    public function updateGatePassStatus(Request $request, $return_id){
+        
+        $returnInventory = ReturnStock::where('id',$return_id)->first();
+        $returnInventory->vehicle_number = $request->vehicle_number;
+        $returnInventory->save();
+        return response()->json(["success" => true]);
+
     }
 }
