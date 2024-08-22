@@ -8,6 +8,7 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Illuminate\Support\Facades\Http;
 use App\Models\Category;
 use App\Models\PriceMaster;
+use App\Models\Unit;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -43,9 +44,18 @@ class ProductsImport implements ToModel, WithHeadingRow
         $product_units = null;
         if(isset($row['unit'])){
             $product_units = explode(',', $row['unit']);
-            $product_units = json_encode($product_units);
+            $unitIds = [];
+            foreach($product_units as $key => $unitValue) {
+                $unitValue = trim($unitValue);
+                $unitData = Unit::firstOrCreate(
+                    ['name' => $unitValue]
+                );
+
+                $unitIds[] = (string)$unitData->id;
+            }
+            $product_units = json_encode($unitIds);
         }
-        
+
         if(!empty($row['product_code'])){
             $product_code = $row['product_code'];
         } else {
