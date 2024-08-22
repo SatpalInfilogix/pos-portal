@@ -134,7 +134,6 @@ class AdminProductController extends Controller
             "data" => $products
         ]);
     }
-    
 
     public function create()
     {
@@ -161,7 +160,8 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'units'              => json_encode($request->units),
+            // 'units'              => json_encode($request->units),
+            'units'             => $request->units,
             'manufacture_date'  => $request->manufacture_date,
             'created_by'        => Auth::id(),
             'image'             => 'uploads/products/'. $filename,
@@ -219,7 +219,8 @@ class AdminProductController extends Controller
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
-            'units'              => empty($request->units) ? null : json_encode($request->units),
+            'units'             => $request->units,
+            // 'units'              => empty($request->units) ? null : json_encode($request->units),
             'manufacture_date'  => $request->manufacture_date,
         ]);
         
