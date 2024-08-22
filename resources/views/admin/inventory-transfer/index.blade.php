@@ -120,8 +120,7 @@ $(function() {
                         actions += `<a class="me-2 p-2 edit-btn" href="{{ route('inventory-transfer.show','') }}/${data.id}">`;
                         actions += '<i class="fa fa-eye"></i>';
                         actions += '</a>';
-                        console
-                        if (userRole === 'Super Admin' || userRole === 'Admin') {
+                        if (userRole === 'Super Admin' || userRole === 'Admin' || userRole === 'Manager') {
                             actions += `<a class="me-2 p-2" href="#" id="open-gatepass-model" data-vehicle-number="${data.vehicle_number}" data-transfer-id="${data.id}">`;
                             actions += '<i class="fa fa-download"></i>&nbsp;Generate Gate Pass';
                             actions += '</a>';
