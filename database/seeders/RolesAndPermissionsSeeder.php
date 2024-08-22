@@ -40,7 +40,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $roles = [
             'Super Admin' => Permission::all(),
             'Admin' => Permission::all(),
-            'Manager' => ['backend', 'view sales', 'view return stocks', 'create return stocks', 'edit return stocks', 'delete return stocks'],
+            'Manager' => ['backend', 'view sales', 'view return stocks', 'create return stocks', 'edit return stocks', 'delete return stocks', 'view inventory transfers', 'view customers'],
             'Sales Person' => ['frontend']
         ];
 
