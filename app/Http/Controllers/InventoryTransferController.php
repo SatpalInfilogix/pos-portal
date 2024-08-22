@@ -245,24 +245,24 @@ class InventoryTransferController extends Controller
                 $priceMasterUpdate->update([
                     "quantity" => $priceMasterUpdate->quantity + $updateQty,
                 ]);
-            }else{
-
-                $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$productData['product_id'])->first();
-                    if($recordExist){
-                        $recordExist->update([
-                            "quantity" => $recordExist->quantity + $productData['receivedQty'],
-                        ]);
-
-                    }else{
-
-                        $storeProduct = StoreProduct::create([
-                            "store_id" => $store_id,
-                            "product_id" => $productData['product_id'],
-                            "quantity" => $productData['receivedQty'],
-                        ]);
-
-                    }
             }
+
+            $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$productData['product_id'])->first();
+                if($recordExist){
+                    $recordExist->update([
+                        "quantity" => $recordExist->quantity + $productData['receivedQty'],
+                    ]);
+
+                }else{
+
+                    $storeProduct = StoreProduct::create([
+                        "store_id" => $store_id,
+                        "product_id" => $productData['product_id'],
+                        "quantity" => $productData['receivedQty'],
+                    ]);
+
+                }
+            
             $inventoryProduct->quantity = $productData['receivedQty'];
             $inventoryProduct->received_quantity = $productData['receivedQty'];
             $inventoryProduct->save();
