@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use App\Models\Store;
+use App\Models\UserActivity;
 use Illuminate\Support\Facades\Gate;
 
 class AdminUserController extends Controller
@@ -155,4 +156,70 @@ class AdminUserController extends Controller
             return response()->json(['status' => 'error', 'message' => 'User not found.'], 404);
         }
     }
+
+    public function userActivity()
+    {
+        $users = UserActivity::latest()->get();
+
+        return view('admin.users.users-activity',compact('users'));
+    }
+
+    public function getUsersActivity(Request $request)
+    {
+        $usersQuery = UserActivity::select([
+                'users_activities.id',
+                'users_activities.logged_in',
+                'users_activities.logged_out',
+                'users.first_name',
+                'users.last_name'
+            ])
+            ->join('users', 'users_activities.user_id', '=', 'users.id'); // Adjust the join condition as necessary
+
+        if ($request->has('search') && !empty($request->search['value'])) {
+            $searchValue = $request->search['value'];
+            $usersQuery->where(function ($query) use ($searchValue) {
+                $query->where('users.first_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('users.last_name', 'like', '%' . $searchValue . '%')
+                    ->orWhere('users_activities.logged_in', 'like', '%' . $searchValue . '%')
+                    ->orWhere('users_activities.logged_out', 'like', '%' . $searchValue . '%');
+            });
+        }
+
+        if ($request->has('date') && !empty($request->date)) {
+            $date = $request->date;
+            $usersQuery->whereDate('users_activities.logged_in', $date)
+                    ->orWhereDate('users_activities.logged_out', $date);
+        }
+
+        if ($request->has('order')) {
+            $orderColumnIndex = $request->order[0]['column'];
+            $orderDirection = $request->order[0]['dir'];
+            $columns = $request->columns;
+            $column = $columns[$orderColumnIndex]['data'];
+
+            if ($column === 'first_name') {
+                $usersQuery->orderBy('users.first_name', $orderDirection);
+            } elseif ($column === 'last_name') {
+                $usersQuery->orderBy('users.last_name', $orderDirection);
+            } elseif (in_array($column, ['id', 'logged_in', 'logged_out'])) {
+                $usersQuery->orderBy('users_activities.' . $column, $orderDirection);
+            }
+        }
+
+        $totalRecords = $usersQuery->count();
+
+        $perPage = $request->input('length', 10);
+        $currentPage = $request->input('start', 0) / $perPage;
+        $users = $usersQuery->skip($currentPage * $perPage)->take($perPage)->get();
+
+        return response()->json([
+            "draw" => intval($request->input('draw')),
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalRecords,
+            "data" => $users
+        ]);
+    }
+
+    
+
 }
