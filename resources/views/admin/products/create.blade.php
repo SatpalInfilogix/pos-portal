@@ -61,12 +61,12 @@
                             <div class="row mb-3">
                                 <div class="col-md-6 add-product">
                                     <label class="form-label">Unit</label>
-                                    <select class="select2-multiple form-control" name="units[]" multiple="multiple"id="select2Multiple">
+                                    {{-- <select class="select2-multiple form-control" name="units[]" multiple="multiple"id="select2Multiple"> --}}
+                                    <select class="select2-multiple form-control" name="units" id="select2Multiple">
+                                        <option value="" selected disabled>Select Unit</option>
                                         @foreach($units as $key => $unit)
-                                        <option value="{{$unit->id}}">{{$unit->name}}</option>
+                                            <option value="{{$unit->id}}">{{$unit->name}}</option>
                                         @endforeach
-                                        {{-- <option value="tag2">tag2</option>
-                                        <option value="tag3">tag3</option> --}}
                                     </select>
                                     {{-- <div class="input-blocks add-product list">
                                         <label class="form-label">Units</label>
@@ -109,7 +109,7 @@
          $(document).ready(function() {
             // Select2 Multiple
             $('.select2-multiple').select2({
-                placeholder: "Select",
+                placeholder: "Select Unit",
                 allowClear: true
             });
 
@@ -183,6 +183,7 @@
                     product_code: "required",
                     image: "required",
                     manufacture_date: "required",
+                    units: "required"
                 },
                 messages: {
                     category_id: "Please enter category",
@@ -190,6 +191,7 @@
                     product_code: "Please enter the product code",
                     image: "Please select image",
                     manufacture_date: "Please enter the manufacture date",
+                    units: "Please enter the unit"
                 },
                 errorClass: "invalid-feedback",
                 errorElement: "span",
