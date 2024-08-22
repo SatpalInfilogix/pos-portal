@@ -67,23 +67,6 @@ class InventoryTransferController extends Controller
                         'sent_by' => Auth::id(),
                     ]);
 
-                    #If product and store already exists
-                  /*  $recordExist = StoreProduct::where('store_id',$store_id)->where('product_id',$product_id)->first();
-                    if($recordExist){
-                        $recordExist->update([
-                            "quantity" => $recordExist->quantity + $product->quantity,
-                        ]);
-
-                    }else{
-
-                        $storeProduct = StoreProduct::create([
-                            "store_id" => $store_id,
-                            "product_id" => $product_id,
-                            "quantity" => $product->quantity,
-                        ]);
-
-                    }*/
-
                     #Price Master quantity update
                     $priceMasterUpdate = PriceMaster::where('product_id',$product_id)->first();
                     $priceMasterUpdate->update([
