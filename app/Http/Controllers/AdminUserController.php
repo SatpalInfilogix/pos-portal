@@ -183,6 +183,10 @@ class AdminUserController extends Controller
                 'users.last_name'
             ])
             ->join('users', 'users_activities.user_id', '=', 'users.id'); // Adjust the join condition as necessary
+        $store_id = Auth::user()->store_id;
+        if($store_id){
+            $usersQuery->where('users.store_id',$store_id);
+        }    
 
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];

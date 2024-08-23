@@ -95,7 +95,7 @@ class PosCartController extends Controller
             // $sub_total -= $cart['discount_amount'];
             // $cart['grand_total'] = $sub_total;
             // $cart['formatted_grand_total'] = '$' . number_format($cart['grand_total'], 2);
-            $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+            $cart['tax'] = $cart['grand_total'] * 0.15;
             $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
         } else {
             $cart['grand_total'] = $sub_total;
@@ -103,7 +103,7 @@ class PosCartController extends Controller
             $cart['discount'] = 0;
             $cart['discount_amount'] = 0;
             $cart['discount_percentage'] = 0;
-            $cart['tax'] = number_format( $cart['grand_total'] * 0.15, 2);
+            $cart['tax'] = $cart['grand_total'] * 0.15;
             $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
         }
 
@@ -172,7 +172,7 @@ class PosCartController extends Controller
                 }
                 $cart['grand_total'] = $sub_total;
                 $cart['formatted_grand_total'] = '$'. number_format( $cart['grand_total'] , 2);
-                $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+                $cart['tax'] = $cart['grand_total'] * 0.15;
                 $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
 
             } else {
@@ -183,7 +183,7 @@ class PosCartController extends Controller
                 $cart['discount_percentage'] = 0;
             }
           
-            $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+            $cart['tax'] = $cart['grand_total'] * 0.15;
             $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
             $cart['count'] = count($cart['products']);
             
@@ -276,7 +276,7 @@ class PosCartController extends Controller
                     $cart['discount_amount'] = 0;
                 }
 
-                $cart['tax'] = number_format($cart['grand_total'] * 0.15, 2);
+                $cart['tax'] = $cart['grand_total'] * 0.15;
                 $cart['payable'] = number_format($cart['grand_total'] + $cart['tax'], 2);
 
                 $cart['count']  = count($cart['products']);

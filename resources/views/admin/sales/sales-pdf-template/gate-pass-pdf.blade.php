@@ -58,7 +58,7 @@
                     <td>{{ ++$key.". ".$delivered_item->product->name }}</td>
                     <td>{{ $delivered_item->transfer_quantity }}</td>
                     <td></td>
-                    <td>{{ $delivered_item->priceMaster->price * $delivered_item->transfer_quantity}}</td>
+                    <td>${{ $delivered_item->priceMaster->price * $delivered_item->transfer_quantity}}</td>
                 </tr>
                 @endforeach
                 <tr>

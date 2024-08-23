@@ -78,7 +78,7 @@ class OrderController extends Controller
                 'OrderStatus' => 'completed',
                 'PaymentMethod' => $request->payment_method,
                 'PaymentStatus' => 'success',
-                'TotalAmount' => $cart['payable'],
+                'TotalAmount' => str_replace(',','',$cart['payable']),
                 'TaxAmount' => $cart['tax'],
                 'DiscountAmount' => $cart['discount_amount'],
                 'VehicleNumber' => $request->vehicle_number,
