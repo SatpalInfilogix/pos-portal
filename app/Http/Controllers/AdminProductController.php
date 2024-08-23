@@ -292,4 +292,10 @@ class AdminProductController extends Controller
             return response()->json(['status' => 'error', 'Product' => 'Category not found.'], 404);
         }
     }
+
+    public function downloadSampleCsv()
+    {
+        $filePath = public_path('sample-products.csv');
+        return response()->download($filePath);
+    }
 }

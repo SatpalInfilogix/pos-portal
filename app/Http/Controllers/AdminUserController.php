@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Store;
 use App\Models\UserActivity;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class AdminUserController extends Controller
 {
@@ -97,6 +98,14 @@ class AdminUserController extends Controller
 
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|unique:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         User::create([
             'first_name'    => $request->first_name,
             'last_name'     => $request->last_name,

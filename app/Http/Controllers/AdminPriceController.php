@@ -210,4 +210,10 @@ class AdminPriceController extends Controller
         
         return redirect()->route('prices.index')->with('success', 'Price master imported successfully.');
     }
+
+    public function downloadPriceMaster()
+    {
+        $filePath = public_path('price-master.csv');
+        return response()->download($filePath);
+    }
 }

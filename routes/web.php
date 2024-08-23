@@ -199,3 +199,7 @@ Route::get('/open-cash-drawer', [PrintController::class, 'openCashDrawer'])->nam
 Route::post('/get-transaction', [PosDashboardController::class, 'getTransaction'])->name('get-transaction');
 
 Route::get('/gate-pass/{orderId}', [OrderController::class, 'renderGatePassView'])->name('gate-pass.view');
+
+/* Download csv files */
+Route::get('/download-sample-csv', [AdminProductController::class, 'downloadSampleCsv']);
+Route::get('/download-price-master', [AdminPriceController::class, 'downloadPriceMaster']);
