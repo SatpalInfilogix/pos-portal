@@ -38,7 +38,12 @@
                         });
                     </script>
 
-                    <a href="{{ url('price-master.csv') }}" class="btn btn-added">
+                    {{-- <a href="{{ url('price-master.csv') }}" class="btn btn-added">
+                        <i data-feather="download" class="me-2"></i>
+                        Download Sample CSV
+                    </a> --}}
+
+                    <a href="{{ url('download-price-master') }}" class="btn btn-added">
                         <i data-feather="download" class="me-2"></i>
                         Download Sample CSV
                     </a>
