@@ -166,7 +166,6 @@ class AdminPriceController extends Controller
     public function update(Request $request, $id)
     {
         PriceMaster::where('id', $id)->update([
-            'product_id'        => $request->product,
             'quantity'          => $request->quantityValue,
             'quantity_type'     => $request->unit_id ?? NULL,
             'price'             => $request->price ?? 0,

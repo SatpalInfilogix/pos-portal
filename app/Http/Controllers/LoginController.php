@@ -30,7 +30,8 @@ class LoginController extends Controller
             $userActivities = UserActivity::create([
                 "user_id" => $user->id,
                 "logged_in" => now(),
-                "ip_address" => $request->ip()
+                "ip_address" => $request->ip(),
+                "store_id" => $user->store_id,
             ]);
 
             if ($user->hasPermissionTo('backend')) {

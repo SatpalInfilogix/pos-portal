@@ -489,7 +489,7 @@
                             let amount = '<b>' + cart + '</b>';
                             $('.totalAmount').html(amount);
                             $('.grandTotal').html(response.cart.formatted_grand_total);
-                            $('.tax').html('$' + response.cart.tax);
+                            $('.tax').html('$' + response.cart.tax.toFixed(2));
                             $('.payable').html('$' + response.cart.payable);
                             $('.discount-option').html(response.discountOptions);
                             $('.count-products').html(response.cart.count);
@@ -576,8 +576,8 @@
 
         $(document).on('keyup', '[name="tender_amount"]', function() {
             var tender_amount = parseFloat($(this).val());
-            var payable = parseFloat($('span.payable:first').text().replace("$", ""));
-
+            var payable = parseFloat($('span.payable:first').text().replace(/[$,]/g, ""));
+            console.log(payable);
             if (tender_amount > payable) {
                 var total_change = tender_amount - payable;
                 $('[name="order_change_amount"]').val(total_change.toFixed(
@@ -772,21 +772,12 @@
                                     </div>
                                 </div>`;
                         $('.completed-orders').prepend(completedOrder);
+                    }else{
+                        alert('Something Went Wrong');
+                        $('#order-submission').prop('disabled', false).html('Place');
                     }
                 }
             });
-        });
-
-        $(document).on('keyup', '[name="tender_amount"]', function() {
-            var tender_amount = parseFloat($(this).val());
-            var payable = parseFloat($('span.payable:first').text().replace("$", ""));
-
-            if (tender_amount >= payable) {
-                var total_change = tender_amount - payable;
-                $('[name="order_change_amount"]').val(total_change.toFixed(2)); // Ensure two decimal places
-            } else {
-                $('[name="order_change_amount"]').val(0);
-            }
         });
 
         $(document).on('keyup', 'input[name="searchOrder"]', function() {
