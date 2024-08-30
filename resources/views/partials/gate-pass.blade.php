@@ -15,8 +15,14 @@
                                 aria-labelledby="onhold-tab">
                                 <div class="form-group" id="searchbox">
                                     <input type="hidden" name="transfer-id">
-                                    <input type="text" class="form-control form-control-sm" placeholder="Enter Vehicle Number" name="vehicle-number" id="vehicle-number"><a href="#"
-                                    class="btn btn-info btn-icon flex-fill" id="generate-gatepass">Generate</a>
+                                    <select name="vehicle-number" id="vehicle-number" class="form-control form-control-sm">
+                                        <option value="" selected disabled>Select Vehicle Number</option>
+                                        @foreach($vehicleNumbers as $vehicleNumber)
+                                            <option value="{{ $vehicleNumber->vehicle_number }}">{{ $vehicleNumber->vehicle_number }}</option>
+                                        @endforeach
+                                    </select>
+                                        {{-- <input type="text" class="form-control form-control-sm" placeholder="Enter Vehicle Number" name="vehicle-number" id="vehicle-number"> --}}
+                                        <a href="#" class="btn btn-info btn-icon flex-fill" id="generate-gatepass">Generate</a>
                                 </div>
                                 <div class="order-body" id="g-invoice-details">
                                     <div class="default-cover p-4 mb-4">

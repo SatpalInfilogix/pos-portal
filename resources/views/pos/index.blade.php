@@ -364,7 +364,7 @@
     @include('partials.recent-transactions')
     @include('partials.orders')
 
-    @include('partials.gate-pass')
+    {{-- @include('partials.gate-pass') --}}
 
     <script>
         $(document).ready(function() {
@@ -580,8 +580,9 @@
             console.log(payable);
             if (tender_amount > payable) {
                 var total_change = tender_amount - payable;
-                $('[name="order_change_amount"]').val(total_change.toFixed(
-                    2)); // toFixed(2) to ensure two decimal places
+                var rounded_change = Math.round(total_change);
+                console.log(rounded_change);
+                $('[name="order_change_amount"]').val(rounded_change);
             } else {
                 $('[name="order_change_amount"]').val(0);
             }

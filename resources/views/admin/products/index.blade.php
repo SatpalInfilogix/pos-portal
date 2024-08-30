@@ -12,7 +12,7 @@
 
             @canany(['create product'])
                 <div class="page-btn d-flex gap-2">
-                    <a href="#" class="btn btn-added">
+                    <a href="{{ route('download.barcodes') }}" class="btn btn-added">
                         <i data-feather="download" class="me-2"></i>
                         Generate Bar code
                     </a>

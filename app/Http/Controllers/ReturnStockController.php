@@ -6,7 +6,7 @@ use App\Models\ReturnStock;
 use Illuminate\Http\Request;
 use App\Models\Store;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\VehicleNumber;
 use App\Models\ReturnStockProduct;
 use App\Models\PriceMaster;
 use App\Models\StoreProduct;
@@ -22,8 +22,9 @@ class ReturnStockController extends Controller
         if (!Gate::allows('view return stocks')) {
             abort(403);
         }
+        $vehicleNumbers = VehicleNumber::latest()->get();
 
-        return view('admin.stocks.return-stock.index');
+        return view('admin.stocks.return-stock.index', compact('vehicleNumbers'));
     }
 
     /**

@@ -11,7 +11,7 @@
             </div>
             <div class="left-side">
                 <!-- Button on the left -->
-                <button class="btn btn-primary" id="pdf-download">PDF Download</button>
+                <button class="btn btn-primary" id="pdf-download">Download Sales Report</button>
             </div>
         </div>
 

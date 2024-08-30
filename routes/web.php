@@ -209,3 +209,5 @@ Route::get('/export-products-quantites', [AdminPriceController::class, 'exportQu
 
 Route::get('/products/get-latest-code-number', [AdminProductController::class, 'getLatestCodeNumber'])->name('products.get_latest_code_number');
 Route::get('/sales-details-download', [AdminSalesController::class, 'downloadSalesDetail'])->name('sales-details-download');
+
+Route::get('/download-barcodes', [AdminProductController::class, 'downloadBarcodes'])->name('download.barcodes');

@@ -3,38 +3,6 @@
 <head>
     <title> Gate Pass</title>
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
-    <style>
-        /* Add your custom styles here */
-        .stamp-signature-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        .stamp-signature-container .temperature,
-        .stamp-signature-container .signature {
-            padding: 10px;
-            width: 35%;
-            position: relative;
-        }
-
-        .stamp-signature-container .temperature::before,
-        .stamp-signature-container .signature::before {
-            content: "";
-            display: inline-block;
-            width: 35%; /* Adjust the width of the line as needed */
-            border-bottom: 1px solid #000;
-            margin-right: 10px; /* Space between line and text */
-        }
-
-        .stamp-signature-container .temperature {
-            text-align: right;
-        }
-
-        .stamp-signature-container .signature {
-            text-align: left;
-        }
-    </style>
 </head>
 
 <body>
@@ -97,11 +65,11 @@
                 </tr>
             </table>
             <div class="stamp-signature-container" style="margin-bottom: 100px;">
-                <div class="temperature">
-                    <p><strong>Temperature</strong></p>
-                </div>
                 <div class="signature">
                     <p><strong>Signature/Stamp</strong></p>
+                </div>
+                <div class="temperature">
+                    <p><strong>Temperature</strong></p>
                 </div>
             </div>
         </div>

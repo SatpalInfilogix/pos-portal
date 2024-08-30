@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Inventory;
+use App\Models\VehicleNumber;
 use App\Models\InventoryProduct;
 use App\Models\PriceMaster;
 use App\Models\StoreProduct;
@@ -24,7 +25,9 @@ class InventoryTransferController extends Controller
             abort(403);
         }
         $stores = Store::where('is_deleted',0)->latest()->get();
-        return view('admin.inventory-transfer.index',compact('stores'));
+        $vehicleNumbers = VehicleNumber::latest()->get();
+
+        return view('admin.inventory-transfer.index',compact('stores', 'vehicleNumbers'));
     }
 
     /**

@@ -12,6 +12,8 @@ use App\Imports\ProductsImport;
 use Maatwebsite\Excel\Facades\Excel;
 use DB;
 use Illuminate\Support\Facades\Gate;
+use Picqer\Barcode\BarcodeGeneratorPNG;
+use PDF;
 
 class AdminProductController extends Controller
 {
@@ -317,5 +319,29 @@ class AdminProductController extends Controller
         $latestProduct = Product::latest('id')->first();
         $latestCodeNumber = $latestProduct ? substr($latestProduct->product_code, -6) : 0;
         return response()->json(['latest_code_number' => $latestCodeNumber]);
+    }
+
+    public function downloadBarcodes()
+    {
+        $products = Product::where('status', 0)
+                            ->whereHas('category', function ($query) {
+                                $query->where('status', 0);
+                            })->get();
+
+        $generator = new BarcodeGeneratorPNG();
+        $barcodes = [];
+
+        foreach ($products as $product) {
+            $barcode = base64_encode($generator->getBarcode($product->product_code, $generator::TYPE_CODE_128));
+            $barcodes[] = [
+                'product' => $product,
+                'barcode' => $barcode,
+                'product_code' => $product->product_code
+            ];
+        }
+
+        $pdf = PDF::loadView('admin.products.pdf.barcodes', ['barcodes' => $barcodes]);
+
+        return $pdf->download('product_barcodes.pdf');
     }
 }
