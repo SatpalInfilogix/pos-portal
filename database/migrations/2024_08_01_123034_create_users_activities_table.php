@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('logged_in')->nullable();
             $table->string('logged_out')->nullable();
             $table->string('ip_address')->nullable();
+            $table->unsignedBigInteger('store_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users');
