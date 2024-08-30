@@ -30,7 +30,7 @@
                                 <div class="row">
                                     <div class="mb-3 add-product">
                                         <label class="form-label">Discount</label></label>
-                                        <input type="text" name="discount[]" id="discount" class="form-control" value="{{ $role->discount }}">
+                                        <input type="number" name="discount[]" id="discount" class="form-control" value="{{ $role->discount }}">
                                     </div>
                                 </div>
                             @endforeach

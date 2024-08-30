@@ -12,6 +12,11 @@
 
             @canany(['create product'])
                 <div class="page-btn d-flex gap-2">
+                    <a href="#" class="btn btn-added">
+                        <i data-feather="download" class="me-2"></i>
+                        Generate Bar code
+                    </a>
+
                     <form id="importForm" action="{{ route('import-products') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <button type="button" class="btn btn-added" id="importButton">
@@ -89,7 +94,7 @@
 
     <input type="hidden" name="can_edit" value="{{ Auth::user()->can('edit product') }}">
     <input type="hidden" name="can_delete" value="{{ Auth::user()->can('delete product') }}">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(function() {
             let can_edit = $('[name="can_edit"]').val();
@@ -131,14 +136,14 @@
                             var actions = '<div class="edit-delete-action">';
                             if (row.is_active == 1) {
                                 actions +=
-                                    `<a class="me-2 p-2 status-btn" id="active" data-id="${row.id}" href="#">Inactive</a>`;
+                                    `<a class="me-2 p-2 status-btn" id="active" data-type = "Active" data-id="${row.id}" href="#">Inactive</a>`;
                                 actions +=
-                                    `<a class="me-2 p-2 status-btn" id="in-active" data-id="${row.id}" style="display: none;">Active</a>`;
+                                    `<a class="me-2 p-2 status-btn" id="in-active" data-type = "Inactive" data-id="${row.id}" style="display: none;">Active</a>`;
                             } else {
                                 actions +=
-                                    `<a class="me-2 p-2 status-btn" id="in-active" data-id="${row.id}" href="#">Active</a>`;
+                                    `<a class="me-2 p-2 status-btn" id="in-active" data-type = "Inactive" data-id="${row.id}" href="#">Active</a>`;
                                 actions +=
-                                    `<a class="me-2 p-2 status-btn" id="active" data-id="${row.id}" style="display: none;">Inactive</a>`;
+                                    `<a class="me-2 p-2 status-btn" id="active" data-type = "Active" data-id="${row.id}" style="display: none;">Inactive</a>`;
                             }
                             actions += '</div>';
                             return actions;
@@ -181,7 +186,6 @@
             });
         });
 
-
         $(document).ready(function() {
             $(document).on('click', '.delete-btn', function(e) {
                 e.preventDefault();
@@ -220,33 +224,41 @@
             $(document).on('click', '.status-btn', function(e) {
                 var productId = $(this).data('id');
                 var token = "{{ csrf_token() }}";
-                var url = "{{ route('products.status', '') }}/" + productId;
-                $.ajax({
-                        url: url,
-                        type: 'POST',
-                        data: {
-                            "_token": token,
-                        },
-                        success: function(response) {
-                            console.log(response.status);
-                            if (response.status == 'success') {
-                                if (response.product == 1) {
-                                    $('#active[data-id="' + productId + '"]').show();
-                                    $('#in-active[data-id="' + productId + '"]').hide();
+                var actionText = $(this).data('type');
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Do you want to ${actionText} this product?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: `Yes, ${actionText} it!`,
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: "{{ route('products.status', '') }}/" + productId,
+                            type: 'POST',
+                            data: {
+                                "_token": token,
+                            },
+                            success: function(response) {
+                                if (response.status == 'success') {
+                                    if (response.product == 1) {
+                                        $('#active[data-id="' + productId + '"]').show();
+                                        $('#in-active[data-id="' + productId + '"]').hide();
+                                    } else {
+                                        $('#active[data-id="' + productId + '"]').hide();
+                                        $('#in-active[data-id="' + productId + '"]').show();
+                                    }
                                 } else {
-                                    $('#active[data-id="' + productId + '"]').hide();
-                                    $('#in-active[data-id="' + productId + '"]').show();
+                                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
                                 }
-                            } else {
-                                alert('Something went wrong. Please try again.');
-                            }
-                        },
-                        error: function(xhr) {
-                            console.log(xhr.responseText);
-                            alert('Something went wrong. Please try again.');
-                        }
-                    });
-            }) 
+                            },
+                        });
+                    }
+                });
+            });
         });
     </script>
 @endsection

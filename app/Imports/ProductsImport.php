@@ -56,19 +56,27 @@ class ProductsImport implements ToModel, WithHeadingRow
             $product_units = $unitData->id;
         }
 
-        if(!empty($row['product_code'])){
-            $product_code = $row['product_code'];
+        // Extract initials from category and product names
+        $category_initials = $this->getInitials($category_name);
+        $product_initials = $this->getInitials($row['name'] ?? 'Product');
+        
+        // Fetch the last product code to generate the next sequential number
+      /*  $last_product = Product::orderByDesc('product_code')->first();
+        
+        if (!$last_product) {
+            $product_code = $category_initials . $product_initials . '000001';
         } else {
-            $product = Product::orderByDesc('product_code')->first();
-            if (!$product) {
-                $product_code =  'PR0001';
-            } else {
-                $numericPart = (int)substr($product->product_code, 3);
-                $nextNumericPart = str_pad($numericPart + 1, 4, '0', STR_PAD_LEFT);
-                $product_code = 'PR' . $nextNumericPart;
-            }
-        }
-
+            // Extract the prefix and numeric part from the last product code
+            $last_product_code = $last_product->product_code;
+            $prefix_length = strlen($category_initials . $product_initials);
+            $numericPart = substr($last_product_code, $prefix_length);
+            
+            // Increment and pad with zeros
+            $nextNumericPart = str_pad((int)$numericPart + 1, 6, '0', STR_PAD_LEFT);
+            $product_code = $category_initials . $product_initials . $nextNumericPart;
+        }*/
+        $product_code = $category_initials . $product_initials . $this->generateProductCode();
+        
         $product = Product::updateOrCreate(
             ['name' => $row['name']],
             [
@@ -95,6 +103,33 @@ class ProductsImport implements ToModel, WithHeadingRow
                 'created_by'   => Auth::id(),
             ]
         );
+    }
+
+    // Helper function to get initials from a name
+    private function getInitials($name)
+    {
+        $words = explode(' ', $name);
+        $initials = '';
+
+        foreach ($words as $word) {
+            $word = trim($word);
+            if (strlen($word) > 0) {
+                $initials .= strtoupper(substr($word, 0, 1));
+            }
+        }
+
+        return $initials;
+    }
+    public function generateProductCode()
+    {
+        $latestOrder = Product::orderBy('id', 'desc')->first();
+        if (!$latestOrder) {
+            return '000001';
+        }
+
+        $latestOrderId = $latestOrder->product_code;
+        $number = intval(substr($latestOrderId, 4)) + 1;
+        return str_pad($number, 6, '0', STR_PAD_LEFT);
     }
 
     public function uploadImageFromUrl(string $folderName, string $imageUrl): string

@@ -26,4 +26,9 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class, 'category_id', 'id');
     }
+
+    public function price()
+    {
+        return $this->hasOne(PriceMaster::class, 'product_id');
+    }
 }

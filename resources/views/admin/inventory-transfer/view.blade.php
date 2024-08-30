@@ -80,6 +80,13 @@
         
     </div>
     <script>
+        $(document).ready(function() {
+            $(document).on('input', '[name="rec-qauntity"]', function() {
+                var value = $(this).val();
+                value = value.replace(/[^0-9]/g, '');
+                $(this).val(value);
+            });
+        });
         $(document).on('keyup','[name="rec-qauntity"]',function(){
             var deliveredQty = $(this).data('delivered-qty');
             var receivedQty = $(this).val();

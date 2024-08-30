@@ -47,9 +47,8 @@
                                 </div>
                                 <div class="col-md-6 add-product">
                                     <label class="form-label">Product Code</label>
-                                    <input type="text" name="product_code" class="form-control">
-                                    <small id="pcode-err" style="color:red; display:none;">Product code already
-                                        exist</small>
+                                    <input type="text" name="product_code" class="form-control" readonly>
+                                    <small id="pcode-err" style="color:red; display:none;">Product code already exist</small>
                                 </div>
                             </div>
                             <div class="row">
@@ -103,135 +102,179 @@
     </div>
 @endsection
 @section('script')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-    <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
-    <script>
-         $(document).ready(function() {
-            // Select2 Multiple
-            $('.select2-multiple').select2({
-                placeholder: "Select Unit",
-                allowClear: true
-            });
-
+<script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('.select2-multiple').select2({
+            placeholder: "Select Unit",
+            allowClear: true
         });
-        $(document).ready(function() {
-            //Image preivew
-            $('#img-product').change(function() {
-                var input = this;
-                if (input.files && input.files[0]) {
-                    $('#image_preview').prop('hidden', false);
-                    var reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('#image_preview').attr('src', e.target.result);
-                    }
-                    reader.readAsDataURL(input.files[0]);
+    });
+
+    $(document).ready(function() {
+        $('#img-product').change(function() {
+            var input = this;
+            if (input.files && input.files[0]) {
+                $('#image_preview').prop('hidden', false);
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    $('#image_preview').attr('src', e.target.result);
                 }
-            });
-
-            // Array to store entered units
-            var units = []; // Initialize units as an empty array
-
-            // Add Units button click event
-            $('#add-units').click(function() {
-                var unitValue = $('#unit').val().trim();
-                if (unitValue !== '') {
-                    units.push(unitValue); // Add to units array
-                    updateUnitList(); // Update the displayed units
-                    $('#unit').val(''); // Clear the input field
-                } else {
-                    alert('Units cannot be empty');
-                }
-            });
-
-            // Function to update displayed units
-            function updateUnitList() {
-                $('#unit-list').empty(); // Clear previous entries
-                units.forEach(function(unit, index) {
-                    var listItem = $('<div class="card added-unit me-2 mb-2">' +
-                        '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
-                        '<span>' + unit + '</span>' +
-                        '<input type="hidden" name="units[]" value="' + unit + '">' +
-                        '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' +
-                        index + '"><span class="badge rounded-pill">x</span></button>' +
-                        '</div>' +
-                        '</div>');
-                    $('#unit-list').append(listItem); // Append each unit as a new item
-                });
+                reader.readAsDataURL(input.files[0]);
             }
-
-            // Remove Unit button click event (for dynamically added elements)
-            $('#unit-list').on('click', '.remove-units', function() {
-                var index = $(this).data('index');
-                units.splice(index, 1); // Remove from array
-                updateUnitList(); // Update displayed units
-            });
-
-            // Datepicker initialization
-            $('#manufacture_date').datepicker({
-                format: 'yyyy-mm-dd', // specify the format you want
-                todayHighlight: true,
-                autoclose: true,
-                endDate: new Date(), // Set the end date to today
-                orientation: 'bottom'
-            });
-
-            // Form validation
-            $("#product-form").validate({
-                rules: {
-                    category_id: "required",
-                    product_name: "required",
-                    product_code: "required",
-                    image: "required",
-                    manufacture_date: "required",
-                    units: "required"
-                },
-                messages: {
-                    category_id: "Please enter category",
-                    product_name: "Please enter the product name",
-                    product_code: "Please enter the product code",
-                    image: "Please select image",
-                    manufacture_date: "Please enter the manufacture date",
-                    units: "Please enter the unit"
-                },
-                errorClass: "invalid-feedback",
-                errorElement: "span",
-                highlight: function(element, errorClass, validClass) {
-                    $(element).addClass("is-invalid");
-                },
-                unhighlight: function(element, errorClass, validClass) {
-                    $(element).removeClass("is-invalid");
-                },
-                submitHandler: function(form) {
-                    form.submit();
-                }
-            });
         });
-        //check product code
-        $(document).on('keyup', '[name="product_code"]', function() {
-            var product_code = $(this).val();
-            var token = "{{ csrf_token() }}";
-            var url = "{{ route('products.check_code') }}";
+
+        var units = []; // Initialize units as an empty array
+
+        // Add Units button click event
+        $('#add-units').click(function() {
+            var unitValue = $('#unit').val().trim();
+            if (unitValue !== '') {
+                units.push(unitValue); // Add to units array
+                updateUnitList(); // Update the displayed units
+                $('#unit').val(''); // Clear the input field
+            } else {
+                alert('Units cannot be empty');
+            }
+        });
+
+        // Function to update displayed units
+        function updateUnitList() {
+            $('#unit-list').empty(); // Clear previous entries
+            units.forEach(function(unit, index) {
+                var listItem = $('<div class="card added-unit me-2 mb-2">' +
+                    '<div class="card-body card-size d-flex justify-content-between align-items-center">' +
+                    '<span>' + unit + '</span>' +
+                    '<input type="hidden" name="units[]" value="' + unit + '">' +
+                    '<button type="button" class="btn btn-sm btn-danger remove-units" data-index="' +
+                    index + '"><span class="badge rounded-pill">x</span></button>' +
+                    '</div>' +
+                    '</div>');
+                $('#unit-list').append(listItem); // Append each unit as a new item
+            });
+        }
+
+        // Remove Unit button click event (for dynamically added elements)
+        $('#unit-list').on('click', '.remove-units', function() {
+            var index = $(this).data('index');
+            units.splice(index, 1); // Remove from array
+            updateUnitList(); // Update displayed units
+        });
+
+        // Datepicker initialization
+        $('#manufacture_date').datepicker({
+            format: 'yyyy-mm-dd', // specify the format you want
+            todayHighlight: true,
+            autoclose: true,
+            endDate: new Date(), // Set the end date to today
+            orientation: 'bottom'
+        });
+
+        // Form validation
+        $("#product-form").validate({
+            rules: {
+                category_id: "required",
+                product_name: "required",
+                product_code: "required",
+                image: "required",
+                manufacture_date: "required",
+                units: "required"
+            },
+            messages: {
+                category_id: "Please enter category",
+                product_name: "Please enter the product name",
+                product_code: "Please enter the product code",
+                image: "Please select image",
+                manufacture_date: "Please enter the manufacture date",
+                units: "Please enter the unit"
+            },
+            errorClass: "invalid-feedback",
+            errorElement: "span",
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass("is-invalid");
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass("is-invalid");
+            },
+            submitHandler: function(form) {
+                form.submit();
+            }
+        });
+    });
+
+    //check product code
+    $(document).on('keyup', '[name="product_code"]', function() {
+        var product_code = $(this).val();
+        var token = "{{ csrf_token() }}";
+        var url = "{{ route('products.check_code') }}";
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                "_token": token,
+                product_code
+            },
+            success: function(response) {
+                console.log(response);
+                if (response.success) {
+                    $('#pcode-err').show();
+                    $('.btn-submit').prop('disabled', true);
+                } else {
+                    $('#pcode-err').hide();
+                    $('.btn-submit').prop('disabled', false);
+                }
+            },
+            error: function(xhr) {
+                console.log(xhr);
+            }
+        });
+    });
+
+    $(document).ready(function() {
+    function generateProductCode() {
+        var category = $('#category_id option:selected').text();
+        var productName = $('input[name="product_name"]').val();
+
+        // Handle case where the placeholder is selected
+        if (category === 'Select Category') {
+            category = ''; // Clear category if placeholder is selected
+        }
+
+        // Extract initials
+        var categoryInitials = category ? category.split(' ').map(word => word.charAt(0).toUpperCase()).join('') : '';
+        var productInitials = productName ? productName.split(' ').map(word => word.charAt(0).toUpperCase()).join('') : '';
+
+        var productCode = '';
+
+        // Generate product code only if a valid category is selected
+        if (categoryInitials) {
             $.ajax({
-                url: url,
-                type: 'POST',
-                data: {
-                    "_token": token,
-                    product_code
-                },
+                url: "{{ route('products.get_latest_code_number') }}", // Define this route in your routes file
+                method: 'GET',
                 success: function(response) {
-                    console.log(response);
-                    if (response.success) {
-                        $('#pcode-err').show();
-                        $('.btn-submit').prop('disabled', true);
-                    } else {
-                        $('#pcode-err').hide();
-                        $('.btn-submit').prop('disabled', false);
-                    }
+                    var latestCodeNumber = parseInt(response.latest_code_number, 10) || 0;
+                    var newCodeNumber = String(latestCodeNumber + 1).padStart(6, '0'); // 6 digits zero-padded
+                    productCode = `${categoryInitials}${productInitials}${newCodeNumber}`;
+                    $('input[name="product_code"]').val(productCode);
                 },
-                error: function(xhr) {
-                    console.log(xhr);
+                error: function() {
+                    // Handle AJAX errors
+                    $('input[name="product_code"]').val('Error');
                 }
             });
-        });
-    </script>
+        } else {
+            // Clear the product code if no valid category is selected
+            $('input[name="product_code"]').val('');
+        }
+    }
+
+    // Trigger code generation when category or product name changes
+    $('#category_id, input[name="product_name"]').on('change keyup', generateProductCode);
+
+    // Initial call to handle cases when the page loads
+    generateProductCode();
+});
+
+
+</script>
 @endsection

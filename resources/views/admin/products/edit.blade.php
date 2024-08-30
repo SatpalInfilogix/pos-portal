@@ -50,7 +50,7 @@
                             </div>
                             <div class="col-md-6 add-product">
                                 <label class="form-label">Product Code</label>
-                                <input type="text" name="product_code" class="form-control" value="{{ old('product_code', $product->product_code) }}">
+                                <input type="text" name="product_code" id="product_Code" class="form-control" value="{{ old('product_code', $product->product_code) }}" readonly>
                                 <small id="pcode-err" style="color:red; display:none;">Product code already exist</small>
                             </div>    
                         </div>
@@ -292,5 +292,43 @@
             }
         });
     });
+
+    $(document).ready(function() {
+        var isEditMode = $('#product_Code').val().trim() !== '';
+
+        function generateProductCode() {
+            var category = $('#category_id option:selected').text();
+            var productName = $('input[name="product_name"]').val();
+
+            if (category === 'Select Category') {
+                category = ''; // Clear category if placeholder is selected
+            }
+
+            var categoryInitials = category ? category.split(' ').map(word => word.charAt(0).toUpperCase()).join('') : '';
+            var productInitials = productName ? productName.split(' ').map(word => word.charAt(0).toUpperCase()).join('') : '';
+
+            if (categoryInitials) {
+                if (isEditMode) {
+                    var existingCode = $('#product_Code').val().trim();
+                    var trimmedCode = existingCode.slice(0, -1);
+                    var numericPart = existingCode.slice(-6);
+                    var newNumericPart = String(parseInt(numericPart, 10)).padStart(6, '0');
+                    var newCodeNumber = `${categoryInitials}${productInitials}${newNumericPart}`;
+                    $('input[name="product_code"]').val(newCodeNumber);
+                } else {
+                    var newCodeNumber = '000001';
+                    var productCode = `${categoryInitials}${productInitials}${newCodeNumber}`;
+                    $('input[name="product_code"]').val(productCode);
+                }
+            } else {
+                $('input[name="product_code"]').val('');
+            }
+        }
+
+        $('#category_id, input[name="product_name"]').on('change keyup', generateProductCode);
+
+        generateProductCode();
+    });
+
 </script>
 @endsection

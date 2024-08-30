@@ -203,3 +203,9 @@ Route::get('/gate-pass/{orderId}', [OrderController::class, 'renderGatePassView'
 /* Download csv files */
 Route::get('/download-sample-csv', [AdminProductController::class, 'downloadSampleCsv']);
 Route::get('/download-price-master', [AdminPriceController::class, 'downloadPriceMaster']);
+
+Route::get('/export-products', [AdminPriceController::class, 'exportPrice'])->name('export-products');
+Route::get('/export-products-quantites', [AdminPriceController::class, 'exportQuantites'])->name('export-products-quantites');
+
+Route::get('/products/get-latest-code-number', [AdminProductController::class, 'getLatestCodeNumber'])->name('products.get_latest_code_number');
+Route::get('/sales-details-download', [AdminSalesController::class, 'downloadSalesDetail'])->name('sales-details-download');

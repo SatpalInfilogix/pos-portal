@@ -183,9 +183,9 @@ a.chosen-single.chosen-default {
     color: #fff;
 }
 
-select#sales-store {
+/* select#sales-store {
     width: 50%;
-}
+} */
 a#generate-gatepass {
     width: 100px;
 }
@@ -207,4 +207,15 @@ div#method-card {
 }
 .letter-heading h1 {
     margin-bottom: 0px;
+}
+
+tbody, td, tfoot, th, thead, tr {
+    border-color: inherit;
+    border-style: none;
+}
+
+.active-btn {
+    border: 1px solid rgba(145, 158, 171, .3);
+    background-color: #fff;
+    border-radius: 8px;
 }

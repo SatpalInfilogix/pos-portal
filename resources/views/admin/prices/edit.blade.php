@@ -179,22 +179,53 @@
                 });
             }
         });
-        document.getElementById('price').addEventListener('input', function (e) {
-            let value = e.target.value;
-            e.target.value = value.replace(/[^0-9.]/g, ''); // Remove any non-numeric and non-period characters
+        // document.getElementById('price').addEventListener('input', function (e) {
+        //     let value = e.target.value;
+        //     e.target.value = value.replace(/[^0-9.]/g, ''); // Remove any non-numeric and non-period characters
+        // });
+
+        $(document).ready(function() {
+            $('#quantityValue').on('input', function() {
+                this.value = this.value.replace(/[^0-9]/g, '');
+            });
+
+            $('#price').on('input', function() {
+                var value = $(this).val();
+                var regex = /^(\d*\.?\d*)$/;
+                if (regex.test(value)) {
+                    value = value.replace(/(\..*)\./g, '$1');
+                    $(this).val(value);
+                } else {
+                    $(this).val(value.slice(0, -1));
+                }
+            });
         });
 
         $(document).ready(function () {    
             $("#price-form").validate({
                 rules: {
                     product: "required",
-                    quantityValue: "required",
-                    price: "required",
+                    quantityValue: {
+                        required: true,
+                        digits: true
+                    },
+                    price: {
+                        required: true,
+                        number: true,
+                        pattern: /^\d+(\.\d{1,2})?$/
+                    },
                 },
                 messages: {
                     product: "Please enter the product",
-                    quantityValue: "Please enter the quantity",
-                    price: "Please enter the price",
+                    quantityValue: {
+                        required: "Please enter the quantity",
+                        digits: "Please enter a valid number",
+                        pattern: "Please enter a valid price with a single decimal point"
+                    },
+                    price: {
+                        required: "Please enter the price",
+                        number: "Please enter a valid number"
+                    },
                 },
                 errorClass: "invalid-feedback",
                 errorElement: "span",

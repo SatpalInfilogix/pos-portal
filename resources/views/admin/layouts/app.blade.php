@@ -27,10 +27,8 @@
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/feather.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/icofont.css') }}">
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 
     <!-- DataTables CSS -->
@@ -74,6 +72,7 @@
     <script src="{{ asset('assets/js/summernote-bs4.min.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
     <script src="{{ asset('assets/js/theia-sticky-sidebar/ResizeSensor.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
     <script src="{{ asset('assets/js/theia-sticky-sidebar/theia-sticky-sidebar.js') }}" type="3ac1efcaa8098a8db2bd90f0-text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
       <!-- DataTables JS -->
       {{-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>

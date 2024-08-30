@@ -151,6 +151,20 @@ class AdminProductController extends Controller
 
     public function store(Request $request)
     {
+        // $validatedData = $request->validate([
+        //     'category_id' => 'required',
+        //     'product_name' => 'required',
+        // ]);
+
+        // $category = Category::find($request->category_id);
+        // $categoryInitials = str_replace(' ', '-', $category->name);
+        // $productName = str_replace(' ', '-',$request->product_name);
+        // $latestProduct = Product::latest('id')->first();
+        // $latestCodeNumber = $latestProduct ? (int) substr($latestProduct->product_code, -6) : 0;
+        // $newCodeNumber = str_pad($latestCodeNumber + 1, 6, '0', STR_PAD_LEFT);
+
+        // $productCode = "{$categoryInitials}-{$productName}-{$newCodeNumber}";
+
         if ($request->hasFile('image'))
         {
             $file = $request->file('image');
@@ -182,7 +196,6 @@ class AdminProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Products imported successfully.');
     }
 
-    
     public function searchProducts(Request $request)
     {
         $searchTerm = $request->input('input');
@@ -297,5 +310,12 @@ class AdminProductController extends Controller
     {
         $filePath = public_path('sample-products.csv');
         return response()->download($filePath);
+    }
+
+    public function getLatestCodeNumber()
+    {
+        $latestProduct = Product::latest('id')->first();
+        $latestCodeNumber = $latestProduct ? substr($latestProduct->product_code, -6) : 0;
+        return response()->json(['latest_code_number' => $latestCodeNumber]);
     }
 }

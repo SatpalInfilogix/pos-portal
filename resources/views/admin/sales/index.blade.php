@@ -9,6 +9,10 @@
                     <h6>Manage your sales detail</h6>
                 </div>
             </div>
+            <div class="left-side">
+                <!-- Button on the left -->
+                <button class="btn btn-primary" id="pdf-download">PDF Download</button>
+            </div>
         </div>
 
         @if (session('success'))
@@ -18,18 +22,36 @@
         @endif
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            @hasanyrole('Super Admin')
+            <div class="col-md-3 mb-3">
                 <label class="form-label">Store</label>
-                @hasanyrole('Super Admin')
                 <select name="store" id="sales-store" class="form-control" >
                     <option value="">select store</option>
                     @foreach ($stores as $store)
                         <option value="{{ $store->id }}" @selected($store->id == auth()->user()->store_id)>{{ $store->name }}</option>
                     @endforeach
                 </select>
-                @endhasanyrole
+            </div>
+            @endhasanyrole
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="text" id="start_date" name="start_date" class="form-control"  placeholder="Select Start Date">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">End Date</label>
+                <input type="text" id="end_date" name="end_date" class="form-control"  placeholder="Select End Date">
+            </div>
+            <div class="col-md-3 mb-3">
+                <label class="form-label">Yearly</label>
+                <select name="yearly" id="yearly" class="form-control" >
+                    <option value="" selected disabled>select Yearly</option>
+                    <option value="Yearly">Yearly</option>
+                    <option value="Quatrely">Quatrely</option>
+                    <option value="Half Yearly">Half Yearly</option>
+                </select>
             </div>
         </div>
+
         <div class="card table-list-card">
             <div class="card-body">
                 <div class="table-responsive p-0 m-0">
@@ -52,6 +74,43 @@
         </div>
     </div>
     <script>
+        $(document).ready(function() {
+            $('#yearly').change(function() {
+                $('#start_date').val('');
+                $('#end_date').val('');
+            });
+
+            $('#start_date').datepicker({
+                autoclose: true,
+                orientation: 'bottom'
+            }).on('changeDate', function(e) {
+                var startDate = e.date;
+                $('#end_date').datepicker('setDate', null);
+                $('#end_date').datepicker('setStartDate', startDate);
+            });
+
+            $('#end_date').datepicker({
+                autoclose: true,
+                orientation: 'bottom'
+            });
+
+            $('#pdf-download').on('click', function() {
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+                var yearly = $('#yearly').val();
+                var storeId = $('#sales-store').val();
+
+                var url = '{{ route('sales-details-download') }}' + 
+                        '?start_date=' + encodeURIComponent(startDate) + 
+                        '&end_date=' + encodeURIComponent(endDate) + 
+                        '&yearly=' + encodeURIComponent(yearly) + 
+                        '&store_id=' + encodeURIComponent(storeId);
+
+                // Open a new tab with the generated URL
+                window.open(url, '_blank');
+            });
+        });
+
         $(function() {
             let salesTable = $('.sales-table').DataTable({
                 processing: true,
@@ -62,6 +121,9 @@
                     data: function(d) {
                         d._token = "{{ csrf_token() }}";
                         d.store_id = $('[name="store"]').val();
+                        d.start_date = $('[name="start_date"]').val();
+                        d.end_date = $('[name="end_date"]').val();
+                        d.yearly = $('[name="yearly"]').val();
                         return d;
                     }
                 },
@@ -105,8 +167,7 @@
                 lengthMenu: [10, 25, 50, 100]
             });
 
-
-            $(document).on('change', '[name="store"]', function() {
+            $(document).on('change', '[name="store"], [name="start_date"], [name="end_date"], [name="yearly"]', function() {
                 salesTable.ajax.reload();
             });
         });

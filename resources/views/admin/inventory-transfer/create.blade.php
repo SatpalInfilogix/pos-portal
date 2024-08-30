@@ -234,5 +234,12 @@
                 }
             });
         });
+        $(document).ready(function() {
+            $(document).on('input', '.quantity-input', function() {
+                var value = $(this).val();
+                value = value.replace(/[^0-9]/g, '');
+                $(this).val(value);
+            });
+        });
     </script>
 @endsection
