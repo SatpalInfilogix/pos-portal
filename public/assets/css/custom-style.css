@@ -219,8 +219,6 @@ tbody, td, tfoot, th, thead, tr {
     background-color: #fff;
     border-radius: 8px;
 }
-
-
 /**************** Gate Pass *************/
 
  .header-container {
@@ -296,4 +294,7 @@ table.receipt-table th {
 .sales-card {
     padding: 20px;
     width: auto;
+}
+.error-message {
+    color: red; 
 }

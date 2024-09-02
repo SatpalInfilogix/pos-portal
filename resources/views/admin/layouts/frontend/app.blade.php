@@ -139,10 +139,17 @@
                                 Settings
                             </a>
                             <hr class="m-0">
+                            @hasanyrole('Manager|Sales Person')
+                            <a class="dropdown-item logout pb-0" data-bs-toggle="modal" data-bs-target="#tender-declaration-modal">
+                                <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
+                                Logout
+                            </a>
+                            @else
                             <a href="{{ route('logout') }}" class="dropdown-item logout pb-0">
                                 <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
                                 Logout
                             </a>
+                            @endhasanyrole
                         </div>
                     </div>
                 </li>
@@ -168,6 +175,7 @@
 
     @include('partials.payment-completed')
     @include('partials.print-receipt')
+    @include('partials.tender-declaration')
 
     <div class="modal fade modal-default pos-modal" id="products" aria-labelledby="products">
         <div class="modal-dialog modal-dialog-centered">
@@ -481,7 +489,7 @@
                             let amount = '<b>' + cart + '</b>';
                             $('.totalAmount').html(amount);
                             $('.grandTotal').html(cartData.formatted_grand_total);
-                            $('.tax').html(`$${cartData.tax}`);
+                            $('.tax').html(`$${cartData.tax.toFixed(2)}`);
                             $('.payable').html(`$${cartData.payable}`);
                             $('.count-products').html(cartData.count);
 
