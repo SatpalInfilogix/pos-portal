@@ -42,10 +42,10 @@
             <table class="receipt-table">
                 <thead>
                     <tr>
-                        <th width="16%">Order Id</th>
-                        <th width="16%">Store</th>
-                        <th width="16%">Quantity</th>
-                        <th width="52%">Total Amt</th>
+                        <th width="20%">Order Id</th>
+                        <th width="20%">Store</th>
+                        <th width="20%">Quantity</th>
+                        <th width="40%">Total Amt</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -63,16 +63,14 @@
                                     <table class="receipt-table nested-table">
                                         <thead>
                                             <tr>
-                                                <th width="16%">Order Id</th>
-                                                <th width="16%">Item Name</th>
-                                                <th width="16%">Qty</th>
-                                                <th width="52%">Total Amt</th>
+                                                <th width="40%">Item Name</th>
+                                                <th width="20%">Qty</th>
+                                                <th width="40%">Total Amt</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach ($sale['product_details'] as $product)
                                                 <tr>
-                                                    <td>{{ $product['order_id'] }}</td>
                                                     <td>{{ $product['name'] }}</td>
                                                     <td>{{ $product['quantity'] }}</td>
                                                     <td>${{ number_format($product['product_total_amount'], 2) }}</td>
