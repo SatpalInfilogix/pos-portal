@@ -17,22 +17,22 @@ class PosDashboardController extends Controller
     public function index(Request $request)
     {
         $categories = Category::where('status', 0)->withCount(['products' => function ($query) {
-                        $query->where('status', 0)->where('is_active', 0); // Condition for products status
+                        $query->where('status', 0); // Condition for products status
                     }])->latest()->take(15)->get();
        
         $productsTotal = Category::where('status', 0)->with('products')->get();
         // Calculate the total number of products
-        // $totalProducts = $productsTotal->flatMap(function ($productCount) {
-        //     return $productCount->products;
-        // })->count();
+        $totalProducts = $productsTotal->flatMap(function ($productCount) {
+            return $productCount->products;
+        })->count();
 
-        $totalProducts = $productsTotal->flatMap(function ($category) {
-            return $category->products;
-        })->where('is_active', 0)->count();
+        // $totalProducts = $productsTotal->flatMap(function ($category) {
+        //     return $category->products;
+        // })->where('is_active', 0)->count();
 
         $selectedCategoryId = $request->input('category_id');
 
-        $productsQuery = Product::where('status', 0)->where('is_active', 0)
+        $productsQuery = Product::where('status', 0)
                             ->whereHas('category', function ($query) {
                                 $query->where('status', 0); // Ensure the category status is 0
                             })->latest();

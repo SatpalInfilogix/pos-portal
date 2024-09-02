@@ -32,19 +32,14 @@
                     <td class="right" style="float: inline-end;">Time: {{ \Carbon\Carbon::parse($gatePass->created_at)->format('h:i:s A') }}</td>
                 </tr>
             </table>
-             {{-- <p class="main-content">TRN</p>
-            <div class="content-details">
-                <p class="main-content">Sales Receipt No. {{ $gatePass->id }} </p>
-                <p class="main-content">Date of Sale {{ date('d-m-Y') }}</p>
-            </div>
-            <p class="receipt-time">Time: {{ date('H:i:s') }}</p> --}}
-            <table class="receipt-table" style="margin-bottom: 200px;">
+            <table class="receipt-table" style="margin-bottom: 100px;">
                 {{-- Table Heading --}}
                 <tr>
                     <th>Description</th>
                     <th>Qty</th>
                     <th>Checked</th>
-                    <th>Amount (JMD)</th>
+                    <th>Received Quantity</th>
+                    {{-- <th>Amount (JMD)</th> --}}
                 </tr>
                 {{-- Table Data --}}
                 @php
@@ -58,7 +53,8 @@
                     <td>{{ ++$key.". ".$delivered_item->name }}</td>
                     <td>{{ $delivered_item->quantity }}</td>
                     <td></td>
-                    <td>${{ $delivered_item->price * $delivered_item->quantity}}</td>
+                    <td></td>
+                    {{-- <td>{{ $delivered_item->price * $delivered_item->quantity}}</td> --}}
                 </tr>
                 @endforeach
                 <tr>
@@ -68,6 +64,14 @@
                     <td></td>
                 </tr>
             </table>
+            <div class="stamp-signature-container" style="margin-bottom: 100px;">
+                <div class="signature">
+                    <p><strong>Signature/Stamp</strong></p>
+                </div>
+                <div class="temperature">
+                    <p><strong>Temperature</strong></p>
+                </div>
+            </div>
         </div>
     </div>
 </body>

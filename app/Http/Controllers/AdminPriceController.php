@@ -11,6 +11,8 @@ use App\Models\Unit;
 use App\Imports\PriceMasterImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Gate;
+use App\Exports\ProductQuantitesExport;
+use App\Exports\ProductPriceExport;
 
 class AdminPriceController extends Controller
 {
@@ -166,6 +168,7 @@ class AdminPriceController extends Controller
     public function update(Request $request, $id)
     {
         PriceMaster::where('id', $id)->update([
+            // 'product_id'        => $request->product,
             'quantity'          => $request->quantityValue,
             'quantity_type'     => $request->unit_id ?? NULL,
             'price'             => $request->price ?? 0,
@@ -210,9 +213,19 @@ class AdminPriceController extends Controller
         return redirect()->route('prices.index')->with('success', 'Price master imported successfully.');
     }
 
-    public function downloadPriceMaster()
+    // public function downloadPriceMaster()
+    // {
+    //     $filePath = public_path('price-master.csv');
+    //     return response()->download($filePath);
+    // }
+
+    public function exportPrice()
     {
-        $filePath = public_path('price-master.csv');
-        return response()->download($filePath);
+        return Excel::download(new ProductPriceExport, 'products-price.csv');
+    }
+
+    public function exportQuantites()
+    {
+        return Excel::download(new ProductQuantitesExport, 'products-quantites.csv');
     }
 }

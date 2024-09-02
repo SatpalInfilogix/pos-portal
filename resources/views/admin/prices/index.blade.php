@@ -38,16 +38,20 @@
                         });
                     </script>
 
-                    {{-- <a href="{{ url('price-master.csv') }}" class="btn btn-added">
+                    <a href="{{ route('export-products-quantites') }}" class="btn btn-added">
                         <i data-feather="download" class="me-2"></i>
-                        Download Sample CSV
-                    </a> --}}
-
-                    <a href="{{ url('download-price-master') }}" class="btn btn-added">
-                        <i data-feather="download" class="me-2"></i>
-                        Download Sample CSV
+                        Download Quantites Sameple CSV
                     </a>
 
+                    {{-- <a href="{{ url('download-price-master') }}" class="btn btn-added">
+                        <i data-feather="download" class="me-2"></i>
+                        Download Price Sample CSV
+                    </a> --}}
+                    <a href="{{ route('export-products') }}" class="btn btn-added">
+                        <i data-feather="download" class="me-2"></i>
+                        Download Price Sample CSV
+                    </a>
+                    
                     <a href="{{ route('prices.create') }}" class="btn btn-added">
                         <i data-feather="plus-circle" class="me-2"></i>
                         Add New Price

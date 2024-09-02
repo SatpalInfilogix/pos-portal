@@ -6,7 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\ProductOrderHistory;
 use App\Models\Store;
+use Carbon\Carbon;  
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
+use Barryvdh\DomPDF\Facade as PDF;
 
 class AdminSalesController extends Controller
 {
@@ -34,8 +37,40 @@ class AdminSalesController extends Controller
         // Base query
         $salesQuery = Order::where('OrderStatus', '!=', 'onhold')->select(['id', 'OrderId', 'TotalAmount', 'CustomerName', 'ShippingAddress', 'transit_status']);
         
-        if($request->store_id){
-            $salesQuery->where('store_id',$request->store_id);
+        $store_id = Auth::user()->store_id;
+        if ($store_id) {
+            $salesQuery->where('store_id', $store_id);
+        }
+
+        if ($request->store_id) {
+            $salesQuery->where('store_id', $request->store_id);
+        }
+        
+        if ($request->start_date) {
+            $startDate = \Carbon\Carbon::parse($request->start_date)->startOfDay();
+            $salesQuery->where('created_at', '>=', $startDate);
+        }
+        
+        if ($request->end_date) {
+            $endDate = \Carbon\Carbon::parse($request->end_date)->endOfDay();
+            $salesQuery->where('created_at', '<=', $endDate);
+        }
+
+        if ($request->yearly) {
+            $yearlyValue = $request->yearly;
+            if ($yearlyValue == 'Yearly') {
+                $previousYear = Carbon::now()->subYear()->startOfDay();
+                $today = Carbon::now();
+                $salesQuery->whereBetween('created_at', [$previousYear, $today]);
+            } elseif ($yearlyValue == 'Quatrely') {
+                $previousMonths = Carbon::now()->subMonths(3)->startOfDay();
+                $today = Carbon::now();
+                $salesQuery->whereBetween('created_at', [$previousMonths, $today]);
+            } elseif ($yearlyValue == 'Half Yearly') {
+                $previousMonths = Carbon::now()->subMonths(6)->startOfDay();
+                $today = Carbon::now();
+                $salesQuery->whereBetween('created_at', [$previousMonths, $today]);
+            }
         }
     
         // Search filter
@@ -85,7 +120,70 @@ class AdminSalesController extends Controller
     }
     //Get All Orders
     private function getAllOrders(){
+        $store_id = Auth::user()->store_id;
+        if ($store_id) {
+            return Order::where('store_id', $store_id)->where('OrderStatus', '!=', 'onhold')->latest()->get();
+        }
         return Order::where('OrderStatus', '!=', 'onhold')->latest()->get();
+    }
+
+    public function downloadSalesDetail(Request $request)
+    {
+        $store_id = Auth::user()->store_id;
+        if($store_id) {
+            $storeId = $store_id;
+        } else {
+            $storeId = $request->input('store_id');
+        }
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $yearly = $request->input('yearly');
+        
+        // Fetch data based on the parameters
+        $sales = $this->getSalesData($startDate, $endDate, $yearly, $storeId);
+        return view('admin.sales.sales-pdf-template.sales-pdf',compact('sales'));
+    }
+
+    private function getSalesData($startDate, $endDate, $yearly, $storeId)
+    {
+        $query = Order::where('OrderStatus', '!=', 'onhold');
+        
+        // if ($store_id) {
+        //     $query->where('store_id', $store_id);
+        // }
+        
+        if ($storeId) {
+            $query->where('store_id', $storeId);
+        }
+        
+        if ($startDate) {
+            $start_date = \Carbon\Carbon::parse($startDate)->startOfDay();
+            $query->whereDate('created_at', '>=', $start_date);
+        }
+        
+        if ($endDate) {
+            $end_date = \Carbon\Carbon::parse($endDate)->endOfDay();
+            $query->whereDate('created_at', '<=', $end_date);
+        }
+
+        if ($yearly) {
+            $yearlyValue = $yearly;
+            if ($yearlyValue == 'Yearly') {
+                $previousYear = Carbon::now()->subYear()->startOfDay();
+                $today = Carbon::now();
+                $query->whereBetween('created_at', [$previousYear, $today]);
+            } elseif ($yearlyValue == 'Quatrely') {
+                $previousMonths = Carbon::now()->subMonths(3)->startOfDay();
+                $today = Carbon::now();
+                $query->whereBetween('created_at', [$previousMonths, $today]);
+            } elseif ($yearlyValue == 'Half Yearly') {
+                $previousMonths = Carbon::now()->subMonths(6)->startOfDay();
+                $today = Carbon::now();
+                $query->whereBetween('created_at', [$previousMonths, $today]);
+            }
+        }
+
+        return $query->get();
     }
 
 }

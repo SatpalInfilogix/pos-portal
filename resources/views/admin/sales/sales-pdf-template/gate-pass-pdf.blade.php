@@ -1,7 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
 <head>
-    <title> Gate Pass</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gate Pass</title>
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
 </head>
 
@@ -38,13 +41,14 @@
                 <p class="main-content">Date of Sale {{ date('d-m-Y') }}</p>
             </div>
             <p class="receipt-time">Time: {{ date('H:i:s') }}</p> --}}
-            <table class="receipt-table" style="margin-bottom: 200px;">
+            <table class="receipt-table" style="margin-bottom: 100px;">
                 {{-- Table Heading --}}
                 <tr>
                     <th>Description</th>
                     <th>Qty</th>
                     <th>Checked</th>
-                    <th>Amount (JMD)</th>
+                    <th>Received Quantity</th>
+                    {{-- <th>Amount (JMD)</th> --}}
                 </tr>
                 {{-- Table Data --}}
                 @php
@@ -58,7 +62,8 @@
                     <td>{{ ++$key.". ".$delivered_item->product->name }}</td>
                     <td>{{ $delivered_item->transfer_quantity }}</td>
                     <td></td>
-                    <td>${{ $delivered_item->priceMaster->price * $delivered_item->transfer_quantity}}</td>
+                    <td>{{ ($delivered_item->received_quantity) ?  $delivered_item->received_quantity : ''}} </td>
+                    {{-- <td>{{ $delivered_item->priceMaster->price * $delivered_item->transfer_quantity}}</td> --}}
                 </tr>
                 @endforeach
                 <tr>
@@ -68,6 +73,15 @@
                     <td></td>
                 </tr>
             </table>
+
+            <div class="stamp-signature-container" style="margin-bottom: 100px;">
+                <div class="signature">
+                    <p><strong>Signature/Stamp</strong></p>
+                </div>
+                <div class="temperature">
+                    <p><strong>Temperature</strong></p>
+                </div>
+            </div>
         </div>
     </div>
 </body>
