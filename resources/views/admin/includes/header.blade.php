@@ -66,15 +66,21 @@ else{
                         Settings
                     </a>
                     <hr class="m-0">
-                    <a class="dropdown-item logout pb-0" href="{{ route('logout') }}">
-                        <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
-                        Logout
-                    </a>
+                        @hasanyrole('Manager|Sales Person')
+                        <a class="dropdown-item logout pb-0" data-bs-toggle="modal" data-bs-target="#tender-declaration-modal">
+                            <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
+                            Logout
+                        </a>
+                        @else
+                        <a href="{{ route('logout') }}" class="dropdown-item logout pb-0">
+                            <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
+                            Logout
+                        </a>
+                        @endhasanyrole
                 </div>
             </div>
         </li>
     </ul>
-
 
     <div class="dropdown mobile-user-menu">
         <a href="javascript:void(0);" class="nav-link dropdown-toggle" data-bs-toggle="dropdown"
@@ -88,3 +94,4 @@ else{
     </div>
 
 </div>
+@include('partials.tender-declaration')

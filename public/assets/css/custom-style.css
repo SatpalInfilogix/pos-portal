@@ -208,3 +208,6 @@ div#method-card {
 .letter-heading h1 {
     margin-bottom: 0px;
 }
+.error-message {
+    color: red; 
+}
