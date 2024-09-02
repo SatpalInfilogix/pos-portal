@@ -148,10 +148,6 @@ class AdminSalesController extends Controller
     {
         $query = Order::where('OrderStatus', '!=', 'onhold');
         
-        // if ($store_id) {
-        //     $query->where('store_id', $store_id);
-        // }
-        
         if ($storeId) {
             $query->where('store_id', $storeId);
         }
@@ -186,4 +182,66 @@ class AdminSalesController extends Controller
         return $query->get();
     }
 
+    public function downloadItemWiseReport(Request $request)
+    {
+        $storeId = Auth::user()->store_id ?: $request->input('store_id');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $yearly = $request->input('yearly');
+
+        $sales = $this->getSalesDetailsData($startDate, $endDate, $yearly, $storeId);
+        foreach ($sales as $key => $order) {
+            $totalQuantity = 0;
+            $totalAmount = 0;
+            if (isset($order['product_details']) && is_array($order['product_details'])) {
+                foreach ($order['product_details'] as $product) {
+                    $quantity = isset($product['quantity']) ? (float)$product['quantity'] : 0;
+                    $amount = isset($product['product_total_amount']) ? (float)$product['product_total_amount'] : 0.0;
+
+                    $totalQuantity += $quantity;
+                    $totalAmount += $amount;
+                }
+            }
+            $store = Store::where('id', $order['store_id'])->first();
+            $sales[$key]['store_name'] = $store ? $store->name : null;
+            $sales[$key]['productTotalAmount'] = $totalAmount;
+            $sales[$key]['productTotalQuantity'] = $totalQuantity;
+        }
+
+        return view('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
+    }
+
+
+    private function getSalesDetailsData($startDate, $endDate, $yearly, $storeId)
+    {
+        $query = Order::with('productDetails')->where('OrderStatus', '!=', 'onhold');
+
+        if ($storeId) {
+            $query->where('store_id', $storeId);
+        }
+
+        if ($startDate) {
+            $query->whereDate('created_at', '>=', \Carbon\Carbon::parse($startDate)->startOfDay());
+        }
+
+        if ($endDate) {
+            $query->whereDate('created_at', '<=', \Carbon\Carbon::parse($endDate)->endOfDay());
+        }
+
+        if ($yearly) {
+            switch ($yearly) {
+                case 'Yearly':
+                    $query->whereBetween('created_at', [\Carbon\Carbon::now()->subYear()->startOfDay(), \Carbon\Carbon::now()]);
+                    break;
+                case 'Quarterly':
+                    $query->whereBetween('created_at', [\Carbon\Carbon::now()->subMonths(3)->startOfDay(), \Carbon\Carbon::now()]);
+                    break;
+                case 'Half Yearly':
+                    $query->whereBetween('created_at', [\Carbon\Carbon::now()->subMonths(6)->startOfDay(), \Carbon\Carbon::now()]);
+                    break;
+            }
+        }
+
+        return $query->get()->toArray(); // Convert to array if needed
+    }
 }

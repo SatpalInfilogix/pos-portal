@@ -16,6 +16,7 @@ use App\Models\PriceMaster;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\ReturnStockProduct;
+use App\Models\UserActivity;
 /* Library Imports Stops Here */
 
 /* Controller Imports Imports Starts Here */
@@ -75,6 +76,7 @@ class AdminDashboardController extends Controller
         $endDate = $request->input('end_date');
         $isSuperAdmin = $user->hasRole('Super Admin');
         $store_id = $request->input('store_id');
+        $userActivity = UserActivity::where('user_id', Auth::user()->id)->latest()->first();
 
         if (!$isSuperAdmin) {
             $store_id = Auth::user()->store_id;
@@ -121,7 +123,6 @@ class AdminDashboardController extends Controller
         $totalCustomers = Customer::count();
 
         $products = $this->getLatestProducts();
-
         if ($request->ajax()) {
             return response()->json([
                 'totalProducts' => $totalProducts,
@@ -131,6 +132,7 @@ class AdminDashboardController extends Controller
                 'stores' => $stores,
                 'totalCustomers' => $totalCustomers,
                 'products' => $products,
+                'userActivity' => $userActivity
             ]);
         }
 
@@ -143,6 +145,7 @@ class AdminDashboardController extends Controller
             'totalInventoryReturn' => $totalInventoryReturn,
             'totalSaleAmount' => $totalSaleAmount,
             'stores' => $stores,
+            'userActivity' => $userActivity
         ]);
     }
 
@@ -239,6 +242,18 @@ class AdminDashboardController extends Controller
         return response()->json([
             'months' => $months,
             'sales' => $sales
+        ]);
+    }
+
+    public function tenderAmount(Request $request)
+    {
+        $userActivities = UserActivity::where('user_id',Auth::id())->latest('id')->first();
+        $userActivities->update([
+            "amount_during_login" => $request->tender_amount,
+        ]);
+
+        return response()->json([
+            'success' => true
         ]);
     }
 

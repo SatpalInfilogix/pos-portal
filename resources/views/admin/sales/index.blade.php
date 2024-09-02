@@ -11,6 +11,7 @@
             </div>
             <div class="left-side">
                 <!-- Button on the left -->
+                <button class="btn btn-primary" id="report-download">Download Item Wise Report</button>
                 <button class="btn btn-primary" id="pdf-download">Download Sales Report</button>
             </div>
         </div>
@@ -104,6 +105,22 @@
                         '?start_date=' + encodeURIComponent(startDate) + 
                         '&end_date=' + encodeURIComponent(endDate) + 
                         '&yearly=' + encodeURIComponent(yearly) + 
+                        '&store_id=' + encodeURIComponent(storeId);
+
+                // Open a new tab with the generated URL
+                window.open(url, '_blank');
+            });
+
+            $('#report-download').on('click', function() {
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+                var yearly = $('#yearly').val();
+                var storeId = $('#sales-store').val();
+
+                var url = '{{ route('item-wise-report-download') }}' +
+                        '?start_date=' + encodeURIComponent(startDate) +
+                        '&end_date=' + encodeURIComponent(endDate) +
+                        '&yearly=' + encodeURIComponent(yearly) +
                         '&store_id=' + encodeURIComponent(storeId);
 
                 // Open a new tab with the generated URL

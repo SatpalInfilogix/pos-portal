@@ -26,17 +26,47 @@
         </div>
     </div>
 </div>
-
+<script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script>
     $(document).ready(function(){
+            var shouldShowModal = {{ session('#tender-declaration-modal', 'false') ? 'true' : 'false' }};
+            if (shouldShowModal === 'true') {
+                $('#tender-declaration-modal').modal('show');
+            }
         $('#submitTender').validate({
-            rules : {
-                collect_tender_amount : 'required'
+            rules: {
+                collect_tender_amount: {
+                    required: true,
+                    number: true,
+                    min: 0
+                }
             },
-            messages : {
-                collect_tender_amount :  'Please Enter Tender Amount'
+            messages: {
+                collect_tender_amount: 'Please Enter a valid Tender Amount'
             },
-            errorClass: 'error-message' 
+            errorClass: 'error-message',
+            submitHandler: function(form) {
+                var tenderAmount = $(form).find('input[name="collect_tender_amount"]').val();
+                var token = "{{ csrf_token() }}";
+                $.ajax({
+                    url: '{{ route('save.tender') }}',
+                    type: 'post',
+                    data: {
+                        "_token": token,
+                        tender_amount: tenderAmount
+                    },
+                    success: function(response) {
+                        window.location.href = '{{ route('login') }}';  // Redirect to logout route
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('Error:', error);
+                    }
+                });
+            }
+        });
+
+        $('#tender-declaration-modal').on('hide.bs.modal', function (e) {
+            e.preventDefault();
         });
     });
 </script>
