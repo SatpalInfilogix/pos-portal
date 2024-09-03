@@ -4,6 +4,9 @@
     <title>Customers with Tender</title>
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
     <style>
+        body{
+            font-family: sans-serif;
+        }
         .receipt-table {
             width: 100%;
             border-collapse: collapse;

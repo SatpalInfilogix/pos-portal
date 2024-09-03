@@ -6,33 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gate Pass</title>
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
+
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+    </style>
 </head>
 
 <body>
-    <div class="main-card">
+    <div>
         <div class="sales-card">
             @include('partials.letter-head')
             <h3 class="receipt-title">GATE PASS</h3>
             <table class="head-table">
                 <tr>
-                    <td class="left">TRN</td>
+                    <td class="left">TRN:</td>
                     <td class="right"></td>
                 </tr>
                 <tr>
-                    <td class="left">Sales Receipt No. {{ $transferedInventory->id}}</td>
+                    <td class="left">Sales Receipt No: {{ $transferedInventory->id}}</td>
                     <td class="right"></td>
                 </tr>
                 <tr>
-                    <td class="left">Store : {{ $transferedInventory->store->name }}</td>
-                    <td class="right" style="float: inline-end;">Date of Sale {{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('d F Y') }}</td>
+                    <td class="left">Store: {{ $transferedInventory->store->name }}</td>
+                    <td class="right" style="float: inline-end;">Date of Sale: {{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('d F Y') }}</td>
                 </tr>
                 <tr>
-                    <td class="left">Vehicle No. {{ $transferedInventory->vehicle_number}}</td>
-                    <td class="right"></td>
-                </tr>
-                <tr>
-                    <td class="left"></td>
-                    <td class="right" style="float: inline-end;">Time: {{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('h:i:s A') }}</td>
+                    <td class="left">Vehicle No: {{ $transferedInventory->vehicle_number}}</td>
+                    <td class="right">Time: {{ \Carbon\Carbon::parse($transferedInventory->created_at)->format('h:i:s A') }}</td>
                 </tr>
             </table>
             {{-- <p class="main-content">TRN</p>
@@ -74,14 +76,13 @@
                 </tr>
             </table>
 
-            <div class="stamp-signature-container" style="margin-bottom: 100px;">
-                <div class="signature">
-                    <p><strong>Signature/Stamp</strong></p>
-                </div>
-                <div class="temperature">
-                    <p><strong>Temperature</strong></p>
-                </div>
-            </div>
+            <table class="stamp-signature-container">
+                <tr>
+                    <td class="temperature">Temperature</td>
+                    <td class="whitespace" style="border: none">&nbsp;</td>
+                    <td class="signature">Signature</td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>

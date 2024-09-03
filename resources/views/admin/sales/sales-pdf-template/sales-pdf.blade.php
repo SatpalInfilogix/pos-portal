@@ -1,8 +1,13 @@
 <html>
 
 <head>
-    <title>Customers with Tender</title>
+    <title>Sales PDF</title>
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+    </style>
 </head>
 
 <body>
@@ -14,10 +19,10 @@
             <table class="receipt-table" style="margin-bottom: 200px;">
                 {{-- Table Heading --}}
                 <tr>
-                    <th width="16%">Order Id</th>
-                    <th width="16%">Price</th>
-                    <th width="16%">Customer Name</th>
-                    <th width="48%">Customer Address</th>
+                    <th>Order Id</th>
+                    <th>Price</th>
+                    <th>Customer Name</th>
+                    <th>Customer Address</th>
                 </tr>
 
                 {{-- Table Data --}}

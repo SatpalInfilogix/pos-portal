@@ -3,6 +3,12 @@
 <head>
     <title>Customers with Tender</title>
     <link rel="stylesheet" href="{{ asset('assets/css/custom-style.css') }}">
+
+    <style>
+        body{
+            font-family: sans-serif;
+        }
+    </style>
 </head>
 
 <body>
@@ -10,12 +16,21 @@
         <div class="sales-card">
             @include('partials.letter-head')
             <h3 class="receipt-title">SALE RECEIPT</h3>
-            <p class="main-content">TRN</p>
-            <div class="content-details">
-                <p class="main-content">Sales Receipt No. {{ $orderDetail->OrderID }} </p>
-                <p class="main-content">Date of Sale {{ \Carbon\Carbon::parse($orderDetail->created_at)->format('d-m-Y') }}</p>
-            </div>
-            <p class="receipt-time">Time: {{ \Carbon\Carbon::parse($orderDetail->created_at)->format('h:i:s A') }}</p>
+            <table class="head-table">
+                <tr>
+                    <td class="left">TRN:</td>
+                    <td class="right"></td>
+                </tr>
+                <tr>
+                    <td class="left">Sales Receipt No: {{ $orderDetail->OrderID }}</td>
+                    <td class="right"></td>
+                </tr>
+                <tr>
+                    <td class="left">Time: {{ \Carbon\Carbon::parse($orderDetail->created_at)->format('h:i:s A') }}</td>
+                    <td class="right"></td>
+                </tr>
+            </table>
+
             <table class="receipt-table">
                 {{-- Table Heading --}}
                 <tr>
@@ -83,12 +98,17 @@
                     <td colspan="2"></td>
                     <td></td>
                 </tr>
+                @if($orderDetail->card_digits)
                 <tr>
                     <td>Card ending: {{ $orderDetail->card_digits }}</td>
                     <td colspan="2"></td>
                     <td></td>
                 </tr>
+                @endif
+            </table>
+        </div>
 
+            <table class="head-table" style="margin-top: 40px">
                 <tr class="single-data">
                     <td colspan="4">Terms and Conditions:</td>
                 </tr>

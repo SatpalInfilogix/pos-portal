@@ -1,7 +1,4 @@
 /* Sales receipt */
-.main-card {
-    padding: 30px;
-}
 .sales-card {
     border: 1px solid;
     width: 100%;
@@ -220,70 +217,73 @@ tbody, td, tfoot, th, thead, tr {
     border-radius: 8px;
 }
 /**************** Gate Pass *************/
-
- .header-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.header-container .company-info {
-    text-align: center;
-    flex: 1;
-}
-
-.header-container .logo {
-    margin-left: auto;
-    width: 150px; /* Adjust the width as needed */
-}
-
-.header-container .logo img {
-    width: 100%;
-    height: auto;
-}
-
-.stamp-signature-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 20px;
-}
-
-.stamp-signature-container .temperature,
-.stamp-signature-container .signature {
-    padding: 10px;
-    width: 35%;
-    position: relative;
-}
-
-.stamp-signature-container .temperature::before,
-.stamp-signature-container .signature::before {
-    content: "";
-    display: inline-block;
-    width: 35%; /* Adjust the width of the line as needed */
-    border-bottom: 1px solid #000;
-    margin-right: 0px; /* Space between line and text */
-}
-
-.stamp-signature-container .temperature {
-    text-align: right;
-}
-
-.stamp-signature-container .signature {
-    text-align: left;
-}
-
-table.head-table,
-table.receipt-table {
+.header-container {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 20px;
 }
+.header-container td {
+    vertical-align: top;
+    padding: 5px;
+}
+.logo img {
+    width: 150px; /* Adjust width as needed */
+    height: auto;
+}
+.company-info {
+    text-align: center;
+}
+.stamp-signature-container {
+    width: 100%;
+    margin-top: 20px;
+}
+.stamp-signature-container td {
+    padding: 10px;
+    border-top: 1px solid #000; /* Separator line for each section */
+    vertical-align: top;
+}
+.temperature, .signature {
+    width: 35%;
+    text-align: center;
+}
+.temperature::after, .signature::after {
+    content: "";
+    display: block;
+    width: 100%;
+    margin: 5px 0; /* Adjust the space between line and text */
+}
+.temperature {
+    text-align: left;
+}
+.signature {
+    text-align: left;
+}
+table.head-table,
+    table.receipt-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
 
-table.head-table th,
-table.receipt-table th {
-    background-color: #f2f2f2;
-}
+    table.head-table th,
+    table.receipt-table th {
+        background-color: #f2f2f2;
+        text-align: left; /* Ensure headers align correctly */
+        padding: 8px; /* Add padding for better spacing */
+    }
+
+    table.head-table td,
+    table.receipt-table td {
+        padding: 8px; /* Add padding to table cells */
+    }
+
+
+    .left {
+        text-align: left;
+    }
+
+    .right {
+        text-align: right;
+    }
 
 .receipt-title {
     text-align: center;

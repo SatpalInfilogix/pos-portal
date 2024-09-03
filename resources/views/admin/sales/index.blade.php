@@ -33,6 +33,8 @@
                     @endforeach
                 </select>
             </div>
+            @else
+            <input type="hidden" id="sales-store" value="{{ auth()->user()->store_id }}">
             @endhasanyrole
             <div class="col-md-3 mb-3">
                 <label class="form-label">Start Date</label>
