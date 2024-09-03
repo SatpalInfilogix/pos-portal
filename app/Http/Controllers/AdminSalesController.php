@@ -141,7 +141,10 @@ class AdminSalesController extends Controller
         
         // Fetch data based on the parameters
         $sales = $this->getSalesData($startDate, $endDate, $yearly, $storeId);
-        return view('admin.sales.sales-pdf-template.sales-pdf',compact('sales'));
+
+        $pdf = \PDF::loadView('admin.sales.sales-pdf-template.sales-pdf', compact('sales'));
+        return $pdf->download('sales-details.pdf');
+        // return view('admin.sales.sales-pdf-template.sales-pdf',compact('sales'));
     }
 
     private function getSalesData($startDate, $endDate, $yearly, $storeId)
@@ -208,7 +211,9 @@ class AdminSalesController extends Controller
             $sales[$key]['productTotalQuantity'] = $totalQuantity;
         }
 
-        return view('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
+        $pdf = \PDF::loadView('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
+        return $pdf->download('sales-report.pdf');
+        // return view('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
     }
 
 
