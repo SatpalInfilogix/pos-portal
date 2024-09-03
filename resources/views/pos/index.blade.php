@@ -817,16 +817,10 @@
                                             </table>
                                         </div>
                                         <p class="p-4 mb-4">Customer need to recheck the product once</p>
-                                        <div class="btn-row d-flex align-items-center justify-content-between">
-                                            <a href="{{ route('sales.view', '') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
-                                            <a href="javascript:void(0);"
-                                                class="btn btn-danger btn-icon flex-fill">Products</a>
-                                            <a href="javascript:void(0);"
-                                                class="btn btn-success btn-icon flex-fill">Print</a>
-                                        </div>
                                     </div>
                                 </div>`;
                         $('.completed-orders').prepend(completedOrder);
+                        $('.record-not-found').hide();
                     }else{
                         alert('Something Went Wrong');
                         $('#order-submission').prop('disabled', false).html('Place');
@@ -894,16 +888,10 @@
                                             </table>
                                         </div>
                                         <p class="p-4 mb-4">Customer need to recheck the product once</p>
-                                        <div class="btn-row d-flex align-items-center justify-content-between">
-                                            <a href="{{ route('sales.view', '') }}/${ response.orderId }" class="btn btn-info btn-icon flex-fill">Open</a>
-                                            <a href="javascript:void(0);"
-                                                class="btn btn-danger btn-icon flex-fill">Products</a>
-                                            <a href="javascript:void(0);"
-                                                class="btn btn-success btn-icon flex-fill">Print</a>
-                                        </div>
                                     </div>
                                 </div>`;
                         $('.hold-orders').prepend(holdOrder);
+                        $('.record-not-found').hide();
                     }
                 }
             });
