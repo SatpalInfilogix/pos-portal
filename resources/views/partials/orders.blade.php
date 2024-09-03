@@ -62,19 +62,19 @@
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">{{ $onHoldOrder->created_at }}</td>
+                                                    <td class="text">{{ \Carbon\Carbon::parse($onHoldOrder->created_at)->format('d F, Y') }}</td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
                                     <p class="p-4 mb-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
+                                    {{-- <div class="btn-row d-flex align-items-center justify-content-between">
                                         <a href="{{ route('sales.view',$onHoldOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-danger btn-icon flex-fill">Products</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 @empty
                                     <div class="record-not-found">
@@ -118,19 +118,19 @@
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">{{ $unPaidOrder->created_at }}</td>
+                                                    <td class="text">{{ \Carbon\Carbon::parse($unPaidOrder->created_at)->format('d F, Y') }}</td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
                                     <p class="p-4 mb-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
+                                    {{-- <div class="btn-row d-flex align-items-center justify-content-between">
                                         <a href="{{ route('sales.view',$unPaidOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-danger btn-icon flex-fill">Products</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 @empty
                                     <div class="record-not-found">
@@ -174,19 +174,19 @@
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">{{ $completedOrder->created_at }}</td>
+                                                    <td class="text">{{ \Carbon\Carbon::parse($completedOrder->created_at)->format('d F, Y') }}</td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
                                     <p class="p-4 mb-4">Customer need to recheck the product once</p>
-                                    <div class="btn-row d-flex align-items-center justify-content-between">
+                                    {{-- <div class="btn-row d-flex align-items-center justify-content-between">
                                         <a href="{{ route('sales.view',$completedOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-danger btn-icon flex-fill">Products</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 @empty
                                     <div class="record-not-found">
