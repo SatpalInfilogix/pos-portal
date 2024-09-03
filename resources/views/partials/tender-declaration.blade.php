@@ -1,5 +1,4 @@
-<div class="modal fade" id="tender-declaration-modal" tabindex="-1"
-        aria-hidden="true">
+<div class="modal fade" id="tender-declaration-modal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-md modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header p-4">
@@ -13,13 +12,17 @@
                     <div class="tab-content">
                         <form action="" id="submitTender">
                             <div class="row">
-                                <input name="collect_tender_amount" type="text" placeholder="Please enter tender amount" class="form-control">
-                                <small></small>
+                                <div class="col-12">
+                                    <input name="collect_tender_amount" type="text"
+                                        placeholder="Please enter tender amount" class="form-control">
+                                </div>
                             </div>
-                            <div class="row m-2">
-                                <button type="submit" class="btn btn-primary">Submit & Logout</button>
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary">Submit & Logout</button>
+                                </div>
                             </div>
-                        </form>    
+                        </form>
                     </div>
                 </div>
             </div>
@@ -28,11 +31,11 @@
 </div>
 <script src="{{ asset('assets/js/jquery.validate.min.js') }}"></script>
 <script>
-    $(document).ready(function(){
-            var shouldShowModal = {{ session('#tender-declaration-modal', 'false') ? 'true' : 'false' }};
-            if (shouldShowModal === 'true') {
-                $('#tender-declaration-modal').modal('show');
-            }
+    $(document).ready(function() {
+        var shouldShowModal = {{ session('#tender-declaration-modal', 'false') ? 'true' : 'false' }};
+        if (shouldShowModal === 'true') {
+            $('#tender-declaration-modal').modal('show');
+        }
         $('#submitTender').validate({
             rules: {
                 collect_tender_amount: {
@@ -56,7 +59,8 @@
                         tender_amount: tenderAmount
                     },
                     success: function(response) {
-                        window.location.href = '{{ route('login') }}';  // Redirect to logout route
+                        window.location.href =
+                        '{{ route('login') }}'; // Redirect to logout route
                     },
                     error: function(xhr, status, error) {
                         console.log('Error:', error);
@@ -65,7 +69,7 @@
             }
         });
 
-        $('#tender-declaration-modal').on('hide.bs.modal', function (e) {
+        $('#tender-declaration-modal').on('hide.bs.modal', function(e) {
             e.preventDefault();
         });
     });

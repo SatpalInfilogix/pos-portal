@@ -3,28 +3,28 @@
 @section('content')
     <div class="content">
         <?php
-            $authUser = auth()->user()->getRoleNames()->first();
-            $amountDuringLogin = $userActivity->amount_during_login ?? null;
+        $authUser = auth()->user()->getRoleNames()->first();
+        $amountDuringLogin = $userActivity->amount_during_login ?? null;
         ?>
         <div class="row">
-            @if($authUser == 'Super Admin')
-            <div class="col-md-4 mb-3">
-                <label class="form-label">Select Store</label>
-                <select name="store" id="store" class="form-control">
-                    <option value="" selected disabled>Select Store</option>
-                    @foreach ($stores as $store)
-                        <option value="{{ $store->id }}">{{ $store->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+            @if ($authUser == 'Super Admin')
+                <div class="col-md-4 mb-3">
+                    <label class="form-label">Select Store</label>
+                    <select name="store" id="store" class="form-control">
+                        <option value="" selected disabled>Select Store</option>
+                        @foreach ($stores as $store)
+                            <option value="{{ $store->id }}">{{ $store->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
             @endif
             <div class="col-md-4 mb-3">
                 <label class="form-label">Start Date</label>
-                <input type="text" id="start_date" class="form-control"  placeholder="Select Start Date">
+                <input type="text" id="start_date" class="form-control" placeholder="Select Start Date">
             </div>
             <div class="col-md-4 mb-3">
                 <label class="form-label">End Date</label>
-                <input type="text" id="end_date" class="form-control"  placeholder="Select End Date">
+                <input type="text" id="end_date" class="form-control" placeholder="Select End Date">
             </div>
         </div>
 
@@ -140,7 +140,8 @@
                                         alt="img"></span>
                             </div>
                             <div class="dash-widgetcontent">
-                                <h5>$<span class="counters totalSaleAmount" data-count="{{ $totalSaleAmount }}">${{ $totalSaleAmount }}</span></h5>
+                                <h5>$<span class="counters totalSaleAmount"
+                                        data-count="{{ $totalSaleAmount }}">${{ $totalSaleAmount }}</span></h5>
                                 <h6>Total Sale Amount</h6>
                             </div>
                         </div>
@@ -154,7 +155,7 @@
             </div>
             <div class="card-body">
                 <div class="table-responsive p-0 m-0">
-                    <table id="example" class="table table-bordered" style="width:100%">
+                    <table id="low-stock-products" class="table table-bordered" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -173,31 +174,37 @@
                                     <td>{{ $product->product_code ?? '' }}</td>
                                     <td>{{ $product->manufacture_date }}</td>
                                     @canany(['edit product', 'delete product'])
-                                    <td>
-                                        @if($product->is_active == 1)
-                                            <a class="btn btn-added me-2 p-2 status-btn active-btn" id="active" data-type = "Active" data-id="${row.id}" href="#">Inactive</a>
-                                            <a class="btn btn-added me-2 p-2 status-btn active-btn" id="in-active" data-type = "Inactive" data-id="${row.id}" style="display: none;">Active</a>
-                                        @else
-                                            <a class="btn btn-added me-2 p-2 status-btn active-btn" id="in-active" data-type = "Inactive" data-id="${row.id}" href="#">Active</a>
-                                            <a class="btn btn-added me-2 p-2 status-btn active-btn" id="active" data-type = "Active" data-id="${row.id}" style="display: none;">Inactive</a>
-                                        @endif
-                                    </td>
-                                   
-                                    <td class="action-table-data">
-                                        <div class="edit-delete-action">
-                                            @canany(['edit product'])
-                                                <a class="me-2 p-2" href="{{ route('products.edit', $product->id) }}">
-                                                    <i data-feather="edit" class="feather-edit"></i>
-                                                </a>
-                                            @endcanany
-                                            @canany(['delete product'])
-                                                <a class="p-2 delete-products" id="delete-products"
-                                                    data-id="{{ $product->id }}" href="#">
-                                                    <i data-feather="trash-2" class="feather-trash-2"></i>
-                                                </a>
-                                            @endcanany
-                                        </div>
-                                    </td>
+                                        <td>
+                                            @if ($product->is_active == 1)
+                                                <a class="btn btn-added me-2 p-2 status-btn active-btn" id="active"
+                                                    data-type = "Active" data-id="${row.id}" href="#">Inactive</a>
+                                                <a class="btn btn-added me-2 p-2 status-btn active-btn" id="in-active"
+                                                    data-type = "Inactive" data-id="${row.id}"
+                                                    style="display: none;">Active</a>
+                                            @else
+                                                <a class="btn btn-added me-2 p-2 status-btn active-btn" id="in-active"
+                                                    data-type = "Inactive" data-id="${row.id}" href="#">Active</a>
+                                                <a class="btn btn-added me-2 p-2 status-btn active-btn" id="active"
+                                                    data-type = "Active" data-id="${row.id}"
+                                                    style="display: none;">Inactive</a>
+                                            @endif
+                                        </td>
+
+                                        <td class="action-table-data">
+                                            <div class="edit-delete-action">
+                                                @canany(['edit product'])
+                                                    <a class="me-2 p-2" href="{{ route('products.edit', $product->id) }}">
+                                                        <i data-feather="edit" class="feather-edit"></i>
+                                                    </a>
+                                                @endcanany
+                                                @canany(['delete product'])
+                                                    <a class="p-2 delete-products" id="delete-products"
+                                                        data-id="{{ $product->id }}" href="#">
+                                                        <i data-feather="trash-2" class="feather-trash-2"></i>
+                                                    </a>
+                                                @endcanany
+                                            </div>
+                                        </td>
                                     @endcanany
                                 </tr>
                             @endforeach
@@ -217,240 +224,257 @@
                 <div class="modal-body p-4">
                     <form id="tenderFormLogin">
                         <div class="row">
-                            <input name="collect_tender_amount" type="text" placeholder="Please enter tender amount" class="form-control">
-                            <small></small>
+                            <div class="col-12">
+                                <input name="collect_tender_amount" type="number"
+                                    placeholder="Please enter tender amount" class="form-control">
+                            </div>
                         </div>
-                        <div class="row m-2">
-                            <button type="submit" class="btn btn-primary">Submit & Login</button>
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Submit & Continue</button>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    $(document).ready(function() {
-        $('#example').DataTable();
-    });
+    </div>
+    <script>
+        $(document).ready(function() {
+            $('#low-stock-products').DataTable();
+        });
 
-    $(document).ready(function() {
-        $('.delete-products').click(function(e) {
-            e.preventDefault();
-            var productId = $(this).data('id');
-            var token = "{{ csrf_token() }}";
-            var url = "{{ route('products.destroy', '') }}/" + productId;
+        $(document).ready(function() {
+            $('.delete-products').click(function(e) {
+                e.preventDefault();
+                var productId = $(this).data('id');
+                var token = "{{ csrf_token() }}";
+                var url = "{{ route('products.destroy', '') }}/" + productId;
 
-            if (confirm('Are you sure you want to delete this product?')) {
+                if (confirm('Are you sure you want to delete this product?')) {
+                    $.ajax({
+                        url: url,
+                        type: 'DELETE',
+                        data: {
+                            "_token": token,
+                        },
+                        success: function(response) {
+                            if (response.status == 'success') {
+                                if (response.product == 1) {
+                                    $('#restore-products[data-id="' + productId + '"]').show();
+                                    $('#delete-products[data-id="' + productId + '"]').hide();
+                                } else {
+                                    $('#restore-products[data-id="' + productId + '"]').hide();
+                                    $('#delete-products[data-id="' + productId + '"]').show();
+                                }
+                                // $('#product-row-' + productId).remove();
+                                // alert('Product deleted successfully');
+                                // window.location.reload();
+                            } else {
+                                alert('Something went wrong. Please try again.');
+                            }
+                        },
+                        error: function(xhr) {
+                            console.log(xhr.responseText);
+                            alert('Something went wrong. Please try again.');
+                        }
+                    });
+                }
+            });
+
+            function showModalForRoles() {
+                var userRole = "{{ $authUser }}";
+                var amountDuringLogin = @json($amountDuringLogin);
+
+                if ((userRole === 'Manager' || userRole === 'Sales Person') && amountDuringLogin === null) {
+                    $('#tender-modal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    }).modal('show');
+                }
+            }
+
+            showModalForRoles();
+
+            $('#tenderFormLogin').validate({
+                rules: {
+                    collect_tender_amount: {
+                        required: true,
+                        number: true,
+                        min: 0
+                    }
+                },
+                messages: {
+                    collect_tender_amount: 'Please Enter a valid Tender Amount'
+                },
+                errorClass: 'error-message',
+                submitHandler: function(form) {
+                    var tenderAmount = $(form).find('input[name="collect_tender_amount"]').val();
+                    var token = "{{ csrf_token() }}";
+                    $.ajax({
+                        url: '{{ route('submit-tender') }}',
+                        method: 'POST',
+                        data: {
+                            "_token": token,
+                            tender_amount: tenderAmount
+                        },
+                        success: function(response) {
+                            $('#tender-modal').modal('hide');
+                        },
+                        error: function(xhr, status, error) {
+                            console.log('Error:', error);
+                        }
+                    });
+                }
+            });
+
+            function updateDashboard() {
+                var storeId = $('#store').val();
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+
                 $.ajax({
-                    url: url,
-                    type: 'DELETE',
+                    url: "{{ route('backend-dashboard') }}",
+                    type: 'GET',
                     data: {
-                        "_token": token,
+                        store_id: storeId,
+                        start_date: startDate,
+                        end_date: endDate
                     },
                     success: function(response) {
-                        if (response.status == 'success') {
-                            if (response.product == 1) {
-                                $('#restore-products[data-id="' + productId + '"]').show();
-                                $('#delete-products[data-id="' + productId + '"]').hide();
-                            } else {
-                                $('#restore-products[data-id="' + productId + '"]').hide();
-                                $('#delete-products[data-id="' + productId + '"]').show();
+                        console.log(response); // For debugging purposes
+
+                        // Update the dashboard elements with the new data
+                        $('.dash-counts').eq(0).find('h4').text(response.totalCustomers);
+                        $('.dash-counts').eq(1).find('h4').text(response.totalProducts);
+                        $('.dash-counts').eq(2).find('h4').text(response.totalInventoryReturn);
+                        $('.dash-counts').eq(3).find('h4').text(response.totalSaleInvoices);
+                        $('.totalSaleAmount').text(response.totalSaleAmount);
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.responseText);
+                        alert('An error occurred while fetching data.');
+                    }
+                });
+            }
+
+            // Initial chart update if needed
+            @if (Auth::user()->hasRole('Super Admin'))
+                updateDashboard();
+            @else
+                updateDashboard(); // Adjust as needed if non-admin
+            @endif
+
+            // Event handlers
+            $('#store, #start_date, #end_date').change(function() {
+                updateDashboard();
+            });
+
+            var chart;
+
+            function updateChart(storeId) {
+                var chartDetailsUrl = $('#sales_charts').data('href');
+                var startDate = $('#start_date').val();
+                var endDate = $('#end_date').val();
+
+                $.ajax({
+                    url: chartDetailsUrl,
+                    type: 'GET',
+                    data: {
+                        store_id: storeId,
+                        start_date: startDate,
+                        end_date: endDate
+                    },
+                    success: function(resp) {
+                        var options = {
+                            series: [{
+                                name: "Total Sales",
+                                data: resp.sales
+                            }],
+                            chart: {
+                                height: 350,
+                                type: 'line',
+                                zoom: {
+                                    enabled: false
+                                }
+                            },
+                            dataLabels: {
+                                enabled: false
+                            },
+                            stroke: {
+                                curve: 'smooth'
+                            },
+                            grid: {
+                                row: {
+                                    colors: ['#f3f3f3', 'transparent'], // Row colors
+                                    opacity: 0.5
+                                },
+                            },
+                            xaxis: {
+                                categories: resp.months
                             }
-                            // $('#product-row-' + productId).remove();
-                            // alert('Product deleted successfully');
-                            // window.location.reload();
+                        };
+
+                        if (chart) {
+                            chart.updateOptions(options);
                         } else {
-                            alert('Something went wrong. Please try again.');
+                            chart = new ApexCharts(document.querySelector("#sales_charts"), options);
+                            chart.render();
                         }
                     },
                     error: function(xhr) {
                         console.log(xhr.responseText);
-                        alert('Something went wrong. Please try again.');
+                        alert('An error occurred while fetching data.');
                     }
                 });
             }
-        });
 
-        function showModalForRoles() {
-            var userRole = "{{ $authUser }}";
-            var amountDuringLogin = @json($amountDuringLogin);
-
-            if ((userRole === 'Manager' || userRole === 'Sales Person') && amountDuringLogin === null) {
-                $('#tender-modal').modal({
-                    backdrop: 'static',
-                    keyboard: false
-                }).modal('show');
-            }
-        }
-
-        showModalForRoles();
-
-        $('#tenderFormLogin').on('submit', function(event) {
-            event.preventDefault();
-            var tenderAmount = $(this).find('input[name="collect_tender_amount"]').val();
-
-            $.ajax({
-                url: '{{ route('submit-tender') }}',
-                method: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    tender_amount: tenderAmount
-                },
-                success: function(response) {
-                    $('#tender-modal').modal('hide');
-                },
-                error: function(xhr) {
-                    alert('Error submitting tender amount');
-                }
-            });
-        });
-
-
-        function updateDashboard() {
-            var storeId = $('#store').val();
             var startDate = $('#start_date').val();
             var endDate = $('#end_date').val();
-
-            $.ajax({
-                url: "{{ route('backend-dashboard') }}",
-                type: 'GET',
-                data: {
-                    store_id: storeId,
-                    start_date: startDate,
-                    end_date: endDate
-                },
-                success: function(response) {
-                    console.log(response); // For debugging purposes
-
-                    // Update the dashboard elements with the new data
-                    $('.dash-counts').eq(0).find('h4').text(response.totalCustomers);
-                    $('.dash-counts').eq(1).find('h4').text(response.totalProducts);
-                    $('.dash-counts').eq(2).find('h4').text(response.totalInventoryReturn);
-                    $('.dash-counts').eq(3).find('h4').text(response.totalSaleInvoices);
-                    $('.totalSaleAmount').text(response.totalSaleAmount);
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    alert('An error occurred while fetching data.');
-                }
-            });
-        }
-
-        // Initial chart update if needed
-        @if (Auth::user()->hasRole('Super Admin'))
-            updateDashboard();
-        @else
-            updateDashboard(); // Adjust as needed if non-admin
-        @endif
-
-        // Event handlers
-        $('#store, #start_date, #end_date').change(function() {
-            updateDashboard();
-        });
-
-        var chart;
-        function updateChart(storeId) {
-            var chartDetailsUrl = $('#sales_charts').data('href');
-            var startDate = $('#start_date').val();
-            var endDate = $('#end_date').val();
-
-            $.ajax({
-                url: chartDetailsUrl,
-                type: 'GET',
-                data: {
-                    store_id: storeId, 
-                    start_date: startDate,
-                    end_date: endDate },
-                success: function(resp) {
-                    var options = {
-                        series: [{
-                            name: "Total Sales",
-                            data: resp.sales
-                        }],
-                        chart: {
-                            height: 350,
-                            type: 'line',
-                            zoom: {
-                                enabled: false
-                            }
-                        },
-                        dataLabels: {
-                            enabled: false
-                        },
-                        stroke: {
-                            curve: 'smooth'
-                        },
-                        grid: {
-                            row: {
-                                colors: ['#f3f3f3', 'transparent'], // Row colors
-                                opacity: 0.5
-                            },
-                        },
-                        xaxis: {
-                            categories: resp.months 
-                        }
-                    };
-
-                    if (chart) {
-                        chart.updateOptions(options);
-                    } else {
-                        chart = new ApexCharts(document.querySelector("#sales_charts"), options);
-                        chart.render();
-                    }
-                },
-                error: function(xhr) {
-                    console.log(xhr.responseText);
-                    alert('An error occurred while fetching data.');
-                }
-            });
-        }
-
-        var startDate = $('#start_date').val();
-        var endDate = $('#end_date').val();
-        @if (Auth::user()->hasRole('Super Admin'))
-            var storeId = $('#store').val();
-            updateChart(storeId, startDate, endDate);
-
-            $('#store').change(function() {
-                storeId = $(this).val();
-                startDate = $('#start_date').val();
-                endDate = $('#end_date').val();
+            @if (Auth::user()->hasRole('Super Admin'))
+                var storeId = $('#store').val();
                 updateChart(storeId, startDate, endDate);
-            });
 
-            $('#start_date, #end_date').change(function() {
-                storeId = $('#store').val();
-                startDate = $('#start_date').val();
-                endDate = $('#end_date').val();
-                updateChart(storeId, startDate, endDate);
-            });
-        @else
-            // For other roles (non-Super Admin), storeId is assigned automatically
-            updateChart(null, startDate, endDate);
+                $('#store').change(function() {
+                    storeId = $(this).val();
+                    startDate = $('#start_date').val();
+                    endDate = $('#end_date').val();
+                    updateChart(storeId, startDate, endDate);
+                });
 
-            $('#start_date, #end_date').change(function() {
-                startDate = $('#start_date').val();
-                endDate = $('#end_date').val();
+                $('#start_date, #end_date').change(function() {
+                    storeId = $('#store').val();
+                    startDate = $('#start_date').val();
+                    endDate = $('#end_date').val();
+                    updateChart(storeId, startDate, endDate);
+                });
+            @else
+                // For other roles (non-Super Admin), storeId is assigned automatically
                 updateChart(null, startDate, endDate);
+
+                $('#start_date, #end_date').change(function() {
+                    startDate = $('#start_date').val();
+                    endDate = $('#end_date').val();
+                    updateChart(null, startDate, endDate);
+                });
+            @endif
+
+            $('#start_date').datepicker({
+                autoclose: true,
+                orientation: 'bottom'
+            }).on('changeDate', function(e) {
+                var startDate = e.date;
+                $('#end_date').datepicker('setDate', null);
+                $('#end_date').datepicker('setStartDate', startDate);
             });
-        @endif
 
-        $('#start_date').datepicker({
-            autoclose: true,
-            orientation: 'bottom'
-        }).on('changeDate', function(e) {
-            var startDate = e.date;
-            $('#end_date').datepicker('setDate', null);
-            $('#end_date').datepicker('setStartDate', startDate);
-        });
+            $('#end_date').datepicker({
+                autoclose: true,
+                orientation: 'bottom'
+            });
 
-        $('#end_date').datepicker({
-            autoclose: true,
-            orientation: 'bottom'
-        });
-
-        $(document).on('click', '.status-btn', function(e) {
+            $(document).on('click', '.status-btn', function(e) {
                 var productId = $(this).data('id');
                 var token = "{{ csrf_token() }}";
                 var actionText = $(this).data('type');
@@ -474,20 +498,26 @@
                             success: function(response) {
                                 if (response.status == 'success') {
                                     if (response.product == 1) {
-                                        $('#active[data-id="' + productId + '"]').show();
-                                        $('#in-active[data-id="' + productId + '"]').hide();
+                                        $('#active[data-id="' + productId + '"]')
+                                            .show();
+                                        $('#in-active[data-id="' + productId + '"]')
+                                            .hide();
                                     } else {
-                                        $('#active[data-id="' + productId + '"]').hide();
-                                        $('#in-active[data-id="' + productId + '"]').show();
+                                        $('#active[data-id="' + productId + '"]')
+                                            .hide();
+                                        $('#in-active[data-id="' + productId + '"]')
+                                            .show();
                                     }
                                 } else {
-                                    Swal.fire('Error!', 'Something went wrong. Please try again.', 'error');
+                                    Swal.fire('Error!',
+                                        'Something went wrong. Please try again.',
+                                        'error');
                                 }
                             },
                         });
                     }
                 });
             });
-    });
-</script>
+        });
+    </script>
 @endsection
