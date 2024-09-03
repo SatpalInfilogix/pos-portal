@@ -27,8 +27,8 @@
 
         <div class="card table-list-card">
             <div class="card-body">
-                <div class="table-responsive dataview">
-                    <table class="table dashboard-expired-products">
+                <div class="table-responsive p-0 m-0">
+                    <table id="example" class="table table-bordered table-responsive" style="width:100%">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -50,4 +50,9 @@
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function() {
+            $('#example').DataTable();
+        });
+        </script>
 @endsection
