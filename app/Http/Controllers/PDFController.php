@@ -16,8 +16,9 @@ class PDFController extends Controller
     public function generateOrderPDF($invoice_id){
 
         $orderDetail = Order::with('productDetails')->with('customerDetail')->where('OrderID',$invoice_id)->first();
-
-        return view('admin.sales.sales-pdf-template.cash-sales-receipt-pdf',compact('orderDetail'));
+        $pdf = \PDF::loadView('admin.sales.sales-pdf-template.cash-sales-receipt-pdf', compact('orderDetail'));
+        return $pdf->download('generate-order.pdf');
+        // return view('admin.sales.sales-pdf-template.cash-sales-receipt-pdf',compact('orderDetail'));
     }
     public function download() {
        // $pdf = PDF::loadView('admin.sales.sales-pdf-template.cash-sales-receipt-pdf');
