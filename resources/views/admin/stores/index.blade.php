@@ -28,7 +28,7 @@
         <div class="card table-list-card">
             <div class="card-body">
                 <div class="table-responsive p-0 m-0">
-                    <table id="users-table" class="table users-table">
+                    <table id="users-table" class="table users-table ">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -76,6 +76,9 @@
         </div>
     </div>
     <script>
+         $(document).ready(function() {
+            $('#users-table').DataTable();
+        });
         $(document).on('click', '.delete-btn', function(e) {
             e.preventDefault();
             var storeId = $(this).data('id');
