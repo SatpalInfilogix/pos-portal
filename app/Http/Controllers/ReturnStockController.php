@@ -225,7 +225,9 @@ class ReturnStockController extends Controller
         //dd($returStocks);
        // $transferedInventory = Inventory::with('store')->with('deliveredItems')->where('id',$transfer_id)->first();
        // dd($transferedInventory);
-       return view('admin.stocks.return-stock.pdf.return-gate-pass',compact('returStocks'));
+       $pdf = \PDF::loadView('admin.stocks.return-stock.pdf.return-gate-pass', compact('returStocks'));
+       return $pdf->download('return-stock-gate-pass.pdf');
+    //    return view('admin.stocks.return-stock.pdf.return-gate-pass',compact('returStocks'));
     }
     public function updateGatePassStatus(Request $request, $return_id){
         
