@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\RedirectResponse;
 use App\Models\UserActivity;
+use Illuminate\Support\Facades\Session;
 
 class LoginController extends Controller
 {
@@ -54,5 +55,22 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');
+    }
+
+    public function update(Request $request)
+    {
+        $userActivities = UserActivity::where('user_id',Auth::id())->latest('id')->first();
+        $userActivities->update([
+            "amount_during_logout" => $request->tender_amount,
+            "logged_out" => now()
+        ]);
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

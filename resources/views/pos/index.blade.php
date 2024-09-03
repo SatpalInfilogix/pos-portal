@@ -73,6 +73,8 @@
         }
     </style>
     @php
+        $authUser = auth()->user()->getRoleNames()->first();
+        $amountDuringLogin = $userActivity->amount_during_login ?? null;
         $cart = session('cart');
     @endphp
     <div class="content pos-design p-0">
@@ -355,7 +357,26 @@
             </div>
         </div>
     </div>
-
+    <div class="modal fade" id="tender-modal" tabindex="-1" aria-labelledby="tender-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header p-4">
+                    <h5 class="modal-title" id="tender-modal-label">Today Tender Amount</h5>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="tenderFormLogin">
+                        <div class="row">
+                            <input name="collect_tender_amount" type="text" placeholder="Please enter tender amount" class="form-control">
+                            <small></small>
+                        </div>
+                        <div class="row m-2">
+                            <button type="submit" class="btn btn-primary">Submit & Login</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
     @include('partials.place-order')
 
@@ -405,6 +426,39 @@
                     // Update the input field value
                     $(this).val(discountValue);
                 }
+            });
+
+            function showModalForRoles() {
+                var userRole = "{{ $authUser }}";
+                var amountDuringLogin = @json($amountDuringLogin);
+
+                if ((userRole === 'Manager' || userRole === 'Sales Person') && amountDuringLogin === null) {
+                    $('#tender-modal').modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    }).modal('show');
+                }
+            }
+
+            showModalForRoles();
+            $('#tenderFormLogin').on('submit', function(event) {
+                event.preventDefault();
+                var tenderAmount = $(this).find('input[name="collect_tender_amount"]').val();
+
+                $.ajax({
+                    url: '{{ route('submit-tender') }}',
+                    method: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        tender_amount: tenderAmount
+                    },
+                    success: function(response) {
+                        $('#tender-modal').modal('hide');
+                    },
+                    error: function(xhr) {
+                        alert('Error submitting tender amount');
+                    }
+                });
             });
         });
 

@@ -10,12 +10,14 @@ use App\Models\Order;
 use App\Models\Discount;
 use App\Models\Customer;
 use App\Models\StoreProduct;
+use App\Models\UserActivity;
 use Illuminate\Support\Facades\Auth;
 
 class PosDashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $userActivity = UserActivity::where('user_id', Auth::user()->id)->latest()->first();
         $categories = Category::where('status', 0)->withCount(['products' => function ($query) {
                         $query->where('status', 0); // Condition for products status
                     }])->latest()->take(15)->get();
@@ -96,7 +98,7 @@ class PosDashboardController extends Controller
             ]);
         }
 
-        return view('pos.index', compact('categories', 'totalProducts', 'products','invoiceId', 'discount', 'customers','completedOrders','holdOrders','unPaidOrders'));
+        return view('pos.index', compact('categories', 'totalProducts', 'products','invoiceId', 'discount', 'customers','completedOrders','holdOrders','unPaidOrders', 'userActivity'));
     }
 
     public function getTransaction(Request $request)

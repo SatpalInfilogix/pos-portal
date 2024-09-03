@@ -154,7 +154,11 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
     Route::view('stock-transfer-pdf','admin.stocks.stock-transfer-pdf-template.stock-transfer-pdf');
     
     Route::get('/pos-dashboard',[PosDashboardController::class,'index'])->name('pos-dashboard');
+
 });
+Route::post('/submit-tender', [AdminDashboardController::class, 'tenderAmount'])->name('submit-tender');
+Route::post('/save-tender', [LoginController::class, 'update'])->name('save.tender');
+
 /***************  Frontend Routes ****************/
 Route::get('/search-products', [AdminProductController::class,'searchProducts'])->name('search-products');
 Route::post('/import-products', [AdminProductController::class, 'import_products'])->name('import-products');
@@ -209,5 +213,5 @@ Route::get('/export-products-quantites', [AdminPriceController::class, 'exportQu
 
 Route::get('/products/get-latest-code-number', [AdminProductController::class, 'getLatestCodeNumber'])->name('products.get_latest_code_number');
 Route::get('/sales-details-download', [AdminSalesController::class, 'downloadSalesDetail'])->name('sales-details-download');
-
+Route::get('/item-wise-report-download',[AdminSalesController::class, 'downloadItemWiseReport'])->name('item-wise-report-download');
 Route::get('/download-barcodes', [AdminProductController::class, 'downloadBarcodes'])->name('download.barcodes');
