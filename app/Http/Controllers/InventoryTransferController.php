@@ -184,7 +184,9 @@ class InventoryTransferController extends Controller
     public function viewGatePass($transfer_id){
         $transferedInventory = Inventory::with('store')->with('deliveredItems')->where('id',$transfer_id)->first();
        // dd($transferedInventory);
-        return view('admin.sales.sales-pdf-template.gate-pass-pdf',compact('transferedInventory'));
+       $pdf = \PDF::loadView('admin.sales.sales-pdf-template.gate-pass-pdf', compact('transferedInventory'));
+        return $pdf->download('gate-pass.pdf');
+        // return view('admin.sales.sales-pdf-template.gate-pass-pdf',compact('transferedInventory'));
     }
     public function printGatePass(Request $request, $transfer_id){
         $transferedInventory = Inventory::with('store')->with('deliveredItems')->where('id',$transfer_id)->first();
