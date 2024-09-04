@@ -517,6 +517,8 @@
                 success: function(response) {
                     if (response.success == true) {
                         updateCartUI(response.cart);
+                        $('.invoiceId').val(response.orderId);
+                        $('.invoice-id').text(response.orderId);
                     } else {
                         alert('Error');
                     }
@@ -550,6 +552,39 @@
                 }
             });
         }
+
+        $(document).on('click', '.hold-order', function(event) {
+            event.preventDefault();
+            var orderId = $(this).data('order-id');
+            console.log(orderId);
+            $.ajax({
+                url: "{{ route('get-hold-order') }}",
+                method: 'post',
+                data: {
+                    order_id: orderId,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    alert('Order added to cart successfully!');
+                    updateCartUI(response.cart);
+                    $('body').addClass('updated-cart');
+                    $('.invoiceId').val(orderId);
+                    $('.invoice-id').text(orderId);
+                    $('#orders').modal('hide'); // For Bootstrap modal
+                    $('[data-invoice-id="' + orderId + '"]').remove();
+                    if (response.cart && response.cart.products) {
+                        response.cart.products.forEach(function(product) {
+                            var productId = product.id;
+                            // Add 'added-to-cart' class to the corresponding product card
+                            $('.products-' + productId).addClass('added-to-cart');
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    alert('There was an error adding the order to the cart.');
+                }
+            });
+        });
     </script>
 
     <script src="{{ asset('assets/js/feather.min.js') }}"></script>

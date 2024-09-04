@@ -707,6 +707,7 @@
                 alert('Please Select Payment Method');
                 return false;
             }
+            let invoiceId = $('[name="invoice_id"]').val();
             let customer_name = $('[name="order_customer_id"]').find(':selected').val();
             let email = $('[name="email"]').val();
             let vehicle_number = $('[name="vehicle_number"]').val();
@@ -733,6 +734,7 @@
                     tender_amount: tender_amount,
                     order_change_amount: order_change_amount,
                     billing_address_pin_code: billing_address_pin_code,
+                    invoiceId: invoiceId,
                 },
                 success: function(response) {
                     $.each(response.returnProductDetails, function(key, val) {
@@ -888,6 +890,9 @@
                                             </table>
                                         </div>
                                         <p class="p-4 mb-4">Customer need to recheck the product once</p>
+                                        <div class="btn-row d-flex align-items-center justify-content-between">
+                                            <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="${response.orderId}">Place Order</a>
+                                        </div>
                                     </div>
                                 </div>`;
                         $('.hold-orders').prepend(holdOrder);

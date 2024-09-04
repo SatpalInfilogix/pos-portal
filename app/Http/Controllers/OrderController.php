@@ -9,6 +9,8 @@ use App\Models\Product;
 use App\Models\ProductOrderHistory;
 use App\Models\PriceMaster;
 use App\Models\StoreProduct;
+use App\Models\Cart;
+use App\Models\HoldOrder;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
@@ -29,7 +31,7 @@ class OrderController extends Controller
     public function POSSaleSubmission(Request $request)
     {
         // Create Customer
-        $invoice_id = $this->generateInvoice();
+        $invoice_id = $request->invoiceId;
         $store_id = Auth::user()->store_id;
         $customer = Customer::where('contact_number', '=', $request->contact_number)->first();
         if (!$customer) {
@@ -67,27 +69,31 @@ class OrderController extends Controller
 
         if ($status['payment'] == 'success') {
             // Create Order
-            $order = Order::create([
-                'OrderDate' => now(),
-                'OrderID' => $invoice_id,
-                'CustomerID' => $customer->id,
-                'CustomerName' => $request->customer_name,
-                'CustomerPhone' => $request->contact_number,
-                'ShippingAddress' => $request->billing_address,
-                'BillingAddress' => $request->billing_address,
-                'OrderStatus' => 'completed',
-                'PaymentMethod' => $request->payment_method,
-                'PaymentStatus' => 'success',
-                'TotalAmount' => str_replace(',','',$cart['payable']),
-                'TaxAmount' => $cart['tax'],
-                'DiscountAmount' => $cart['discount_amount'],
-                'VehicleNumber' => $request->vehicle_number,
-                'tender_amount' => $request->tender_amount,
-                'change_amount' => $request->order_change_amount,
-                'card_digits' => $request->card_digits,
-                'CreatedBy' => Auth::id(),
-                'store_id' => $store_id,
-            ]);
+            $order = Order::updateOrCreate(
+                [
+                    'CreatedBy' => Auth::id(),
+                    'OrderID' => $invoice_id,
+                ],
+                [
+                    'OrderDate' => now(),
+                    'CustomerID' => $customer->id,
+                    'CustomerName' => $request->customer_name,
+                    'CustomerEmail' => $request->email,
+                    'CustomerPhone' => $request->contact_number,
+                    'ShippingAddress' => $request->billing_address,
+                    'BillingAddress' => $request->billing_address,
+                    'OrderStatus' => 'completed',
+                    'PaymentMethod' => $request->payment_method,
+                    'PaymentStatus' => 'success',
+                    'TotalAmount' => str_replace(',','',$cart['payable']),
+                    'TaxAmount' => $cart['tax'],
+                    'DiscountAmount' => $cart['discount_amount'],
+                    'VehicleNumber' => $request->vehicle_number,
+                    'tender_amount' => $request->tender_amount,
+                    'change_amount' => $request->order_change_amount,
+                    'card_digits' => $request->card_digits,
+                    'store_id' => $store_id,
+                ]);
 
             try {
                 $this->printerService->printOrderReceipt($order, $cart['products']);
@@ -99,7 +105,7 @@ class OrderController extends Controller
             foreach ($cart['products'] as $product) {
                 $productDetails = Product::find($product['id']);
                 $returnProductDetails[] = ["product_id" => $product['id'], "quantity" =>  $product['quantity']];
-                $order = ProductOrderHistory::create([
+                $productHistory = ProductOrderHistory::create([
                     'order_id' => $invoice_id,
                     'product_id' => $productDetails->id,
                     'name' => $productDetails->name,
@@ -136,7 +142,7 @@ class OrderController extends Controller
                 }
             }
 
-            $pdfUrl = route('gate-pass.view', ['orderId' => $order->order_id]);
+            $pdfUrl = route('gate-pass.view', ['orderId' => $order->OrderID]);
 
             return response()->json([
                 'success' => true,
@@ -215,25 +221,29 @@ class OrderController extends Controller
             'CreatedBy' => Auth::id(),
         ]);
 
-        foreach ($cart['products'] as $product) {
-            $productDetails = Product::find($product['id']);
-            $order = ProductOrderHistory::create([
-                'order_id' => $invoice_id,
-                'product_id' => $productDetails->id,
-                'name' => $productDetails->name,
-                'quantity_type' => $productDetails->quantity,
-                'quantity' => $product['quantity'],
-                'manufacture_date' => $productDetails->manufacture_date,
-                'lot_number' => $productDetails->lot_number,
-                'image' => $productDetails->image,
-                'status' => $productDetails->status,
-                'created_by' => Auth::id(),
-                'category_id' => $productDetails->category_id,
-                'price' => $product['price'],
-                'product_total_amount' => $product['product_total_amount']
-            ]);
-        }
+        // foreach ($cart['products'] as $product) {
+        //     $productDetails = Product::find($product['id']);
+        //     $orderProduuct = ProductOrderHistory::create([
+        //         'order_id' => $invoice_id,
+        //         'product_id' => $productDetails->id,
+        //         'name' => $productDetails->name,
+        //         'quantity_type' => $productDetails->quantity,
+        //         'quantity' => $product['quantity'],
+        //         'manufacture_date' => $productDetails->manufacture_date,
+        //         'lot_number' => $productDetails->lot_number,
+        //         'image' => $productDetails->image,
+        //         'status' => $productDetails->status,
+        //         'created_by' => Auth::id(),
+        //         'category_id' => $productDetails->category_id,
+        //         'price' => $product['price'],
+        //         'product_total_amount' => $product['product_total_amount']
+        //     ]);
+        // }
 
+        $holdOrder = HoldOrder::create([
+            'order_id' => $order->id,
+            'cart'     => json_encode($cart)
+        ]);
 
         return response()->json([
             'success' => true,
@@ -243,4 +253,38 @@ class OrderController extends Controller
             'orderDate' => now()
         ]);
     }
+
+    public function getHoldOrder(Request $request)
+    {
+        $orderId = $request->order_id;
+        session()->forget('cart');
+
+        $order = Order::where('OrderId', $orderId)->where('OrderStatus', 'onhold')->first();
+        if (!$order) {
+            return response()->json(['error' => 'Order not found or not on hold'], 404);
+        }
+
+        $holdOrder = HoldOrder::where('order_id', $order->id)->first();
+        if (!$holdOrder) {
+            return response()->json(['error' => 'Hold order not found'], 404);
+        }
+
+        $cart = json_decode($holdOrder->cart, true);
+
+        $cart['orderId']  = $orderId;
+        session()->put('cart', $cart);
+
+        $order->update([
+            'OrderStatus' => 'pending',
+        ]);
+
+        HoldOrder::where('order_id', $order->id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'cart' => $cart,
+            'message' => 'Cart updated successfully with hold order products. Hold order have been deleted.'
+        ]);
+    }
+
 }
