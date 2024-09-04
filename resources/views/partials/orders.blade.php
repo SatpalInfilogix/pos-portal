@@ -68,13 +68,12 @@
                                         </div>
                                     </div>
                                     <p class="p-4 mb-4">Customer need to recheck the product once</p>
-                                    {{-- <div class="btn-row d-flex align-items-center justify-content-between">
-                                        <a href="{{ route('sales.view',$onHoldOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
+                                    <div class="btn-row d-flex align-items-center justify-content-between">
+                                        {{-- <a href="{{ route('sales.view',$onHoldOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
-                                            class="btn btn-danger btn-icon flex-fill">Products</a>
-                                        <a href="javascript:void(0);"
-                                            class="btn btn-success btn-icon flex-fill">Print</a>
-                                    </div> --}}
+                                            class="btn btn-danger btn-icon flex-fill">Products</a> --}}
+                                        <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="{{ $onHoldOrder->OrderID }}">Place Order</a>
+                                    </div>
                                 </div>
                                 @empty
                                     <div class="record-not-found">

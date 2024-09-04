@@ -10,9 +10,22 @@ use App\Models\Product;
 use App\Models\PriceMaster;
 use App\Models\Cart;
 use App\Models\Discount;
+use App\Models\Order;
 
 class PosCartController extends Controller
 {
+    public function generateInvoice()
+    {
+        $latestOrder = Order::orderBy('id', 'desc')->first();
+        if (!$latestOrder) {
+            return 'INV-000001';
+        }
+
+        $latestOrderId = $latestOrder->OrderID;
+        $number = intval(substr($latestOrderId, 4)) + 1;
+        return 'INV-' . str_pad($number, 6, '0', STR_PAD_LEFT);
+    }
+
     public function addToCart(Request $request)
     {
         $request->validate([
@@ -109,11 +122,19 @@ class PosCartController extends Controller
 
         // echo"<pre>"; print_R($cart); die();
         // Store updated cart in session
+        if (isset($cart['orderId'])) {
+            $orderId = $cart['orderId'];
+        } else {
+            $orderId = $this->generateInvoice();
+            $cart['orderId'] = $orderId;
+        }
+
         session()->put('cart', $cart);
         return response()->json([
             'success'=>true,
             'message'=>'Product Added to Cart', 
-            'cart' => $cart, 
+            'cart' => $cart,
+            'orderId' => $cart['orderId'],
             'count'=> count($cart['products'])
         ]);
     }

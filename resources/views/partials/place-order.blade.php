@@ -7,7 +7,15 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">INVOICE ID : <span id="invoice-id">{{ $invoiceId ?? '' }}</span></h5>
+                @php
+                    $cart = session('cart', []);
+                    if (isset($cart['orderId'])) {
+                        $invoice = $cart['orderId'];
+                    } else {
+                        $invoice = $invoiceId;
+                    }
+                @endphp
+                <h5 class="modal-title">INVOICE ID : <span class="invoice-id" id="invoiceId">{{ $invoice ?? '' }}</span></h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">×</span>
                 </button>
@@ -15,6 +23,7 @@
             <div class="modal-body">
                 <form id="place-order" method="POST">
                     <div class="row">
+                    <input type="hidden" name="invoice_id" class="invoiceId" value="{{ $invoice }}">
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
                                 <label>Customer Name <small style="color:red;">*</small></label>
