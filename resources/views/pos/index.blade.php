@@ -784,6 +784,10 @@
                             window.open(gatePassUrl, '_blank');
                         }
 
+                        let date = new Date(response.orderDate);
+                        let options = { day: '2-digit', month: 'long', year: 'numeric' };
+                        let formattedDate = date.toLocaleDateString('en-GB', options); // Use 'en-GB' for day month, year format
+
                         // Delay to ensure orderUrl opens first
                         setTimeout(openGatePass, 2000);
 
@@ -814,7 +818,8 @@
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">${ response.orderDate }</td>
+                                                    
+                                                    <td class="text">${ formattedDate }</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -848,6 +853,9 @@
                 success: function(response) {
                     console.log(response.orderId);
                     if (response.success) {
+                        let date = new Date(response.orderDate);
+                        let options = { day: '2-digit', month: 'long', year: 'numeric' };
+                        let formattedDate = date.toLocaleDateString('en-GB', options); // Use 'en-GB' for day month, year format
 
                         $("#hold-order").modal("hide");
                         Swal.fire({
@@ -885,13 +893,13 @@
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">${ response.orderDate }</td>
+                                                    <td class="text">${ formattedDate }</td>
                                                 </tr>
                                             </table>
                                         </div>
                                         <p class="p-4 mb-4">Customer need to recheck the product once</p>
                                         <div class="btn-row d-flex align-items-center justify-content-between">
-                                            <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="${response.orderId}">Place Order</a>
+                                            <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="${response.orderId}">Continue</a>
                                         </div>
                                     </div>
                                 </div>`;
