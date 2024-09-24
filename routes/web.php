@@ -33,6 +33,7 @@ use App\Http\Controllers\PosDashboardController;
 use App\Http\Controllers\PosCartController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\PosProfileController;
+use App\Http\Controllers\RoleController;
 /* End Frontend Controller Import */
 /* Controller Imports ends Here */
 
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             'stores' => StoreController::class,
             'units' => AdminUnitController::class,
             'return-stock' => ReturnStockController::class,
+            'roles' => RoleController::class
         ]);
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');

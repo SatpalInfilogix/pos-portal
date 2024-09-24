@@ -366,11 +366,16 @@
                 <div class="modal-body p-4">
                     <form id="tenderFormLogin">
                         <div class="row">
-                            <input name="collect_tender_amount" type="text" placeholder="Please enter tender amount" class="form-control">
-                            <small></small>
+                            <div class="col-12">
+                                <input name="collect_tender_amount" type="number"
+                                    placeholder="Please enter tender amount" class="form-control">
+                                    <div class="tender text-danger"></div>
+                            </div>
                         </div>
-                        <div class="row m-2">
-                            <button type="submit" class="btn btn-primary">Submit & Login</button>
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Submit & Continue</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -432,7 +437,7 @@
                 var userRole = "{{ $authUser }}";
                 var amountDuringLogin = @json($amountDuringLogin);
 
-                if ((userRole === 'Manager' || userRole === 'Sales Person') && amountDuringLogin === null) {
+                if ((userRole === 'Sales Person') && amountDuringLogin === null) {
                     $('#tender-modal').modal({
                         backdrop: 'static',
                         keyboard: false
@@ -444,6 +449,11 @@
             $('#tenderFormLogin').on('submit', function(event) {
                 event.preventDefault();
                 var tenderAmount = $(this).find('input[name="collect_tender_amount"]').val();
+                $(this).find('.tender').text('');
+                if (!tenderAmount || isNaN(tenderAmount)) {
+                    $(this).find('.tender').text('Please enter a valid tender amount greater than 0.');
+                    return;
+                }
 
                 $.ajax({
                     url: '{{ route('submit-tender') }}',

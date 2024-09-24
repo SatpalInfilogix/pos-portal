@@ -139,7 +139,7 @@
                                 Settings
                             </a>
                             <hr class="m-0">
-                            @hasanyrole('Manager|Sales Person')
+                            @hasanyrole('Sales Person')
                             <a class="dropdown-item logout pb-0" data-bs-toggle="modal" data-bs-target="#tender-declaration-modal">
                                 <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
                                 Logout
