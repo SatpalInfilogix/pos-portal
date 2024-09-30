@@ -155,6 +155,10 @@
                                     <i data-feather="shield"></i>
                                     <span>Roles & Permissions</span>
                                 </a>
+                                <a href="{{ route('roles.index') }}">
+                                    <i data-feather="shield"></i>
+                                    <span>Roles</span>
+                                </a>
                             </li>
                         @endcanany
                     </ul>

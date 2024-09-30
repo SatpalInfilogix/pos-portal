@@ -17,11 +17,19 @@
             </div>
         @endif
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label class="form-label">Date</label>
-                <input type="text" name="date" id="date" class="form-control">
+                <input type="text" name="date" id="date" class="form-control" placeholder="Select Date">
             </div>
-            
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Select User</label>
+                <select name="user_id" id="user_id" class="form-control">
+                    <option value="" selected disabled>Select User</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
         <div class="card table-list-card">
             <div class="card-body">
@@ -67,6 +75,7 @@
                     data: function(d) {
                         d._token = "{{ csrf_token() }}";
                         d.date = $('#date').val();
+                        d.user_id = $('#user_id').val();
                         return d;
                     }
                 },
@@ -100,6 +109,10 @@
             });
 
             $('#date').on('change', function() {
+                usersTable.ajax.reload(); // Reload the table data
+            });
+
+            $('#user_id').on('change', function() {
                 usersTable.ajax.reload(); // Reload the table data
             });
         });

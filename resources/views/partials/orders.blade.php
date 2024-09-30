@@ -72,7 +72,7 @@
                                         {{-- <a href="{{ route('sales.view',$onHoldOrder->OrderID) }}" class="btn btn-info btn-icon flex-fill">Open</a>
                                         <a href="javascript:void(0);"
                                             class="btn btn-danger btn-icon flex-fill">Products</a> --}}
-                                        <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="{{ $onHoldOrder->OrderID }}">Place Order</a>
+                                        <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="{{ $onHoldOrder->OrderID }}">Continue</a>
                                     </div>
                                 </div>
                                 @empty

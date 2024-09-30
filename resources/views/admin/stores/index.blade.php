@@ -59,11 +59,11 @@
                                                         <i data-feather="edit" class="feather-edit"></i>
                                                     </a>
                                                 @endcanany
-                                                @canany(['delete stores'])
+                                                {{-- @canany(['delete stores'])
                                                     <a class="me-2 p-2 delete-btn" href="#" data-id="{{ $store->id }}">
                                                         <i class="fa fa-trash"></i>
                                                     </a>
-                                                @endcanany
+                                                @endcanany --}}
                                             </div>
                                         </td>
                                     @endcanany

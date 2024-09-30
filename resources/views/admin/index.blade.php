@@ -287,7 +287,7 @@
                 var userRole = "{{ $authUser }}";
                 var amountDuringLogin = @json($amountDuringLogin);
 
-                if ((userRole === 'Manager' || userRole === 'Sales Person') && amountDuringLogin === null) {
+                if ((userRole === 'Sales Person') && amountDuringLogin === null) {
                     $('#tender-modal').modal({
                         backdrop: 'static',
                         keyboard: false

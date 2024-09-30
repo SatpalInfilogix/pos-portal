@@ -31,9 +31,9 @@ else{
 
     <ul class="nav user-menu">
         <li class="nav-item nav-searchinputs"></li>
-
+        @canany(['pos'])
         <a href="{{ route('pos-dashboard') }}" target="_blank"><strong>POS Dashboard</strong></a>
-
+        @endcanany
         @if (auth()->user()->profile_image)
             @php
                 $profile_picture = asset(auth()->user()->profile_image);
@@ -66,7 +66,7 @@ else{
                         Settings
                     </a>
                     <hr class="m-0">
-                        @hasanyrole('Manager|Sales Person')
+                        @hasanyrole('Sales Person')
                         <a class="dropdown-item logout pb-0" data-bs-toggle="modal" data-bs-target="#tender-declaration-modal">
                             <img src="{{ asset('assets/img/icons/log-out.svg') }}" class="me-2" alt="">
                             Logout

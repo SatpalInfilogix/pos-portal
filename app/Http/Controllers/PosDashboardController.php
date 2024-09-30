@@ -11,12 +11,24 @@ use App\Models\Discount;
 use App\Models\Customer;
 use App\Models\StoreProduct;
 use App\Models\UserActivity;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class PosDashboardController extends Controller
 {
     public function index(Request $request)
     {
+        $todayDate = Carbon::now();
+        $newPrices = PriceMaster::where('status', 0)->where('start_date', '<=', $todayDate)->get();
+
+        foreach ($newPrices as $newPrice) {
+            $newPrice->update([
+                'price' => $newPrice->new_price,
+                'new_price' => null,
+                'start_date' => null
+            ]);
+        }
+
         $userActivity = UserActivity::where('user_id', Auth::user()->id)->latest()->first();
         $categories = Category::where('status', 0)->withCount(['products' => function ($query) {
                         $query->where('status', 0); // Condition for products status

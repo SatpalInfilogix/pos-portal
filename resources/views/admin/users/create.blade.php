@@ -103,6 +103,11 @@
                     value.length >= 8;      // Minimum length of 8 characters
             }, "Password must be at least 8 characters long and include a mix of letters, numbers, and special characters.");
 
+            $.validator.addMethod("storeRequiredIfRole", function(value, element) {
+                const selectedRole = $("#role").val(); // Adjust selector based on your HTML structure
+                return (selectedRole !== "Manager" && selectedRole !== "Sales Person") || value.trim() !== "";
+            }, "Please select store.");
+
             $("#user-form").validate({
                 rules: {
                     first_name: "required",
@@ -110,7 +115,13 @@
                     email: "required",
                     phone_number: "required",
                     role: "required",
-                    store_id: "required",
+                    store_id: {
+                        required: function(element) {
+                            const selectedRole = $("#role").val();
+                            return selectedRole === "Manager" || selectedRole === "Sales Person";
+                        },
+                        storeRequiredIfRole: true // Use the custom validation method
+                    },
                     password: {
                         required: true,
                         complexPassword: true // Use the custom validation method
@@ -122,7 +133,10 @@
                     email: "Please enter the email",
                     phone_number: "Please enter phone number",
                     role: "Please select role",
-                    store_id: "Please select store",
+                    store_id: {
+                        required: "Store ID is required.",
+                        storeRequiredIfRole: "Please select store."
+                    },
                     password: {
                         required: "Please enter a password",
                         complexPassword: "Password must be at least 8 characters long and include a mix of letters, numbers, and special characters."

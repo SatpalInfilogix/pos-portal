@@ -37,8 +37,10 @@ class LoginController extends Controller
 
             if ($user->hasPermissionTo('backend')) {
                 return redirect()->route('backend-dashboard');
-            } else {
+            } else if ($user->hasPermissionTo('pos')){
                 return redirect()->route('pos-dashboard');
+            } else{
+                return redirect()->back()->with('error', 'You do not have permission to login.');
             }
         } else {
             return redirect()->back()->with('error', 'Invalid Credentials');

@@ -27,7 +27,7 @@
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
                                 <label>Customer Name <small style="color:red;">*</small></label>
-                                <select name="order_customer_id" class="form-control chosen-select" required>
+                                <select name="order_customer_id" class="form-control chosen-select">
                                     <option></option>
                                     @foreach ($customers as $customer)
                                         <option value="{{ $customer->customer_name }}"
@@ -50,13 +50,13 @@
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
                                 <label>Vehicle No. <small style="color:red;">*</small></label>
-                                <input type="text" name="vehicle_number" class="form-control" required>
+                                <input type="text" name="vehicle_number" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
                                 <label>Contact No. <small style="color:red;">*</small></label>
-                                <input type="number" name="contact_number" class="form-control" required>
+                                <input type="number" name="contact_number" class="form-control">
                             </div>
                         </div>
                         <div class="col-lg-6 col-sm-12 col-12">
@@ -68,7 +68,7 @@
                         <div class="col-lg-6 col-sm-12 col-12">
                             <div class="input-blocks">
                                 <label>Billing Address <small style="color:red;">*</small></label>
-                                <textarea name="billing_address" required></textarea>
+                                <textarea name="billing_address"></textarea>
                             </div>
                         </div>
 

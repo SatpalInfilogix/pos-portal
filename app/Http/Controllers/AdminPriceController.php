@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Gate;
 use App\Exports\ProductQuantitesExport;
 use App\Exports\ProductPriceExport;
+use Carbon\Carbon;
 
 class AdminPriceController extends Controller
 {
@@ -20,6 +21,17 @@ class AdminPriceController extends Controller
     {
         if (!Gate::allows('view prices')) {
             abort(403);
+        }
+
+        $todayDate = Carbon::now();
+        $newPrices = PriceMaster::where('status', 0)->where('start_date', '<=', $todayDate)->get();
+
+        foreach ($newPrices as $newPrice) {
+            $newPrice->update([
+                'price' => $newPrice->new_price,
+                'new_price' => null,
+                'start_date' => null
+            ]);
         }
 
         $prices = PriceMaster::with('product')->latest()->get();
@@ -143,6 +155,8 @@ class AdminPriceController extends Controller
             'quantity_type'     => $request->unit_id ?? 0,
             'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
+            'new_price'         => $request->new_price,
+            'start_date'        => $request->start_date
         ]);
 
         return redirect()->route('prices.index')->with('success', 'Price created successfully.');      
@@ -173,6 +187,8 @@ class AdminPriceController extends Controller
             'quantity_type'     => $request->unit_id ?? NULL,
             'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
+            'new_price'         => $request->new_price,
+            'start_date'        => $request->start_date
         ]);
 
         return redirect()->route('prices.index')->with('success', 'Price Updated successfully.');
