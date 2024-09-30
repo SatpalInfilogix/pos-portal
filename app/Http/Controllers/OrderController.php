@@ -34,21 +34,23 @@ class OrderController extends Controller
         $invoice_id = $request->invoiceId;
         $store_id = Auth::user()->store_id;
         $customer = Customer::where('contact_number', '=', $request->contact_number)->first();
-        if (!$customer) {
-            $customer = Customer::create([
-                'customer_name' => $request->customer_name,
-                'customer_email' => $request->email,
-                'contact_number' => $request->contact_number,
-                'alternate_number' => $request->alternate_number,
-                'billing_address' => $request->billing_address,
-                'billing_address_pin_code' => $request->billing_address_pin_code,
-                'created_by' => Auth::id(),
-            ]);
-        } else {
-            $customer->customer_email = $request->email;
-            $customer->billing_address = $request->billing_address;
-            $customer->billing_address_pin_code = $request->billing_address_pin_code;
-            $customer->save();
+        if ($request->email && $request->contact_number) {
+            if (!$customer) {
+                $customer = Customer::create([
+                    'customer_name' => $request->customer_name,
+                    'customer_email' => $request->email,
+                    'contact_number' => $request->contact_number,
+                    'alternate_number' => $request->alternate_number,
+                    'billing_address' => $request->billing_address,
+                    'billing_address_pin_code' => $request->billing_address_pin_code,
+                    'created_by' => Auth::id(),
+                ]);
+            } else {
+                $customer->customer_email = $request->email;
+                $customer->billing_address = $request->billing_address;
+                $customer->billing_address_pin_code = $request->billing_address_pin_code;
+                $customer->save();
+            }
         }
         $cart  = session('cart');
         $customerDetails = $request;
@@ -66,7 +68,6 @@ class OrderController extends Controller
         }
 
         // Payment Success
-
         if ($status['payment'] == 'success') {
             // Create Order
             $order = Order::updateOrCreate(
