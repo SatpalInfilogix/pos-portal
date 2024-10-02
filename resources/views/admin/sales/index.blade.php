@@ -11,6 +11,7 @@
             </div>
             <div class="left-side">
                 <!-- Button on the left -->
+                <a href="{{  route('sales.print') }}" class="btn btn-primary">Download Sales PDF</a>
                 <button class="btn btn-primary" id="report-download">Download Item Wise Report</button>
                 <button class="btn btn-primary" id="pdf-download">Download Sales Report</button>
             </div>

@@ -68,7 +68,12 @@ class ProductsImport implements ToModel, WithHeadingRow
             $nextNumericPart = str_pad((int)$numericPart + 1, 6, '0', STR_PAD_LEFT);
             $product_code = $category_initials . $product_initials . $nextNumericPart;
         }*/
-        $product_code = $category_initials . $product_initials . $this->generateProductCode();
+        $productCodeCheck = Product::where('name', $row['name'])->first();
+        if($productCodeCheck) {
+            $product_code = $productCodeCheck->product_code;
+        } else {
+            $product_code = $category_initials . $product_initials . $this->generateProductCode();
+        }
         
         $image = '';
         if($row['image']){

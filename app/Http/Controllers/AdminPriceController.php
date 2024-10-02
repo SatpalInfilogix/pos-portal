@@ -224,10 +224,6 @@ class AdminPriceController extends Controller
 
     public function import_price_masters(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:csv,xlsx',
-        ]);
-
         $import = new PriceMasterImport();
         Excel::import($import, $request->file('file'));
 

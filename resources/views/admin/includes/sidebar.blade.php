@@ -166,7 +166,7 @@
                         ])>
                             <a href="{{ route('admin.settings') }}">
                                 <i data-feather="settings"></i>
-                                <span>Setting</span>
+                                <span>Settings</span>
                             </a>
                         </li>
                     </ul>

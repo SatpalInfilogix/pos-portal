@@ -77,7 +77,7 @@ class OrderController extends Controller
                 ],
                 [
                     'OrderDate' => now(),
-                    'CustomerID' => $customer->id,
+                    'CustomerID' => $customer->id ?? NULL,
                     'CustomerName' => $request->customer_name,
                     'CustomerEmail' => $request->email,
                     'CustomerPhone' => $request->contact_number,

@@ -157,7 +157,7 @@
                                                 </h6>
                                                 <div class="d-flex align-items-center justify-content-between price">
                                                     <span><span id="up-quantity">{{ $product->quantity }}</span> Pcs</span>
-                                                    <p>${{ number_format(optional($product)->price, 2) }}</p>
+                                                    <p>${{ number_format((float) optional($product)->price, 2) }}</p>
                                                 </div>
                                                 <div class="input-group mt-2">
                                                     <input type="hidden" name="product_id" value="{{ $product->id }}">

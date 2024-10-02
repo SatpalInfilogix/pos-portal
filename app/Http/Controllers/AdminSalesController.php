@@ -185,36 +185,36 @@ class AdminSalesController extends Controller
         return $query->get();
     }
 
-    // public function downloadItemWiseReport(Request $request)
-    // {
-    //     $storeId = Auth::user()->store_id ?: $request->input('store_id');
-    //     $startDate = $request->input('start_date');
-    //     $endDate = $request->input('end_date');
-    //     $yearly = $request->input('yearly');
+    public function downloadItemWiseReportPrint(Request $request)
+    {
+        $storeId = Auth::user()->store_id ?: $request->input('store_id');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $yearly = $request->input('yearly');
 
-    //     $sales = $this->getSalesDetailsData($startDate, $endDate, $yearly, $storeId);
-    //     foreach ($sales as $key => $order) {
-    //         $totalQuantity = 0;
-    //         $totalAmount = 0;
-    //         if (isset($order['product_details']) && is_array($order['product_details'])) {
-    //             foreach ($order['product_details'] as $product) {
-    //                 $quantity = isset($product['quantity']) ? (float)$product['quantity'] : 0;
-    //                 $amount = isset($product['product_total_amount']) ? (float)$product['product_total_amount'] : 0.0;
+        $sales = $this->getSalesDetailsData($startDate, $endDate, $yearly, $storeId);
+        foreach ($sales as $key => $order) {
+            $totalQuantity = 0;
+            $totalAmount = 0;
+            if (isset($order['product_details']) && is_array($order['product_details'])) {
+                foreach ($order['product_details'] as $product) {
+                    $quantity = isset($product['quantity']) ? (float)$product['quantity'] : 0;
+                    $amount = isset($product['product_total_amount']) ? (float)$product['product_total_amount'] : 0.0;
 
-    //                 $totalQuantity += $quantity;
-    //                 $totalAmount += $amount;
-    //             }
-    //         }
-    //         $store = Store::where('id', $order['store_id'])->first();
-    //         $sales[$key]['store_name'] = $store ? $store->name : null;
-    //         $sales[$key]['productTotalAmount'] = $totalAmount;
-    //         $sales[$key]['productTotalQuantity'] = $totalQuantity;
-    //     }
+                    $totalQuantity += $quantity;
+                    $totalAmount += $amount;
+                }
+            }
+            $store = Store::where('id', $order['store_id'])->first();
+            $sales[$key]['store_name'] = $store ? $store->name : null;
+            $sales[$key]['productTotalAmount'] = $totalAmount;
+            $sales[$key]['productTotalQuantity'] = $totalQuantity;
+        }
 
-    //     $pdf = \PDF::loadView('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
-    //     return $pdf->download('sales-report.pdf');
-    //     // return view('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
-    // }
+        $pdf = \PDF::loadView('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
+        return $pdf->download('sales-report.pdf');
+        // return view('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
+    }
 
     public function downloadItemWiseReport(Request $request)
     {

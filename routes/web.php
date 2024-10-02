@@ -218,5 +218,6 @@ Route::get('/products/get-latest-code-number', [AdminProductController::class, '
 Route::get('/sales-details-download', [AdminSalesController::class, 'downloadSalesDetail'])->name('sales-details-download');
 Route::get('/item-wise-report-download',[AdminSalesController::class, 'downloadItemWiseReport'])->name('item-wise-report-download');
 Route::get('/download-barcodes', [AdminProductController::class, 'downloadBarcodes'])->name('download.barcodes');
+Route::get('/sales/print', [AdminSalesController::class, 'downloadItemWiseReportPrint'])->name('sales.print');
 
 Route::post('/get-hold-order', [OrderController::class, 'getHoldOrder'])->name('get-hold-order');

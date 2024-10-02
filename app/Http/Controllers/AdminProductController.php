@@ -187,12 +187,11 @@ class AdminProductController extends Controller
     }
 
     public function import_products(Request $request){
-        $request->validate([
-            'file' => 'required|mimes:csv,xlsx',
-        ]);
+        // $request->validate([
+        //     'file' => 'required|mimes:csv,xlsx',
+        // ]);
 
-        Excel::import(new ProductsImport, $request->file('file'));
-        
+        $excel =  Excel::import(new ProductsImport, $request->file('file'));
         return redirect()->route('products.index')->with('success', 'Products imported successfully.');
     }
 

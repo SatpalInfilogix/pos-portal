@@ -29,7 +29,7 @@ class PriceMasterImport implements ToModel, WithHeadingRow
 
         if ($product) {
             $quantity = $this->sanitizeQuantity($row['quantites'] ?? 0);
-            $price = $row['price'] ?? null;
+            $price = isset($row['price']) ? $this->sanitizePrice($row['price']) : null;
             $manufacture_date = $row['manufacture_date'] ?? null;
             
             $isValidManufactureDate = false;
@@ -88,5 +88,10 @@ class PriceMasterImport implements ToModel, WithHeadingRow
         $roundedQuantity = round($floatQuantity);
 
         return $roundedQuantity > 0 ? (int)$roundedQuantity : 0;
+    }
+
+    private function sanitizePrice($input)
+    {
+        return preg_replace('/[^\d.]/', '', $input);
     }
 }
