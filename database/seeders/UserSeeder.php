@@ -30,7 +30,7 @@ class UserSeeder extends Seeder
         $superAdmin->assignRole($superAdminRole);
 
         // Create admin user
-        $admin = User::create([
+        /* $admin = User::create([
             'first_name' => 'Admin',
             'last_name' => '123',
             'email' => 'admin@gmail.com',
@@ -77,6 +77,6 @@ class UserSeeder extends Seeder
             'remember_token' => Str::random(10),
             'store_id' => 2
         ]);
-        $salesperson->assignRole($salesPersonRole);
+        $salesperson->assignRole($salesPersonRole); */
     }
 }

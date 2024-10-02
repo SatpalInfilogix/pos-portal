@@ -161,6 +161,14 @@
                                 </a>
                             </li>
                         @endcanany
+                        <li @class([
+                            'active' => Request::is('admin/settings'),
+                        ])>
+                            <a href="{{ route('admin.settings') }}">
+                                <i data-feather="settings"></i>
+                                <span>Setting</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('quantity_type')->nullable();
             $table->string('quantity')->nullable();
             $table->string('price')->nullable();
+            $table->date('manufacture_date')->nullable();
             $table->boolean('status')->default(0);
             $table->unsignedBigInteger('created_by');
             $table->timestamps();

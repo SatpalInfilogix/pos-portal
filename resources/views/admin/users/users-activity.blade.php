@@ -9,6 +9,17 @@
                     <h6>Manage your users Activities</h6>
                 </div>
             </div>
+
+            <div class="page-btn">
+                <a href="#" id="export-users-activities" class="btn btn-added">
+                    <i data-feather="download" class="me-2"></i>
+                    Download Users Activities CSV
+                </a>
+                {{-- <a href="{{ route('export-users-activities') }}" class="btn btn-added">
+                    <i data-feather="download" class="me-2"></i>
+                    Download Users Activities CSV
+                </a> --}}
+            </div>
         </div>
 
         @if (session('success'))
@@ -16,6 +27,7 @@
                 {{ session('success') }}
             </div>
         @endif
+
         <div class="row">
             <div class="col-md-4 mb-3">
                 <label class="form-label">Date</label>
@@ -31,6 +43,7 @@
                 </select>
             </div>
         </div>
+
         <div class="card table-list-card">
             <div class="card-body">
                 <div class="table-responsive p-0 m-0">
@@ -52,7 +65,6 @@
     </div>
 @endsection
 
-
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script>
@@ -62,6 +74,14 @@
                 todayHighlight: true,
                 autoclose: true,
                 orientation: 'bottom'
+            });
+
+            $('#export-users-activities').on('click', function(e) {
+                e.preventDefault();
+                let date = $('#date').val();
+                let userId = $('#user_id').val();
+                let url = "{{ route('export-users-activities') }}?date=" + date + "&user_id=" + userId;
+                window.location.href = url; // Trigger the download
             });
         });
 

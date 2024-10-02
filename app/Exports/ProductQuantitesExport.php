@@ -11,13 +11,17 @@ class ProductQuantitesExport implements FromCollection, WithHeadings, WithCustom
 {
     public function collection()
     {
-        $products = Product::latest()->get();
+        $products = Product::with('price')->latest()->get();
         $data = [];
         
         foreach ($products as $product) {
+            $manufacture_date =  $product->price ? $product->price->manufacture_date: '';
+
             $data[] = [
                 'product_code' => $product->product_code,
                 'quantites' => '',
+                'manufacture_date' => $manufacture_date
+
             ];
         }
 
@@ -29,6 +33,7 @@ class ProductQuantitesExport implements FromCollection, WithHeadings, WithCustom
         return [
             'product_code',
             'quantites',
+            'manufacture_date'
         ];
     }
 

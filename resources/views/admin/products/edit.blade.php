@@ -69,7 +69,7 @@
                             // }
                         ?>
                         <div class="row mb-3">
-                            <div class="col-md-6 add-product">
+                            <div class="add-product">
                                 <label class="form-label">Unit</label>
                                 {{-- <select class="select2-multiple form-control" name="units[]" multiple="multiple"id="select2Multiple"> --}}
                                 <select class="select2-multiple form-control" name="units" id="select2Multiple">
@@ -102,10 +102,6 @@
                                         @endforeach
                                     @endif
                                 </div> --}}
-                            </div>
-                            <div class="col-md-6 add-product">
-                                <label class="form-label">Manufacture Date</label>
-                                <input type="text" name="manufacture_date" id="manufacture_date" class="form-control" value="{{ old('manufacture_date', $product->manufacture_date) }}">
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -224,29 +220,18 @@
             });
         }
 
-        // Datepicker initialization
-        $('#manufacture_date').datepicker({
-            format: 'yyyy-mm-dd', // specify the format you want
-            todayHighlight: true,
-            autoclose: true,
-            endDate: new Date(), // Set the end date to today
-            orientation: 'bottom'
-        });
-
         // Form validation
         $("#product-form").validate({
             rules: {
                 category_id: "required",
                 product_name: "required",
                 product_code: "required",
-                manufacture_date: "required",
                 units: "required"
             },
             messages: {
                 category_id: "Please enter category",
                 product_name: "Please enter the product name",
                 product_code: "Please enter the product code",
-                manufacture_date: "Please enter the manufacture date",
                 units: "Please enter the unit"
             },
             errorClass: "invalid-feedback",

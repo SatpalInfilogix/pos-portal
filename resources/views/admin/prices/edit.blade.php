@@ -83,10 +83,14 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3 add-product">
                                     <label class="form-label">Price</label></label>
                                     <input type="number" name="price" id="price" class="form-control"
                                         value="{{ $price->price }}">
+                                </div>
+                                <div class="col-md-6 mb-3 add-product">
+                                    <label class="form-label">Manufacture Date</label>
+                                    <input type="text" name="manufacture_date" id="manufacture_date" class="form-control" value="{{ $price->manufacture_date }}">
                                 </div>
                             </div>
                             <div class="row">
@@ -126,6 +130,15 @@
                 format: 'yyyy-mm-dd',
                 startDate: date,
                 autoclose: true
+            });
+
+             // Datepicker initialization
+            $('#manufacture_date').datepicker({
+                format: 'yyyy-mm-dd', // specify the format you want
+                todayHighlight: true,
+                autoclose: true,
+                endDate: new Date(), // Set the end date to today
+                orientation: 'bottom'
             });
         });
         function updateProductSearch(keyword) {
@@ -229,6 +242,7 @@
             $("#price-form").validate({
                 rules: {
                     product: "required",
+                    manufacture_date: "required",
                     quantityValue: {
                         required: true,
                         digits: true
@@ -252,6 +266,7 @@
                 },
                 messages: {
                     product: "Please enter the product",
+                    manufacture_date: "Please enter the manufacture date",
                     quantityValue: {
                         required: "Please enter the quantity",
                         digits: "Please enter a valid number",

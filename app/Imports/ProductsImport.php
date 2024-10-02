@@ -22,7 +22,7 @@ class ProductsImport implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         $category_name = $row['category_name'];
-        $category_image = $row['category_image'] ?? '';
+        // $category_image = $row['category_image'] ?? '';
 
         if (empty($category_name)) {
             return null;
@@ -32,7 +32,7 @@ class ProductsImport implements ToModel, WithHeadingRow
             $category = Category::firstOrCreate(
                 ['name' => $category_name],
                 [
-                    'image' => $this->uploadImageFromUrl('categories', $category_image),
+                    // 'image' => $this->uploadImageFromUrl('categories', $category_image),
                     'created_by' => Auth::id(),
                 ]
             );
@@ -43,16 +43,9 @@ class ProductsImport implements ToModel, WithHeadingRow
 
         $product_units = null;
         if(isset($row['unit'])){
-            // $product_units = explode(',', $row['unit']);
-            // $unitIds = [];
-            // foreach($product_units as $key => $unitValue) {
-            //     $unitValue = trim($unitValue);
-                $unitData = Unit::firstOrCreate(
-                    ['name' => $row['unit']]
-                );
-
-                // $unitIds = $unitData->id;
-            // }
+            $unitData = Unit::firstOrCreate(
+                ['name' => $row['unit']]
+            );
             $product_units = $unitData->id;
         }
 
@@ -77,47 +70,49 @@ class ProductsImport implements ToModel, WithHeadingRow
         }*/
         $product_code = $category_initials . $product_initials . $this->generateProductCode();
         
+        $image = '';
+        if($row['image']){
+            $image = $this->uploadImageFromUrl('products', $row['image']);
+        }
         $product = Product::updateOrCreate(
             ['name' => $row['name']],
             [
                 'units' => $product_units,
                 'product_code' => $product_code,
-                'manufacture_date' => $row['manufacture_date'],
                 'category_id' => $category->id,
-                'image' => $this->uploadImageFromUrl('products', $row['image']),
+                'image' => $image,
                 'created_by' => Auth::id(),
-                'is_active'  => $row['is_active'] ?? 1
+                // 'is_active'  => $row['is_active'] ?? 1
             ]
         );        
 
         $product_id = $product->id;
 
-        return PriceMaster::updateOrCreate(
-            [
-                'product_id' => $product_id
-            ],
-            [
-                'quantity'   => $row['quantity_count'],
-                'quantity_type' => $row['quantity_type'],
-                'price'        => $row['price'],
-                'created_by'   => Auth::id(),
-            ]
-        );
+        // return PriceMaster::updateOrCreate(
+        //     [
+        //         'product_id' => $product_id
+        //     ],
+        //     [
+        //         'quantity'   => $row['quantity_count'],
+        //         'quantity_type' => $row['quantity_type'],
+        //         'price'        => $row['price'],
+        //         'created_by'   => Auth::id(),
+        //     ]
+        // );
     }
 
     // Helper function to get initials from a name
     private function getInitials($name)
     {
+        $name = preg_replace('/[^\w\s]/', '', $name);
         $words = explode(' ', $name);
         $initials = '';
-
         foreach ($words as $word) {
             $word = trim($word);
             if (strlen($word) > 0) {
-                $initials .= strtoupper(substr($word, 0, 1));
+                $initials .= strtoupper(substr($word, 0, 1)); // Take the first character
             }
         }
-
         return $initials;
     }
     public function generateProductCode()
@@ -128,7 +123,7 @@ class ProductsImport implements ToModel, WithHeadingRow
         }
 
         $latestOrderId = $latestOrder->product_code;
-        $number = intval(substr($latestOrderId, 4)) + 1;
+        $number = intval(substr($latestOrderId, -6)) + 1;
         return str_pad($number, 6, '0', STR_PAD_LEFT);
     }
 

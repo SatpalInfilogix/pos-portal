@@ -11,13 +11,13 @@ else{
 <div class="header">
     <div class="header-left active">
         <a href="{{ route('backend-dashboard') }}" class="logo logo-normal">
-            <img src="@if($logo_url) {{env('BASE_IMAGE_PATH')}}{{ $logo_url }} @else {{ asset('assets/img/logo.png') }} @endif" alt>
+            <img src="{{ $logo_url ? asset($logo_url) : asset('assets/img/logo.png') }}" alt="Logo">
         </a>
         <a href="{{ route('backend-dashboard') }}" class="logo logo-white">
-            <img src="@if($logo_url) {{env('BASE_IMAGE_PATH')}}{{ $logo_url }} @else {{ asset('assets/img/logo-white.png') }} @endif" alt>
+            <img src="{{ $logo_url ? asset($logo_url) : asset('assets/img/logo-white.png') }}" alt ="Logo">
         </a>
         <a href="{{ route('backend-dashboard') }}" class="logo-small">
-            <img src="@if($logo_url) {{env('BASE_IMAGE_PATH')}}{{ $logo_url }} @else {{ asset('assets/img/logo-small.png') }} @endif" alt>
+            <img src="{{ $logo_url ? asset($logo_url) : asset('assets/img/logo-small.png') }}" alt="Logo">
         </a>
     </div>
 
@@ -61,10 +61,10 @@ else{
                         <i class="me-2" data-feather="user"></i>
                         My Profile
                     </a>
-                    <a class="dropdown-item" href="{{ route('admin.settings') }}">
+                    {{-- <a class="dropdown-item" href="{{ route('admin.settings') }}">
                         <i class="me-2" data-feather="settings"></i>
                         Settings
-                    </a>
+                    </a> --}}
                     <hr class="m-0">
                         @hasanyrole('Sales Person')
                         <a class="dropdown-item logout pb-0" data-bs-toggle="modal" data-bs-target="#tender-declaration-modal">

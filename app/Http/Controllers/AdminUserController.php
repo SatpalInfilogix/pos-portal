@@ -11,6 +11,8 @@ use App\Models\Store;
 use App\Models\UserActivity;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UsersActivitiesExport;
 
 class AdminUserController extends Controller
 {
@@ -171,7 +173,7 @@ class AdminUserController extends Controller
         $users = User::latest()
                 ->whereDoesntHave('roles', function ($query) {
                     $query->where('name', 'super admin');
-                })->get();
+                })->where('status', 0)->latest()->get();
 
         $userActivity = UserActivity::latest()->get();
 
@@ -196,7 +198,7 @@ class AdminUserController extends Controller
         $store_id = Auth::user()->store_id;
         if($store_id){
             $usersQuery->where('users.store_id',$store_id);
-        }    
+        }
 
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
@@ -251,5 +253,11 @@ class AdminUserController extends Controller
     }
 
     
-
+    public function exportUsersActivities(Request $request)
+    {
+        $date = $request->input('date');
+        $userId = $request->input('user_id');
+    
+        return Excel::download(new UsersActivitiesExport($userId, $date), 'users_activities.csv');
+    }
 }
