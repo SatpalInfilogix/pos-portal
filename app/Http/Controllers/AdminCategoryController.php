@@ -73,12 +73,12 @@ class AdminCategoryController extends Controller
         {
             $file = $request->file('image');
             $filename = time().'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/category/'), $filename);
+            $file->move(public_path('uploads/categories/'), $filename);
         }
 
         Category::create([
             'name'          => $request->category_name,
-            'image'         => 'uploads/category/'. $filename,
+            'image'         => 'uploads/categories/'. $filename,
             'created_by'    => Auth::id(),
         ]);
 
@@ -108,7 +108,7 @@ class AdminCategoryController extends Controller
         {
             $file = $request->file('image');
             $filename = time().'.'.$file->getClientOriginalExtension();
-            $file->move(public_path('uploads/category/'), $filename);
+            $file->move(public_path('uploads/categories/'), $filename);
 
             $image_path = public_path($oldCategoryImage);
             if(File::exists($image_path)) {
@@ -118,7 +118,7 @@ class AdminCategoryController extends Controller
 
         $category->update([
             'name'          => $request->category_name,
-            'image'         =>  isset($filename) ? 'uploads/category/'. $filename : $oldCategoryImage,
+            'image'         =>  isset($filename) ? 'uploads/categories/'. $filename : $oldCategoryImage,
         ]);
         
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');

@@ -157,7 +157,7 @@
                                                 </h6>
                                                 <div class="d-flex align-items-center justify-content-between price">
                                                     <span><span id="up-quantity">{{ $product->quantity }}</span> Pcs</span>
-                                                    <p>${{ number_format(optional($product)->price, 2) }}</p>
+                                                    <p>${{ number_format((float) optional($product)->price, 2) }}</p>
                                                 </div>
                                                 <div class="input-group mt-2">
                                                     <input type="hidden" name="product_id" value="{{ $product->id }}">
@@ -366,11 +366,16 @@
                 <div class="modal-body p-4">
                     <form id="tenderFormLogin">
                         <div class="row">
-                            <input name="collect_tender_amount" type="text" placeholder="Please enter tender amount" class="form-control">
-                            <small></small>
+                            <div class="col-12">
+                                <input name="collect_tender_amount" type="number"
+                                    placeholder="Please enter tender amount" class="form-control">
+                                    <div class="tender text-danger"></div>
+                            </div>
                         </div>
-                        <div class="row m-2">
-                            <button type="submit" class="btn btn-primary">Submit & Login</button>
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary">Submit & Continue</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -432,7 +437,7 @@
                 var userRole = "{{ $authUser }}";
                 var amountDuringLogin = @json($amountDuringLogin);
 
-                if ((userRole === 'Manager' || userRole === 'Sales Person') && amountDuringLogin === null) {
+                if ((userRole === 'Sales Person') && amountDuringLogin === null) {
                     $('#tender-modal').modal({
                         backdrop: 'static',
                         keyboard: false
@@ -444,6 +449,11 @@
             $('#tenderFormLogin').on('submit', function(event) {
                 event.preventDefault();
                 var tenderAmount = $(this).find('input[name="collect_tender_amount"]').val();
+                $(this).find('.tender').text('');
+                if (!tenderAmount || isNaN(tenderAmount)) {
+                    $(this).find('.tender').text('Please enter a valid tender amount greater than 0.');
+                    return;
+                }
 
                 $.ajax({
                     url: '{{ route('submit-tender') }}',
@@ -784,6 +794,10 @@
                             window.open(gatePassUrl, '_blank');
                         }
 
+                        let date = new Date(response.orderDate);
+                        let options = { day: '2-digit', month: 'long', year: 'numeric' };
+                        let formattedDate = date.toLocaleDateString('en-GB', options); // Use 'en-GB' for day month, year format
+
                         // Delay to ensure orderUrl opens first
                         setTimeout(openGatePass, 2000);
 
@@ -814,7 +828,8 @@
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">${ response.orderDate }</td>
+                                                    
+                                                    <td class="text">${ formattedDate }</td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -848,6 +863,9 @@
                 success: function(response) {
                     console.log(response.orderId);
                     if (response.success) {
+                        let date = new Date(response.orderDate);
+                        let options = { day: '2-digit', month: 'long', year: 'numeric' };
+                        let formattedDate = date.toLocaleDateString('en-GB', options); // Use 'en-GB' for day month, year format
 
                         $("#hold-order").modal("hide");
                         Swal.fire({
@@ -885,13 +903,13 @@
                                                 <tr>
                                                     <td>Date</td>
                                                     <td class="colon">:</td>
-                                                    <td class="text">${ response.orderDate }</td>
+                                                    <td class="text">${ formattedDate }</td>
                                                 </tr>
                                             </table>
                                         </div>
                                         <p class="p-4 mb-4">Customer need to recheck the product once</p>
                                         <div class="btn-row d-flex align-items-center justify-content-between">
-                                            <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="${response.orderId}">Place Order</a>
+                                            <a href="javascript:void(0);" class="btn btn-success btn-icon flex-fill hold-order" data-order-id="${response.orderId}">Continue</a>
                                         </div>
                                     </div>
                                 </div>`;

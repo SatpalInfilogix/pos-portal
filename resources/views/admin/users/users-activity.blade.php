@@ -9,6 +9,17 @@
                     <h6>Manage your users Activities</h6>
                 </div>
             </div>
+
+            <div class="page-btn">
+                <a href="#" id="export-users-activities" class="btn btn-added">
+                    <i data-feather="download" class="me-2"></i>
+                    Download Users Activities CSV
+                </a>
+                {{-- <a href="{{ route('export-users-activities') }}" class="btn btn-added">
+                    <i data-feather="download" class="me-2"></i>
+                    Download Users Activities CSV
+                </a> --}}
+            </div>
         </div>
 
         @if (session('success'))
@@ -16,13 +27,23 @@
                 {{ session('success') }}
             </div>
         @endif
+
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <label class="form-label">Date</label>
-                <input type="text" name="date" id="date" class="form-control">
+                <input type="text" name="date" id="date" class="form-control" placeholder="Select Date">
             </div>
-            
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Select User</label>
+                <select name="user_id" id="user_id" class="form-control">
+                    <option value="" selected disabled>Select User</option>
+                    @foreach ($users as $user)
+                        <option value="{{ $user->id }}">{{ $user->first_name }} {{ $user->last_name }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
+
         <div class="card table-list-card">
             <div class="card-body">
                 <div class="table-responsive p-0 m-0">
@@ -44,7 +65,6 @@
     </div>
 @endsection
 
-
 @section('script')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
     <script>
@@ -54,6 +74,14 @@
                 todayHighlight: true,
                 autoclose: true,
                 orientation: 'bottom'
+            });
+
+            $('#export-users-activities').on('click', function(e) {
+                e.preventDefault();
+                let date = $('#date').val();
+                let userId = $('#user_id').val();
+                let url = "{{ route('export-users-activities') }}?date=" + date + "&user_id=" + userId;
+                window.location.href = url; // Trigger the download
             });
         });
 
@@ -67,6 +95,7 @@
                     data: function(d) {
                         d._token = "{{ csrf_token() }}";
                         d.date = $('#date').val();
+                        d.user_id = $('#user_id').val();
                         return d;
                     }
                 },
@@ -100,6 +129,10 @@
             });
 
             $('#date').on('change', function() {
+                usersTable.ajax.reload(); // Reload the table data
+            });
+
+            $('#user_id').on('change', function() {
                 usersTable.ajax.reload(); // Reload the table data
             });
         });

@@ -19,13 +19,5 @@ class StoreSeeder extends Seeder
             "location" => "Veerji Tower, Phase 8B Industrial Area, 140308",
             "is_deleted" => 0,
         ]);
-
-        Store::create([
-            "name" => "Store 2",
-            "email" => "store2@gmail.com",
-            "contact_number" => "123465790",
-            "location" => "Mohali Tower, Phase 8B Industrial Area, 140308",
-            "is_deleted" => 0
-        ]);
     }
 }

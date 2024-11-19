@@ -33,6 +33,7 @@ use App\Http\Controllers\PosDashboardController;
 use App\Http\Controllers\PosCartController;
 use App\Http\Controllers\PrintController;
 use App\Http\Controllers\PosProfileController;
+use App\Http\Controllers\RoleController;
 /* End Frontend Controller Import */
 /* Controller Imports ends Here */
 
@@ -66,6 +67,7 @@ Route::middleware(['auth', 'auth.session'])->group(function () {
             'stores' => StoreController::class,
             'units' => AdminUnitController::class,
             'return-stock' => ReturnStockController::class,
+            'roles' => RoleController::class
         ]);
         /********************** Sales Routes Start Here  **********************/
         Route::get('/sales',[AdminSalesController::class,'index'])->name('sales.index');
@@ -210,10 +212,12 @@ Route::get('/download-price-master', [AdminPriceController::class, 'downloadPric
 
 Route::get('/export-products', [AdminPriceController::class, 'exportPrice'])->name('export-products');
 Route::get('/export-products-quantites', [AdminPriceController::class, 'exportQuantites'])->name('export-products-quantites');
+Route::get('/export-users-activities', [AdminUserController::class, 'exportUsersActivities'])->name('export-users-activities');
 
 Route::get('/products/get-latest-code-number', [AdminProductController::class, 'getLatestCodeNumber'])->name('products.get_latest_code_number');
 Route::get('/sales-details-download', [AdminSalesController::class, 'downloadSalesDetail'])->name('sales-details-download');
 Route::get('/item-wise-report-download',[AdminSalesController::class, 'downloadItemWiseReport'])->name('item-wise-report-download');
 Route::get('/download-barcodes', [AdminProductController::class, 'downloadBarcodes'])->name('download.barcodes');
+Route::get('/sales/print', [AdminSalesController::class, 'downloadItemWiseReportPrint'])->name('sales.print');
 
 Route::post('/get-hold-order', [OrderController::class, 'getHoldOrder'])->name('get-hold-order');

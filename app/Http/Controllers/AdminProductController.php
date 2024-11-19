@@ -37,12 +37,11 @@ class AdminProductController extends Controller
             $productsQuery = Product::where('is_active', 0)->select([
                 'products.id',
                 'products.name',
-                'products.manufacture_date',
                 'products.image',
                 'products.status',
                 'products.product_code',
                 DB::raw('COALESCE(MAX(store_products.quantity), 0) as available_quantity'),
-                'categories.name as category_name'
+                'categories.name as category_name', 'price_masters.manufacture_date'
             ])
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->leftJoin('store_products', function($join) use ($store_id) {
@@ -52,14 +51,14 @@ class AdminProductController extends Controller
             ->leftJoin('price_masters', 'products.id', '=', 'price_masters.product_id')
             ->where('categories.status', '=', 0)
             ->groupBy([
-                'products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'categories.name'
+                'products.id', 'products.name', 'products.image', 'products.status', 'products.product_code', 'categories.name', 'price_masters.manufacture_date'
             ]);
     
             if ($request->has('search') && !empty($request->search['value'])) {
                 $searchValue = $request->search['value'];
                 $productsQuery->where(function ($query) use ($searchValue) {
                     $query->where('products.name', 'like', '%' . $searchValue . '%')
-                        ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
+                        ->orWhere('price_masters.manufacture_date', 'like', '%' . $searchValue . '%')
                         ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
                         ->orWhere(DB::raw('COALESCE(store_products.quantity, 0)'), 'like', '%' . $searchValue . '%');
                 });
@@ -68,26 +67,26 @@ class AdminProductController extends Controller
             $productsQuery = Product::select([
                 'products.id',
                 'products.name',
-                'products.manufacture_date',
                 'products.image',
                 'products.status',
                 'products.product_code',
                 'products.is_active',
                 DB::raw('MAX(price_masters.quantity) as available_quantity'),
-                'categories.name as category_name'
+                'categories.name as category_name',
+                'price_masters.manufacture_date'
             ])
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->leftJoin('price_masters', 'products.id', '=', 'price_masters.product_id')
             ->where('categories.status', '=', 0)
             ->groupBy([
-                'products.id', 'products.name', 'products.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'products.is_active', 'categories.name'
+                'products.id', 'products.name', 'price_masters.manufacture_date', 'products.image', 'products.status', 'products.product_code', 'products.is_active', 'categories.name'
             ]);
 
             if ($request->has('search') && !empty($request->search['value'])) {
                 $searchValue = $request->search['value'];
                 $productsQuery->where(function ($query) use ($searchValue) {
                     $query->where('products.name', 'like', '%' . $searchValue . '%')
-                        ->orWhere('products.manufacture_date', 'like', '%' . $searchValue . '%')
+                    ->orWhere('price_masters.manufacture_date', 'like', '%' . $searchValue . '%')
                         ->orWhere('categories.name', 'like', '%' . $searchValue . '%')
                         ->orWhere(DB::raw('COALESCE(price_masters.quantity, 0)'), 'like', '%' . $searchValue . '%');
                 });
@@ -180,7 +179,6 @@ class AdminProductController extends Controller
             'product_code'      => $request->product_code,
             // 'units'              => json_encode($request->units),
             'units'             => $request->units,
-            'manufacture_date'  => $request->manufacture_date,
             'created_by'        => Auth::id(),
             'image'             => 'uploads/products/'. $filename,
         ]);
@@ -189,12 +187,11 @@ class AdminProductController extends Controller
     }
 
     public function import_products(Request $request){
-        $request->validate([
-            'file' => 'required|mimes:csv,xlsx',
-        ]);
+        // $request->validate([
+        //     'file' => 'required|mimes:csv,xlsx',
+        // ]);
 
-        Excel::import(new ProductsImport, $request->file('file'));
-        
+        $excel =  Excel::import(new ProductsImport, $request->file('file'));
         return redirect()->route('products.index')->with('success', 'Products imported successfully.');
     }
 
@@ -238,7 +235,6 @@ class AdminProductController extends Controller
             'product_code'      => $request->product_code,
             'units'             => $request->units,
             // 'units'              => empty($request->units) ? null : json_encode($request->units),
-            'manufacture_date'  => $request->manufacture_date,
         ]);
         
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');

@@ -11,6 +11,8 @@ use App\Models\Store;
 use App\Models\UserActivity;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\UsersActivitiesExport;
 
 class AdminUserController extends Controller
 {
@@ -168,9 +170,14 @@ class AdminUserController extends Controller
 
     public function userActivity()
     {
-        $users = UserActivity::latest()->get();
+        $users = User::latest()
+                ->whereDoesntHave('roles', function ($query) {
+                    $query->where('name', 'super admin');
+                })->where('status', 0)->latest()->get();
 
-        return view('admin.users.users-activity',compact('users'));
+        $userActivity = UserActivity::latest()->get();
+
+        return view('admin.users.users-activity',compact('users', 'userActivity'));
     }
 
     public function getUsersActivity(Request $request)
@@ -183,10 +190,15 @@ class AdminUserController extends Controller
                 'users.last_name'
             ])
             ->join('users', 'users_activities.user_id', '=', 'users.id'); // Adjust the join condition as necessary
+
+        $usersQuery->whereDoesntHave('user.roles', function ($query) {
+            $query->where('name', 'super admin');
+        });
+
         $store_id = Auth::user()->store_id;
         if($store_id){
             $usersQuery->where('users.store_id',$store_id);
-        }    
+        }
 
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
@@ -200,8 +212,15 @@ class AdminUserController extends Controller
 
         if ($request->has('date') && !empty($request->date)) {
             $date = $request->date;
-            $usersQuery->whereDate('users_activities.logged_in', $date)
+            $usersQuery->where(function ($query) use ($date) {
+                $query->whereDate('users_activities.logged_in', $date)
                     ->orWhereDate('users_activities.logged_out', $date);
+            });
+        }
+
+        if ($request->has('user_id') && !empty($request->user_id)) {
+            $user_id = $request->user_id;
+            $usersQuery->where('users_activities.user_id', $user_id);
         }
 
         if ($request->has('order')) {
@@ -234,5 +253,11 @@ class AdminUserController extends Controller
     }
 
     
-
+    public function exportUsersActivities(Request $request)
+    {
+        $date = $request->input('date');
+        $userId = $request->input('user_id');
+    
+        return Excel::download(new UsersActivitiesExport($userId, $date), 'users_activities.csv');
+    }
 }

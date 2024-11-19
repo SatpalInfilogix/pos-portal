@@ -13,6 +13,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Gate;
 use App\Exports\ProductQuantitesExport;
 use App\Exports\ProductPriceExport;
+use Carbon\Carbon;
 
 class AdminPriceController extends Controller
 {
@@ -20,6 +21,17 @@ class AdminPriceController extends Controller
     {
         if (!Gate::allows('view prices')) {
             abort(403);
+        }
+
+        $todayDate = Carbon::now();
+        $newPrices = PriceMaster::where('status', 0)->where('start_date', '<=', $todayDate)->get();
+
+        foreach ($newPrices as $newPrice) {
+            $newPrice->update([
+                'price' => $newPrice->new_price,
+                'new_price' => null,
+                'start_date' => null
+            ]);
         }
 
         $prices = PriceMaster::with('product')->latest()->get();
@@ -32,8 +44,8 @@ class AdminPriceController extends Controller
         $maxItemsPerPage = 10;
     
         // Base query
-        $pricesQuery = PriceMaster::select(['price_masters.id', 'price_masters.price', 'price_masters.quantity', 'price_masters.product_id', 'price_masters.status', 'products.product_code', 'products.name as product_name'])
-            ->join('products', 'price_masters.product_id', '=', 'products.id') // Join the products table
+        $pricesQuery = PriceMaster::select(['price_masters.id', 'price_masters.price', 'price_masters.quantity', 'price_masters.manufacture_date', 'price_masters.product_id', 'price_masters.status', 'products.product_code', 'products.name as product_name'])
+            ->join('products', 'price_masters.product_id', '=', 'products.id')->where('products.status', 0) // Join the products table
             ->join('categories', 'products.category_id', '=', 'categories.id') // Join the categories table
             ->where('categories.status', 0);
 
@@ -54,7 +66,7 @@ class AdminPriceController extends Controller
             $column = $request->columns[$orderColumnIndex]['data'];
     
             // Sort by valid columns only
-            $validColumns = ['id', 'price', 'quantity', 'status', 'product_code', 'product_name'];
+            $validColumns = ['id', 'price', 'quantity', 'status', 'product_code', 'product_name', 'manufacture_date'];
             if (in_array($column, $validColumns)) {
                 if ($column === 'product_code') {
                     $pricesQuery->orderBy('products.product_code', $orderDirection);
@@ -110,12 +122,14 @@ class AdminPriceController extends Controller
             $priceMaster = PriceMaster::where('product_id', $id)->first();
             $quantity = $priceMaster ? $priceMaster->quantity : '';
             $price = $priceMaster ? $priceMaster->price : '';
+            $manufacture_date = $priceMaster ? $priceMaster->manufacture_date: '';
 
             $data = [
                 'unit' => $unitName,
                 'quantity' => $quantity,
                 'price' => $price,
-                'unitId' => $unitId
+                'unitId' => $unitId,
+                'manufacture_date' => $manufacture_date
             ];
 
             return response()->json([
@@ -143,6 +157,9 @@ class AdminPriceController extends Controller
             'quantity_type'     => $request->unit_id ?? 0,
             'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
+            'new_price'         => $request->new_price,
+            'start_date'        => $request->start_date,
+            'manufacture_date'  => $request->manufacture_date
         ]);
 
         return redirect()->route('prices.index')->with('success', 'Price created successfully.');      
@@ -173,6 +190,9 @@ class AdminPriceController extends Controller
             'quantity_type'     => $request->unit_id ?? NULL,
             'price'             => $request->price ?? 0,
             'created_by'        => Auth::id(),
+            'new_price'         => $request->new_price,
+            'start_date'        => $request->start_date,
+            'manufacture_date'  => $request->manufacture_date
         ]);
 
         return redirect()->route('prices.index')->with('success', 'Price Updated successfully.');
@@ -204,11 +224,14 @@ class AdminPriceController extends Controller
 
     public function import_price_masters(Request $request)
     {
-        $request->validate([
-            'file' => 'required|mimes:csv,xlsx',
-        ]);
+        $import = new PriceMasterImport();
+        Excel::import($import, $request->file('file'));
 
-        Excel::import(new PriceMasterImport, $request->file('file'));
+        $errors = $import->getErrors();
+
+        if (!empty($errors)) {
+            return redirect()->back()->with('error', $errors);
+        }
         
         return redirect()->route('prices.index')->with('success', 'Price master imported successfully.');
     }

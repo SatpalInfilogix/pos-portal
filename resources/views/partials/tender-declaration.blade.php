@@ -69,8 +69,8 @@
             }
         });
 
-        $('#tender-declaration-modal').on('hide.bs.modal', function(e) {
-            e.preventDefault();
-        });
+        // $('#tender-declaration-modal').on('hide.bs.modal', function(e) {
+        //     e.preventDefault();
+        // });
     });
 </script>

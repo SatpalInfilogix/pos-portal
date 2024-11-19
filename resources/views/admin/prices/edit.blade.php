@@ -83,10 +83,28 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="mb-3 add-product">
+                                <div class="col-md-6 mb-3 add-product">
                                     <label class="form-label">Price</label></label>
-                                    <input type="text" name="price" id="price" class="form-control"
+                                    <input type="number" name="price" id="price" class="form-control"
                                         value="{{ $price->price }}">
+                                </div>
+                                <div class="col-md-6 mb-3 add-product">
+                                    <label class="form-label">Manufacture Date</label>
+                                    <input type="text" name="manufacture_date" id="manufacture_date" class="form-control" value="{{ $price->manufacture_date }}">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 add-product">
+                                    <div class="mb-3">
+                                        <label class="form-label">New Price</label>
+                                        <input type="number" name="new_price" id="new_price" class="form-control" value="{{ $price->new_price }}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 add-product">
+                                    <div class="mb-3">
+                                        <label class="form-label">Start Date</label>
+                                        <input type="text" name="start_date" id="start_date" class="form-control" value="{{ $price->start_date }}">
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -104,6 +122,25 @@
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/chosen-js/chosen.jquery.min.js"></script>
     <script>
+         $(document).ready(function() {
+            var date = new Date();
+            date.setDate(date.getDate() + 1); // Set to tomorrow
+
+            $('#start_date').datepicker({
+                format: 'yyyy-mm-dd',
+                startDate: date,
+                autoclose: true
+            });
+
+             // Datepicker initialization
+            $('#manufacture_date').datepicker({
+                format: 'yyyy-mm-dd', // specify the format you want
+                todayHighlight: true,
+                autoclose: true,
+                endDate: new Date(), // Set the end date to today
+                orientation: 'bottom'
+            });
+        });
         function updateProductSearch(keyword) {
             $.ajax({
                 url: "{{ route('search-products') }}",
@@ -205,6 +242,7 @@
             $("#price-form").validate({
                 rules: {
                     product: "required",
+                    manufacture_date: "required",
                     quantityValue: {
                         required: true,
                         digits: true
@@ -212,11 +250,23 @@
                     price: {
                         required: true,
                         number: true,
-                        pattern: /^\d+(\.\d{1,2})?$/
                     },
+                    new_price: {
+                        required: function() {
+                            return $("#start_date").val() !== "" && $("#new_price").val() === "";
+                        },
+                        number: true
+                    },
+                    start_date: {
+                        required: function() {
+                            return $("#new_price").val() !== "" && $("#start_date").val() === "";
+                        },
+                        date: true
+                    }
                 },
                 messages: {
                     product: "Please enter the product",
+                    manufacture_date: "Please enter the manufacture date",
                     quantityValue: {
                         required: "Please enter the quantity",
                         digits: "Please enter a valid number",
@@ -226,6 +276,14 @@
                         required: "Please enter the price",
                         number: "Please enter a valid number"
                     },
+                    new_price: {
+                        required: "Please enter a new price if the start date is provided.",
+                        number: "Please enter a valid number"
+                    },
+                    start_date: {
+                        required: "Please enter a start date.",
+                        date: "Please enter a valid date"
+                    }
                 },
                 errorClass: "invalid-feedback",
                 errorElement: "span",

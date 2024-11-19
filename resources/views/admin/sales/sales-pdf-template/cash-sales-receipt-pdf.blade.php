@@ -84,12 +84,12 @@
                     <td colspan="3"></td>
                 </tr>
                 <tr>
-                    <td>Customer Name: {{ $orderDetail->customerDetail->customer_name }}</td>
+                    <td>Customer Name: {{ optional($orderDetail->customerDetail)->customer_name }}</td>
                     <td colspan="2"></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td>Customer Contact: {{ $orderDetail->customerDetail->contact_number }}</td>
+                    <td>Customer Contact: {{ optional($orderDetail->customerDetail)->contact_number }}</td>
                     <td colspan="2"></td>
                     <td></td>
                 </tr>

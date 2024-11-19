@@ -155,8 +155,20 @@
                                     <i data-feather="shield"></i>
                                     <span>Roles & Permissions</span>
                                 </a>
+                                <a href="{{ route('roles.index') }}">
+                                    <i data-feather="shield"></i>
+                                    <span>Roles</span>
+                                </a>
                             </li>
                         @endcanany
+                        <li @class([
+                            'active' => Request::is('admin/settings'),
+                        ])>
+                            <a href="{{ route('admin.settings') }}">
+                                <i data-feather="settings"></i>
+                                <span>Settings</span>
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>

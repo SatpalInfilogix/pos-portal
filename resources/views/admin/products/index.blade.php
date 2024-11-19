@@ -23,7 +23,7 @@
                             <i data-feather="upload" class="me-2"></i>
                             Import Products
                         </button>
-                        <input type="file" id="fileInput" name="file" accept=".csv" style="display:none;">
+                        <input type="file" id="fileInput" name="file" accept=".csv,.xlsx" style="display:none;">
                     </form>
 
                     <script>
@@ -34,10 +34,13 @@
 
                             $('#fileInput').on('change', function(event) {
                                 var file = $(this).prop('files')[0];
-                                if (file && file.type === 'text/csv') {
-                                    $('#importForm').submit();
-                                } else {
-                                    alert('Please select a valid CSV file.');
+                                if (file) {
+                                    var fileName = file.name;
+                                    if (fileName.endsWith('.csv') || fileName.endsWith('.xlsx')) {
+                                        $('#importForm').submit();
+                                    } else {
+                                        alert('Please select a valid CSV or XLSX file.');
+                                    }
                                 }
                             });
                         });

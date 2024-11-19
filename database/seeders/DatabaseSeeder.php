@@ -22,7 +22,6 @@ class DatabaseSeeder extends Seeder
             ModuleSeeder::class,
             StoreSeeder::class,
             UserSeeder::class,
-            UnitSeeder::class,
             VehicleNumberSeeder::class
         ]);
     }

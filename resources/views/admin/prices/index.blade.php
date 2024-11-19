@@ -18,7 +18,7 @@
                             <i data-feather="upload" class="me-2"></i>
                             Import Price Master
                         </button>
-                        <input type="file" id="fileInput" name="file" accept=".csv" style="display:none;">
+                        <input type="file" id="fileInput" name="file" accept=".csv,.xlsx" style="display:none;">
                     </form>
 
                     <script>
@@ -29,10 +29,13 @@
 
                             $('#fileInput').on('change', function(event) {
                                 var file = $(this).prop('files')[0];
-                                if (file && file.type === 'text/csv') {
-                                    $('#importForm').submit();
-                                } else {
-                                    alert('Please select a valid CSV file.');
+                                if (file) {
+                                    var fileName = file.name;
+                                    if (fileName.endsWith('.csv') || fileName.endsWith('.xlsx')) {
+                                        $('#importForm').submit();
+                                    } else {
+                                        alert('Please select a valid CSV or XLSX file.');
+                                    }
                                 }
                             });
                         });
@@ -65,6 +68,16 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach(session('error') as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="card table-list-card">
             <div class="card-body">
                 <div class="table-responsive p-0 m-0">
@@ -76,6 +89,7 @@
                                 <th>Product</th>
                                 <th>Available Quantity</th>
                                 <th>Price</th>
+                                <th>Manufactured Date</th>
                                 <th>
                                     @canany(['edit prices', 'delete prices'])
                                         Action
@@ -129,9 +143,14 @@
                     {
                         data: "price",
                         render: function(data, type, row) {
-                            return `$${parseFloat(data).toFixed(2)}`;
+                            let price = 0;
+                            if(data){
+                                price = data;
+                            }
+                            return `$${parseFloat(price).toFixed(2)}`;
                         }
                     },
+                    { data: "manufacture_date" },
                     {
                         data: null,
                         render: function(data, type, row) {
@@ -159,7 +178,7 @@
                 ],
                 columnDefs: [{
                     orderable: false,
-                    targets: 5, // Adjust based on the actual number of columns
+                    targets: 6, // Adjust based on the actual number of columns
                     className: "action-table-data"
                 }],
                 paging: true,

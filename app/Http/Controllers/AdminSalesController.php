@@ -185,7 +185,7 @@ class AdminSalesController extends Controller
         return $query->get();
     }
 
-    public function downloadItemWiseReport(Request $request)
+    public function downloadItemWiseReportPrint(Request $request)
     {
         $storeId = Auth::user()->store_id ?: $request->input('store_id');
         $startDate = $request->input('start_date');
@@ -215,6 +215,84 @@ class AdminSalesController extends Controller
         return $pdf->download('sales-report.pdf');
         // return view('admin.sales.sales-pdf-template.sales-report-pdf', compact('sales'));
     }
+
+    public function downloadItemWiseReport(Request $request)
+    {
+        $storeId = Auth::user()->store_id ?: $request->input('store_id');
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $yearly = $request->input('yearly');
+    
+        $sales = $this->getSalesDetailsData($startDate, $endDate, $yearly, $storeId);
+        // Prepare CSV download
+        $csvFileName = 'sales-report.csv';
+        $handle = fopen('php://output', 'w');
+    
+        // Set headers for the CSV download
+        header('Content-Type: text/csv');
+        header('Content-Disposition: attachment; filename="' . $csvFileName . '"');
+    
+        // Add CSV column headers
+        fputcsv($handle, ['Order ID', 'Store Name', 'Total Quantity', 'Total Amount', 'Discount Amount', 'Tax Amount', 'Gross Total', 'Product Name', 'Quantity', 'Amount']);
+    
+        foreach ($sales as $order) {
+            $store = Store::find($order['store_id']);
+            $storeName = $store ? $store->name : null;
+    
+            // Calculate total quantities and amounts for the order
+            $totalQuantity = 0;
+            $totalAmount = 0;
+            if (isset($order['product_details']) && is_array($order['product_details'])) {
+                // First, calculate the total quantity and amount
+                foreach ($order['product_details'] as $product) {
+                    $quantity = isset($product['quantity']) ? (float)$product['quantity'] : 0;
+                    $amount = isset($product['product_total_amount']) ? (float)$product['product_total_amount'] : 0.0;
+    
+                    $totalQuantity += $quantity;
+                    $totalAmount += $amount;
+                }
+    
+                // Then, write the product details to the CSV
+                foreach ($order['product_details'] as $index => $product) {
+                    $quantity = isset($product['quantity']) ? (float)$product['quantity'] : 0;
+                    $amount = isset($product['product_total_amount']) ? (float)$product['product_total_amount'] : 0.0;
+    
+                    // Write to CSV, but only add totals on the first product row
+                    if ($index === 0) {
+                        fputcsv($handle, [
+                            $order['OrderID'], // Assuming 'OrderID' is the order ID
+                            $storeName,
+                            $totalQuantity,      // Same total quantity for all products in this order
+                            $totalAmount,        // Same total amount for all products in this order
+                            $order['DiscountAmount'],
+                            $order['TaxAmount'],
+                            $order['TotalAmount'],
+                            $product['name'],    // Product name
+                            $quantity,
+                            $amount,
+                        ]);
+                    } else {
+                        // For subsequent products, just write product details without totals
+                        fputcsv($handle, [
+                            '', // Leave Order ID blank
+                            '', // Leave Store Name blank
+                            '', // Leave Total Quantity blank
+                            '', // Leave Total Amount blank
+                            '', // Leave Discount Amount blank
+                            '', // Leave Tax Amount blank
+                            '', // Leave Gross Total blank
+                            $product['name'],    // Product name
+                            $quantity,
+                            $amount,
+                        ]);
+                    }
+                }
+            }
+        }
+    
+        fclose($handle);
+        exit;
+    }    
 
 
     private function getSalesDetailsData($startDate, $endDate, $yearly, $storeId)
