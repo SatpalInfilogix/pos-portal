@@ -1,23 +1,29 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Models\PriceMaster;
+use App\Models\UserActivity;
 use App\Models\Category;
 use App\Models\Product;
-use App\Models\PriceMaster;
+use Illuminate\Support\Facades\Auth;
+use App\Models\StoreProduct;
 use App\Models\Order;
 use App\Models\Discount;
 use App\Models\Customer;
-use App\Models\StoreProduct;
-use App\Models\UserActivity;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 class PosDashboardController extends Controller
 {
     public function index(Request $request)
     {
+
+        if (!$request->user()) {
+            return response()->json(['message' => 'Unauthorized. Bearer token required'], 401);
+        }
+
         $todayDate = Carbon::now();
         $newPrices = PriceMaster::where('status', 0)->where('start_date', '<=', $todayDate)->get();
 
@@ -31,24 +37,20 @@ class PosDashboardController extends Controller
 
         $userActivity = UserActivity::where('user_id', Auth::user()->id)->latest()->first();
         $categories = Category::where('status', 0)->withCount(['products' => function ($query) {
-                        $query->where('status', 0); // Condition for products status
+                        $query->where('status', 0);
                     }])->latest()->take(15)->get();
        
         $productsTotal = Category::where('status', 0)->with('products')->get();
-        // Calculate the total number of products
+
         $totalProducts = $productsTotal->flatMap(function ($productCount) {
             return $productCount->products;
         })->count();
-
-        // $totalProducts = $productsTotal->flatMap(function ($category) {
-        //     return $category->products;
-        // })->where('is_active', 0)->count();
 
         $selectedCategoryId = $request->input('category_id');
 
         $productsQuery = Product::where('status', 0)
                             ->whereHas('category', function ($query) {
-                                $query->where('status', 0); // Ensure the category status is 0
+                                $query->where('status', 0);
                             })->latest();
 
         if ($selectedCategoryId) {
@@ -91,7 +93,6 @@ class PosDashboardController extends Controller
             }
         }
 
-        // $discounts = Discount::where('quantity', '<', $cart_quantity)->get();
         $roleId = auth()->user()->roles()->first()->id;
         $discount = Discount::where('role_id', $roleId)->first();
 
@@ -100,27 +101,29 @@ class PosDashboardController extends Controller
         $completedOrders = Order::where('OrderStatus','completed')->orderBy('OrderID', 'DESC')->get();
         $holdOrders = Order::where('OrderStatus','onhold')->orderBy('OrderID', 'DESC')->get();
         $unPaidOrders = Order::where('OrderStatus','unpaid')->orderBy('OrderID', 'DESC')->get();
-        
-        if ($request->ajax()) {
-            // Return filtered products as HTML
-            $productsHtml = view('partials.products', compact('products'))->render();
-            return response()->json([
-                'success'   => true,
-                'productsHtml' => $productsHtml,
-            ]);
-        }
 
-        return view('pos.index', compact('categories', 'totalProducts', 'products','invoiceId', 'discount', 'customers','completedOrders','holdOrders','unPaidOrders', 'userActivity'));
+        return response()->json([
+            'status' => 200,
+            'messages' => 'Data fetched successfully.',
+            'categories' => $categories,
+            'totalProducts' => $totalProducts,
+            'products' => $products,
+            'invoiceId' => $invoiceId,
+            'discount' => $discount,
+            'customers' => $customers,
+            'completedOrders' => $completedOrders,
+            'holdOrders' => $holdOrders,
+            'unPaidOrders' => $unPaidOrders,
+            'userActivity' => $userActivity
+        ]);
     }
 
     public function getTransaction(Request $request)
     {
         $maxItemsPerPage = 10;
 
-        // Base query
         $recentTransaction = Order::select(['created_at', 'OrderID', 'CustomerName', 'TotalAmount'])->where('CreatedBy',Auth::user()->id);
 
-        // Search filter
         if ($request->has('search') && !empty($request->search['value'])) {
             $searchValue = $request->search['value'];
             $recentTransaction->where(function ($query) use ($searchValue) {
@@ -131,7 +134,6 @@ class PosDashboardController extends Controller
             });
         }
 
-        // Ordering
         if ($request->has('order')) {
             $orderColumn = $request->order[0]['column'];
             $orderDirection = $request->order[0]['dir'];
@@ -139,20 +141,18 @@ class PosDashboardController extends Controller
             $recentTransaction->orderBy($column, $orderDirection);
         }
 
-        // Pagination
-        $totalRecords = $recentTransaction->count(); // Total records before pagination
+        $totalRecords = $recentTransaction->count();
         $perPage = $request->input('length', $maxItemsPerPage);
         $currentPage = $request->input('start', 0) / $perPage;
         $recentTransactions = $recentTransaction->skip($currentPage * $perPage)->take($perPage)->get();
 
-        // Respond with data
         return response()->json([
+            'status' => 200,
+            'messages' => 'Transactions data fetched successfully.',
             "draw" => intval($request->input('draw')),
             "recordsTotal" => $totalRecords,
-            "recordsFiltered" => $totalRecords, // This should reflect the filtered count if filtering is applied
+            "recordsFiltered" => $totalRecords,
             "data" => $recentTransactions
         ]);
     }
-
-
 }

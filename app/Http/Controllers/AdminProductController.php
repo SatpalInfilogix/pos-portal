@@ -229,12 +229,25 @@ class AdminProductController extends Controller
 
     public function update(Request $request, $id)
     {
+
+        if ($request->hasFile('image'))
+        {
+            $file = $request->file('image');
+            $filename = time().'.'.$file->getClientOriginalExtension();
+            $file->move(public_path('uploads/products/'), $filename);
+        }
+
+        $product_data = Product::where('id', $id)->select('image')->first();
+
+        $oldImage = $product_data->image;
+
         $product = Product::where('id', $id)->update([
             'category_id'       => $request->category_id,
             'name'              => $request->product_name,
             'product_code'      => $request->product_code,
             'units'             => $request->units,
             // 'units'              => empty($request->units) ? null : json_encode($request->units),
+            'image'             => !empty($filename) ? 'uploads/products/'. $filename : $oldImage,
         ]);
         
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
