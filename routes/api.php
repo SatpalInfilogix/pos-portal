@@ -3,24 +3,31 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\PosDashboardController;
-use App\Http\Controllers\Api\InventoryReturnController;
-use App\Http\Controllers\Api\PosCartController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\CartController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\OrderController;
 
 Route::post('login', [AuthController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/pos-dashboard', [PosDashboardController::class, 'index'])->name('pos-dashboard');
-    Route::post('/get-transaction', [PosDashboardController::class, 'getTransaction'])->name('get-transaction');
-    
-    Route::post('/products-quantity',[InventoryReturnController::class, 'availableProductQuantity'])->name('check-products-quantity');
+    Route::post('logout', [AuthController::class, 'logout']);
 
-    Route::post('add-to-cart', [PosCartController::class, 'addToCart'])->name('add-to-cart');
-    Route::post('remove-from-cart', [PosCartController::class, 'remove'])->name('remove-from-cart');
-    Route::post('update-cart', [PosCartController::class, 'update'])->name('update-cart');
-    Route::post('discount', [PosCartController::class, 'discountApply'])->name('discount');
-    Route::post('clear-cart', [PosCartController::class, 'clearCart'])->name('clear-cart');
+    Route::get('get-profile', [ProfileController::class, 'getProfile']);
+    Route::post('update-profile', [ProfileController::class, 'update']);
+
+    Route::get('get-category', [CategoryController::class, 'getCategory']);
+    Route::post('get-category-products', [CategoryController::class, 'getCategoryProducts']);
+
+    Route::get('get-products', [ProductController::class, 'getProducts']);
+
+    Route::get('get-orders', [OrderController::class, 'getOrders']);
+    Route::post('place-order', [OrderController::class, 'placeOrder']);
 });
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+Route::post('add-to-cart', [CartController::class, 'addToCart']);
+
+
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
