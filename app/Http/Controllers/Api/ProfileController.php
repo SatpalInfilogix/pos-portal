@@ -60,4 +60,26 @@ class ProfileController extends Controller
             'data'    => $user
         ]);
     }
+
+    public function profileImage(Request $request) 
+    {
+        $user = User::where('id', Auth::id())->first();
+
+        if ($request->hasFile('profile_image'))
+        {
+            $file = $request->file('profile_image');
+            $filename = time().'.'.$file->getClientOriginalExtension();
+            $file->move(public_path('uploads/profile-pic/'), $filename);
+        }
+
+        $user->update([
+            'profile_image' => isset($filename) ? 'uploads/profile-pic/'. $filename : '',
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User profile updated successfully.',
+            'data'    => $user
+        ]);
+    }
 }

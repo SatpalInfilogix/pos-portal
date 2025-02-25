@@ -11,6 +11,7 @@ use App\Models\ProductOrderHistory;
 use App\Models\StoreProduct;
 use App\Models\PriceMaster;
 use App\Models\Discount;
+use App\Models\HoldOrder;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
@@ -152,5 +153,137 @@ class OrderController extends Controller
     {
         $payment = 'success';
         return ["payment" => $payment];
+    }
+
+    public function generateInvoice()
+    {
+        $latestOrder = Order::orderBy('id', 'desc')->first();
+        if (!$latestOrder) {
+            return 'INV-000001';
+        }
+
+        $latestOrderId = $latestOrder->OrderID;
+        $number = intval(substr($latestOrderId, 4)) + 1;
+        return 'INV-' . str_pad($number, 6, '0', STR_PAD_LEFT);
+    }
+
+    public function holdOrder(Request $request)
+    {
+        $invoice_id = $this->generateInvoice();
+        $cart = json_decode($request->cart, true);
+        $order = Order::create([
+            'OrderDate' => now(),
+            'OrderID' => $invoice_id,
+            'OrderStatus' => 'onhold',
+            'PaymentStatus' => 'pending',
+            'TotalAmount' => $cart['payable'],
+            'TaxAmount' => $cart['tax'],
+            'DiscountAmount' => $cart['discount_amount'],
+            'CreatedBy' => Auth::id(),
+        ]);
+
+        $holdOrder = HoldOrder::create([
+            'order_id' => $order->id,
+            'cart'     => json_encode($cart)
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Order On Hold',
+            'orderId' => $invoice_id,
+            'orderDate' => now(),
+            'totalAmount' => $cart['payable'],
+        ]);
+    }
+
+    public function getHoldOrder(Request $request)
+    {
+        $order =  Order::with('holdOrder')->where('orderStatus', 'onhold')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hold Order Listing.',
+            'data'    => $order
+        ]);
+    }
+
+    public function continueHoldOrder(Request $request)
+    {
+        $orderId = $request->order_id;
+        $order = Order::where('OrderId', $orderId)->where('OrderStatus', 'onhold')->first();
+        if (!$order) {
+            return response()->json(['error' => 'Order not found or not on hold'], 404);
+        }
+
+        $holdOrder = HoldOrder::where('order_id', $order->id)->first();
+        if (!$holdOrder) {
+            return response()->json(['error' => 'Hold order not found'], 404);
+        }
+
+        $cart = json_decode($holdOrder->cart, true);
+
+        $cart['orderId']  = $orderId;
+
+        // $order->update([
+        //     'OrderStatus' => 'pending',
+        // ]);
+
+        // HoldOrder::where('order_id', $order->id)->delete();
+
+        return response()->json([
+            'success' => true,
+            'cart' => $cart,
+            'message' => 'Cart updated successfully with hold order products. Hold order have been deleted.'
+        ]);
+    }
+
+    public function UnPaidOrder()
+    {
+        $unPaidOrders = Order::where('CreatedBy',Auth::user()->id)->where('OrderStatus','unpaid')->orderBy('OrderID', 'DESC')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Unpaid Listing.',
+            'data'    => $unPaidOrders
+        ]);
+    }
+
+    public function paidOrder()
+    {
+        $paidOrders = Order::where('CreatedBy',Auth::user()->id)->where('OrderStatus','completed')->orderBy('OrderID', 'DESC')->get();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Unpaid Listing.',
+            'data'    => $paidOrders
+        ]);
+    }
+
+    public function getTransaction(Request $request)
+    {
+        $recentTransaction = Order::select(['created_at', 'OrderID', 'CustomerName', 'TotalAmount'])->where('CreatedBy',Auth::user()->id);
+        if ($request->order_id) {
+            $recentTransaction = $recentTransaction->where('OrderId', $request->order_id);
+        }
+
+        if($request->customer_name) {
+            $recentTransaction = $recentTransaction->where('CustomerName', $request->customer_name);
+        }
+
+        if($request->amount) {
+            $recentTransaction = $recentTransaction->where('TotalAmount', $request->amount);
+        }
+
+        if($request->date) {
+            $recentTransaction = $recentTransaction->whereDate('created_at', $request->date);
+        }
+
+        $recentTransaction = $recentTransaction->get();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Recent Transaction Listing.',
+            'data'    => $recentTransaction
+        ]);
     }
 }
