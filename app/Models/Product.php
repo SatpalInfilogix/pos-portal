@@ -31,4 +31,9 @@ class Product extends Model
     {
         return $this->hasOne(PriceMaster::class, 'product_id');
     }
+
+    public function storeProducts()
+    {
+        return $this->hasMany(StoreProduct::class);
+    }
 }

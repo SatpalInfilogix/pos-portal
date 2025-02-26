@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\DiscountController;
+use App\Http\Controllers\Api\StoreController;
 
 Route::post('login', [AuthController::class, 'login']);
 
@@ -36,6 +37,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('get-transaction', [OrderController::class, 'getTransaction']);
 
     Route::get('discount', [DiscountController::class, 'getDiscount']);
+
+    Route::get('get-store', [StoreController::class, 'getStore']);
 });
 Route::post('add-to-cart', [CartController::class, 'addToCart']);
 
