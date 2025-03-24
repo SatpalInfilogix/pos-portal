@@ -20,4 +20,9 @@ class Order extends Model
     {
         return $this->belongsTo(Store::class, 'store_id', 'id');
     }
+
+    public function holdOrder()
+    {
+        return $this->belongsTo(HoldOrder::class, 'order_id');
+    }
 }

@@ -34,7 +34,7 @@ else{
         @canany(['pos'])
         <a href="{{ route('pos-dashboard') }}" target="_blank"><strong>POS Dashboard</strong></a>
         @endcanany
-        @if (auth()->user()->profile_image)
+        @if (auth()->check() && auth()->user()->profile_image)
             @php
                 $profile_picture = asset(auth()->user()->profile_image);
             @endphp
@@ -50,8 +50,14 @@ else{
                         <img src="{{ $profile_picture }}" alt="" class="img-fluid">
                     </span>
                     <span class="user-detail">
-                        <span class="user-name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>
-                        <span class="user-role">{{ auth()->user()->getRoleNames()->first() }}</span>
+                        @if (auth()->check())
+                            <span class="user-name">{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</span>
+                            <span class="user-role">{{ auth()->user()->getRoleNames()->first() }}</span>
+                        @else
+                            <span class="user-name">Guest</span>
+                            <span class="user-role">No Role</span>
+                        @endif
+
                     </span>
                 </span>
             </a>

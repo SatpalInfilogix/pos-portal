@@ -10,4 +10,14 @@ class StoreProduct extends Model
     use HasFactory;
     protected $table = 'store_products';
     protected $guarded =[];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
 }
